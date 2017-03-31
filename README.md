@@ -18,4 +18,39 @@ npm run build
 npm run build --report
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## 主要的开源组件
+[Vue.js](http://cn.vuejs.org/)
+[Muse UI](http://www.muse-ui.org)
+[Webpack](http://vuejs-templates.github.io/webpack/)
+[高德地图（javascript-api）](http://lbs.amap.com/api/javascript-api/summary/)
+
+## 需要注意的地方
+1. 使用了[axios](https://github.com/mzabriskie/axios)替代[Vue.js](http://cn.vuejs.org/)的原生ajax
+文件main.js中：
+```javascript
+Vue.prototype.$ajax = axios
+```
+2. 自带的proxy转发
+在文件config/index.js中：
+```javascript
+proxyTable: {
+  '/api': {
+    target: 'http://172.16.128.165/',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/api': ''
+    }
+  }
+}
+```
+3. 引入高德地图javascript-api
+在文件index.html中：
+```html
+<script type="text/javascript" src="//webapi.amap.com/maps?v=1.3&key=49368279e2c8940219e4c54acd3081e8"></script>
+```
+在文件build/webpack.base.conf.js中：
+```js
+externals: {
+  "AMap": "AMap"
+}
+```
