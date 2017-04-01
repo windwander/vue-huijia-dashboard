@@ -70,6 +70,7 @@ externals: {
 ### 4. 部署路径设置为了二级目录([http://***/map]())
 在文件config/index.js中：
 
+
 ``` javascript
 assetsPublicPath: '/map'
 ```
