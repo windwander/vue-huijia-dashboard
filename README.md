@@ -19,9 +19,13 @@ npm run build --report
 ```
 
 ## 主要的开源组件
+
 [Vue.js](http://cn.vuejs.org/)
+
 [Muse UI](http://www.muse-ui.org)
+
 [Webpack](http://vuejs-templates.github.io/webpack/)
+
 [高德地图（javascript-api）](http://lbs.amap.com/api/javascript-api/summary/)
 
 ## 需要注意的地方
