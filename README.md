@@ -72,5 +72,3 @@ assetsPublicPath: '/map'
 ```
 
 同时注意引用图片地址时要使用**相对路径**
-
-tcehsi
