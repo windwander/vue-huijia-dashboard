@@ -49,8 +49,14 @@ proxyTable: {
 <script type="text/javascript" src="//webapi.amap.com/maps?v=1.3&key=49368279e2c8940219e4c54acd3081e8"></script>
 ```
 在文件build/webpack.base.conf.js中：
-```js
+```javascript
 externals: {
   "AMap": "AMap"
 }
 ```
+4. 部署路径设置为了二级目录（http://***/map）
+在文件config/index.js中：
+```javascript
+assetsPublicPath: '/map'
+```
+同时注意引用图片地址时要使用**相对路径**
