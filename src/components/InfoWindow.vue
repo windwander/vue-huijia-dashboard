@@ -349,11 +349,11 @@ export default {
 .license-icon {
   width: 24px;
   height: 24px;
-  background-image: url(/static/license.png)
+  background-image: url(../../static/license.png)
 }
 .service-icon {
   width: 24px;
   height: 24px;
-  background-image: url(/static/service.png)
+  background-image: url(../../static/service.png)
 }
 </style>

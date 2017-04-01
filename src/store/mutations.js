@@ -103,7 +103,7 @@ export const mutations = {
 function mapPoint (obj) {
   let div = document.createElement('div')
   div.className = 'marker-div ' + obj.type + '-' + obj.status
-  div.style.backgroundImage = 'url("/static/' + obj.type + '-' + obj.status + '.png")'
+  div.style.backgroundImage = 'url("static/' + obj.type + '-' + obj.status + '.png")'
   // div.innerHTML = obj.currentOrders || 0
   const point = new AMap.Marker({
     map: state.amap,
