@@ -28,16 +28,16 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
+      '/api/v2': {
         // target: 'http://m.huijiacar.com/api/v2/',
-        target: 'http://10.21.0.180/api/v2/', // 预发布
+        target: 'http://10.21.0.180/', // 预发布
         changeOrigin: false,
         headers: {
           host: 'm.huijiacar.com'
         },
-        pathRewrite: {
-          '^/api': ''
-        }
+        // pathRewrite: {
+        //   '^/api': ''
+        // }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

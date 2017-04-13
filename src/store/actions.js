@@ -47,7 +47,7 @@ export const actions = {
     })
   },
   doLogin ({commit, state, rootState}, user) {
-    axios.get('/api/login?username=' + user.phone + '&password=' + user.password)
+    axios.get('/api/v2/login?username=' + user.phone + '&password=' + user.password)
     .then(res => {
       console.log(res)
       if (res.data.code === '0000') { // 登录成功
@@ -71,7 +71,7 @@ export const actions = {
   }
   */
   getOverallCount ({commit, state}) {
-    axios.get('/api/fworker/rest/v/Dashboard/count')
+    axios.get('/api/v2/fworker/rest/v/Dashboard/count')
     .then(res => {
       console.log(res)
       state.overallCount = res.data
@@ -123,7 +123,7 @@ export const actions = {
   }
   */
   getOrderList ({commit, state}, orderStatus) {
-    axios.get('/api/fworker/rest/v/Dashboard/orderList?orderStatus=' + orderStatus)
+    axios.get('/api/v2/fworker/rest/v/Dashboard/orderList?orderStatus=' + orderStatus)
     .then(res => {
       // 订单状态 当日待接单订单-10 美车师待服务订单-20
       console.log(res)
@@ -216,7 +216,7 @@ export const actions = {
   }
   */
   getOrders ({dispatch, state}) {
-    axios.get('/api/fworker/rest/v/Dashboard/orders')
+    axios.get('/api/v2/fworker/rest/v/Dashboard/orders')
     .then(res => {
       console.log(res)
       state.orders = res.data
@@ -246,7 +246,7 @@ export const actions = {
   }
   */
   getWorkerDetail ({commit, state}, workerId) {
-    axios.get('/api/fworker/rest/v/Dashboard/workerDetial?workerId=' + workerId)
+    axios.get('/api/v2/fworker/rest/v/Dashboard/workerDetial?workerId=' + workerId)
     .then(res => {
       console.log(res)
       state.workerDetail = res.data
@@ -286,7 +286,7 @@ export const actions = {
   }
   */
   getWorkerList ({commit, state}) {
-    axios.get('/api/fworker/rest/v/Dashboard/workerList')
+    axios.get('/api/v2/fworker/rest/v/Dashboard/workerList')
     .then(res => {
       console.log(res)
       state.tableHead = ['姓名', '联系方式', '所属小组']
@@ -324,7 +324,7 @@ export const actions = {
   }
   */
   getWorkers ({dispatch, state}) {
-    axios.get('/api/fworker/rest/v/Dashboard/workers')
+    axios.get('/api/v2/fworker/rest/v/Dashboard/workers')
     .then(res => {
       console.log(res)
       state.workers = res.data
