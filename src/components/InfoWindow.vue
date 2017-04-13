@@ -285,6 +285,9 @@ export default {
   transform: translateX(10px);
   opacity: 0;
 }
+.order-table {
+  background-color: #fff;
+}
 .license-icon {
   width: 24px;
   height: 24px;
