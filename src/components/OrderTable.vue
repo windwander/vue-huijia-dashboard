@@ -17,6 +17,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapState } from 'vuex'
 import {table, thead, tbody, tfoot, tr, th, td} from 'muse-components/table'
 
 Vue.component(table.name, table)
@@ -56,12 +57,12 @@ export default {
     height: {
       type: String,
       default: '480px'
-    },
-    tableHead: {
-      type: Array
-    },
-    tableData: {
-      type: Array
+    // },
+    // tableHead: {
+    //   type: Array
+    // },
+    // tableData: {
+    //   type: Array
     }
   },
   data () {
@@ -78,6 +79,12 @@ export default {
       //   }
       // ]
     }
+  },
+  computed: {
+    ...mapState([
+      'tableHead',
+      'tableData'
+    ])
   }
 }
 </script>

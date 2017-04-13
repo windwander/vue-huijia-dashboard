@@ -4,6 +4,8 @@ import * as getters from './getters'
 import {actions} from './actions'
 import {state, mutations} from './mutations'
 import Amap from './modules/Amap'
+// 引入 axios
+import axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -13,7 +15,8 @@ const store = new Vuex.Store({
   actions,
   mutations,
   modules: {
-    amap: Amap
+    amap: Amap,
+    axios: axios
   }
 })
 

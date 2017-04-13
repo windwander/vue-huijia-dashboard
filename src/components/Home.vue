@@ -50,10 +50,10 @@ export default {
       center: z.center,
       zoom: z.zoom
     })
-    // 设置初始标记点
-    z.$store.commit('doGeneratePoints')
-    // 初始化websocket
-    z.$store.dispatch('initWebsocket', z.wsUri)
+    // // 设置初始标记点
+    // z.$store.commit('doGeneratePoints')
+    // // 初始化websocket
+    // z.$store.dispatch('initWebsocket', z.wsUri)
   },
   methods: {
     ...mapMutations([

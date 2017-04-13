@@ -4,6 +4,7 @@ export const state = {
   amap: {},
   geocoder: {},
   // points: [],
+  workerDetail: {},
   infoWindowData: {},
   testWebsocket: {},
   snackbarMsg: '',
@@ -12,7 +13,28 @@ export const state = {
   topPopup: false,
   recieveMsg: '',
   modalPopup: false,
-  showOrderTable: false
+  showOrderTable: false,
+  workers: [],
+  orders: [],
+  overallCount: {
+    // orderCount: 1,
+    // busyWorkerCount: 2,
+    // freeWorkerCount: 3,
+    // toBeServiceCount: 4,
+    // toBeAcceptCount: 5,
+    // inServiceCount: 6,
+    // payCount: 7,
+    // cancelCount: 8,
+    // inWorkerCount: 9,
+    // outWorkerCount: 0
+  },
+  // orderTableHead: ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型'],
+  // todayOrderList: [],
+  // peopleTableHead: ['姓名', '联系方式', '所属小组'],
+  // workerOrderList: [],
+  // offlineWorkerList: [],
+  tableHead: [],
+  tableData: []
 }
 
 export const mutations = {
@@ -24,11 +46,12 @@ export const mutations = {
       zoom: zoom,
       center: center
     })
-    AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.OverView'], function () {
-      state.amap.addControl(new AMap.ToolBar())
-      state.amap.addControl(new AMap.Scale())
-      state.amap.addControl(new AMap.OverView({ isOpen: true }))
-    })
+    // 地图插件
+    // AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.OverView'], function () {
+    //   state.amap.addControl(new AMap.ToolBar())
+    //   state.amap.addControl(new AMap.Scale())
+    //   state.amap.addControl(new AMap.OverView({ isOpen: true }))
+    // })
     AMap.service('AMap.Geocoder', function () { // 回调函数
       // 实例化Geocoder
       state.geocoder = new AMap.Geocoder({
@@ -38,7 +61,7 @@ export const mutations = {
   },
   // 显示点标记
   mapPoint (state, obj) {
-    mapPoint(obj, true)
+    mapPoint(obj)
   },
   // 移除点标记
   removeMarkers () {
@@ -72,13 +95,23 @@ export const mutations = {
     state.snackbarMsg = 'websocket 发送：' + message
     showSnackbar()
   },
+  openInfoWindow (state, obj) {
+    openInfoWindow(obj)
+  },
   hideSnackbar () {
     hideSnackbar()
   },
   closePopup () {
     state.topPopup = false
   },
-  showPopup () {
+  showPopup (state, type) {
+    // if (type === 'order') {
+    //   state.tableHead = state.orderTableHead
+    //   state.tableData = state.todayOrderList
+    // } else if (type === 'people') {
+    //   state.tableHead = state.peopleTableHead
+    //   state.tableData = state.offlineWorkerList
+    // }
     state.modalPopup = true
     setTimeout(function () {
       const el = document.getElementsByClassName('modal-popup')[0]
@@ -101,20 +134,24 @@ export const mutations = {
 }
 // 设置点标记
 function mapPoint (obj) {
+  let type = 'worker'
   let div = document.createElement('div')
-  div.className = 'marker-div ' + obj.type + '-' + obj.status
-  div.style.backgroundImage = 'url("static/' + obj.type + '-' + obj.status + '.png")'
+  if (!obj.workerId) {
+    type = 'order'
+  }
+  div.className = 'marker-div ' + type + '-' + obj.status
+  div.style.backgroundImage = 'url("static/' + type + '-' + obj.status + '.png")'
+  console.log([obj.lng || 118.722695, obj.lat || 32.033995])
   // div.innerHTML = obj.currentOrders || 0
   const point = new AMap.Marker({
     map: state.amap,
-    position: obj.location.lnglat,
+    position: [obj.lng || 118.722695, obj.lat || 32.033995],
     offset: new AMap.Pixel(-24, -24),
-    title: '美车师：' + obj.account, // 鼠标滑过显示
+    // title: '美车师：' + obj.account, // 鼠标滑过显示
     content: div  // 自定义点标记覆盖物内容
   })
   point.on('click', function () {
-    openInfoWindow(obj)
-    console.log(state.infoWindowData)
+    state.dispatch('getWorkerDetail')
   })
   // state.points.push(point)
 }
@@ -205,21 +242,25 @@ function generatePoints () {
 }
 // 打开点标记窗口
 function openInfoWindow (obj) {
+  console.log('hh------')
+  console.log(obj)
+  const status = ['空闲', '服务中', '已下线']
+  const orderStatus = ['未超时', '已超时']
   state.infoWindowData = Object.assign({}, {
-    type: obj.type,
-    account: obj.account,
-    name: '某某',
-    status: obj.status,
-    star: obj.star,
-    location: obj.location.lnglat,
-    address: obj.location.address,
-    currentOrders: obj.currentOrders,
-    totalOrders: obj.totalOrders,
-    todoOrders: obj.todoOrders,
-    time: obj.time,
-    orderId: obj.orderId,
-    license: obj.license,
-    orderType: obj.orderType
+    type: !obj.carInfo ? 'worker' : 'order',
+    account: obj.phone || obj.userPhone || '',
+    name: obj.userName || obj.name || '',
+    status: !obj.carInfo ? (status[obj.status] || status[0]) : (new Date() - obj.orderTime < 10 * 60 * 1000 ? orderStatus[0] : orderStatus[1]),
+    star: obj.score || '0',
+    location: [obj.lng || obj.longitude || 118.722695, obj.lat || obj.latitude || 32.033995],
+    address: obj.address || obj.location || '',
+    currentOrders: obj.taskOverCount || 0,
+    totalOrders: obj.orderCount || 0,
+    todoOrders: obj.toBeAgentCount || 0,
+    time: obj.timeRequire || '',
+    orderId: obj.orderId || '',
+    license: obj.carInfo || '',
+    orderType: obj.productName || ''
   })
   // 设置信息窗口
   const infoDiv = document.getElementById('infoWindowUI')
@@ -228,7 +269,7 @@ function openInfoWindow (obj) {
     autoMove: true,
     content: infoDiv
   })
-  infoWindow.open(state.amap, obj.location.lnglat)
+  infoWindow.open(state.amap, state.infoWindowData.location)
   AMap.event.addListener(infoWindow, 'close', function () {
     console.log('close infowindow')
     state.showOrderTable = false

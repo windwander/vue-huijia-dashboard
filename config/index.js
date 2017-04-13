@@ -29,8 +29,12 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://172.16.128.165/', //'https://10.21.0.180',
-        changeOrigin: true,
+        // target: 'http://m.huijiacar.com/api/v2/',
+        target: 'http://10.21.0.180/api/v2/', // 预发布
+        changeOrigin: false,
+        headers: {
+          host: 'm.huijiacar.com'
+        },
         pathRewrite: {
           '^/api': ''
         }

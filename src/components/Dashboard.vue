@@ -14,19 +14,19 @@
   </div>
   <div id="orderStatusBox">
     <status-box icon="assignment" title="订单状况" arrowPosition="right" />
-    <status-box :number="99999" title="当日订单" direction="row" />
-    <status-box :number="2" title="待服务订单" direction="row" />
-    <status-box :number="3" title="服务中订单" direction="row" />
-    <status-box :number="23" title="已取消订单" direction="row" />
-    <status-box :number="123" title="已支付订单" direction="row" />
-    <status-box :number="23" title="待接单订单" direction="row" clickable="clickable" @click="showModal('待接单订单', 'order')" />
+    <status-box :number="overallCount.orderCount" title="当日订单" direction="row" />
+    <status-box :number="overallCount.toBeServiceCount" title="待服务订单" direction="row" />
+    <status-box :number="overallCount.inServiceCount" title="服务中订单" direction="row" />
+    <status-box :number="overallCount.cancelCount" title="已取消订单" direction="row" />
+    <status-box :number="overallCount.payCount" title="已支付订单" direction="row" />
+    <status-box :number="overallCount.toBeAcceptCount" title="待接单订单" direction="row" clickable="clickable" @click="showModal('待接单订单', 'order')" />
   </div>
   <div id="serviceStatusBox">
     <status-box icon="people" title="美车师" arrowPosition="bottom" />
-    <status-box :number="99999" title="在线人数" direction="column" />
-    <status-box :number="2" title="离线人数" direction="column" clickable="clickable" @click="showModal('当前离线', 'people')" />
-    <status-box :number="3" title="忙碌人数" direction="column" />
-    <status-box :number="23" title="空闲人数" direction="column" />
+    <status-box :number="overallCount.inWorkerCount" title="在线人数" direction="column" />
+    <status-box :number="overallCount.outWorkerCount" title="离线人数" direction="column" clickable="clickable" @click="showModal('当前离线', 'people')" />
+    <status-box :number="overallCount.busyWorkerCount" title="忙碌人数" direction="column" />
+    <status-box :number="overallCount.freeWorkerCount" title="空闲人数" direction="column" />
   </div>
   <Modal :title="modalTitle" :tableHead="tableHead" :tableData="tableData"/>
 </div>
@@ -34,7 +34,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import paper from 'muse-components/paper'
 import {flexbox, flexboxItem} from 'muse-components/flexbox'
 import raisedButton from 'muse-components/raisedButton'
@@ -72,140 +72,67 @@ export default {
       timeInterval: {},
       modalTitle: '',
       tableHead: [],
-      tableData: [],
-      orderTableHead: ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型'],
-      orderTableData: [
-        {
-          orderId: 'W1702170012811',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012812',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012813',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012814',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012815',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012816',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012817',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012818',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012819',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012820',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012821',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        }
-      ],
-      peopleTableHead: ['姓名', '联系方式', '所属小组'],
-      peopleTableData: [
-        {
-          name: '张玉华',
-          phone: '15951813408',
-          type: '联创大厦'
-        },
-        {
-          name: '张玉华',
-          phone: '15951813408',
-          type: '联创大厦'
-        },
-        {
-          name: '张玉华',
-          phone: '15951813408',
-          type: '联创大厦'
-        },
-        {
-          name: '张玉华',
-          phone: '15951813408',
-          type: '联创大厦'
-        },
-        {
-          name: '张玉华',
-          phone: '15951813408',
-          type: '联创大厦'
-        }
-      ]
+      tableData: []
+      // orderTableHead: ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型'],
+      // orderTableData: [
+      //   {
+      //     orderId: 'W1702170012811',
+      //     phone: '15951813408',
+      //     time: '2017/3/12 10:00',
+      //     location: '集庆门大街18号',
+      //     license: '苏A12883',
+      //     type: '五座轿车清洗加内饰清洗'
+      //   }
+      // ],
+      // peopleTableHead: ['姓名', '联系方式', '所属小组'],
+      // peopleTableData: [
+      //   {
+      //     name: '张玉华',
+      //     phone: '15951813408',
+      //     type: '联创大厦'
+      //   }
+      // ]
     }
   },
   computed: {
+    ...mapState([
+      'overallCount',
+      'todayOrderList',
+      'offlineWorkerList',
+      'tableHead',
+      'tableData'
+    ])
   },
   mounted () {
     this.dashboard.finished = Math.floor(Math.random() * 1000)
     this.dashboard.processing = Math.floor(Math.random() * 1000)
     this.dashboard.todo = Math.floor(Math.random() * 1000)
+    const z = this
+    const update = () => {
+      // 获取视图总情况查询
+      z.getOverallCount()
+      // 获取美车师位置和待接单位置
+      z.getWorkers()
+      z.getOrders()
+    }
+    update()
+    setTimeout(function () { // 每隔固定时间更新数据
+      update()
+    }, 1000 * 60 * 5)
   },
   methods: {
     ...mapMutations([
       'removeMarkers',
       'resetView',
-      'doGeneratePoints'
+      'doGeneratePoints',
+      'showPopup'
+    ]),
+    ...mapActions([
+      'getOverallCount',
+      'getOrderList',
+      'getWorkerList',
+      'getWorkers',
+      'getOrders'
     ]),
     autoPoints () {
       const z = this
@@ -220,10 +147,20 @@ export default {
       this.removeMarkers()
     },
     showModal (title, type) {
-      this.modalTitle = title
-      this.tableHead = type === 'order' ? this.orderTableHead : this.peopleTableHead
-      this.tableData = type === 'order' ? this.orderTableData : this.peopleTableData
-      this.$store.commit('showPopup')
+      const z = this
+      z.modalTitle = title
+      // function show () {
+      //   z.tableHead = type === 'order' ? z.orderTableHead : z.peopleTableHead
+      //   z.tableData = type === 'order' ? z.todayOrderList : z.offlineWorkerList
+      //   z.showPopup()
+      // }
+      // new Promise ((resolve, reject) => {
+      // })
+      if (type === 'order') {
+        z.getOrderList('10')
+      } else if (type === 'people') {
+        z.getWorkerList()
+      }
     }
   }
 }

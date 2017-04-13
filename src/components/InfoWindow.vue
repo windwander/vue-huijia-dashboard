@@ -4,17 +4,17 @@
       <avatar />
       <div class="info-window-head-title">
         <h3>
-          {{infoData.name}} <span v-if="infoData.type === 'service'"> 美车师</span>
+          {{infoData.name}} <span v-if="infoData.type === 'worker'"> 美车师</span>
           <mu-badge :content="infoData.status" secondary/>
         </h3>
-        <div v-if="infoData.type === 'service'" class="icon-contaner" v-bind:style="{width: infoData.star * 24 + 'px' }">
+        <div v-if="infoData.type === 'worker'" class="icon-contaner" v-bind:style="{width: infoData.star * 24 + 'px' }">
           <mu-icon value="star"/>
           <mu-icon value="star"/>
           <mu-icon value="star"/>
           <mu-icon value="star"/>
           <mu-icon value="star"/>
         </div>
-        <mu-badge v-if="infoData.type === 'service'" :content="infoData.star" primary/>
+        <mu-badge v-if="infoData.type === 'worker'" :content="infoData.star" primary/>
         <div v-if="infoData.type === 'order'">订单编号：{{infoData.orderId}}</div>
       </div>
     </div>
@@ -35,7 +35,7 @@
         <mu-icon slot="left" value=":service-icon" color="red400"/>
       </mu-list-item>
     </mu-list>
-    <div v-if="infoData.type === 'service'">
+    <div v-if="infoData.type === 'worker'">
     <mu-divider />
     <div class="info-window-flex">
       <status-box :number="infoData.totalOrders" title="总订单量" direction="row" />
@@ -53,7 +53,7 @@
 </template>
 <script>
 import Vue from 'vue'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import icon from 'muse-components/icon'
 import raisedButton from 'muse-components/raisedButton'
 import textField from 'muse-components/textField'
@@ -95,7 +95,7 @@ export default {
     },
     type: {
       type: String,
-      default: 'service'
+      default: 'worker'
     }
   },
   data () {
@@ -121,78 +121,6 @@ export default {
           location: '集庆门大街18号',
           license: '苏A12883',
           type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012813',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012814',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012815',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012816',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012817',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012818',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012819',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012820',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012821',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
         }
       ]
     }
@@ -203,6 +131,9 @@ export default {
     ])
   },
   methods: {
+    ...mapActions([
+      'getOrderList'
+    ]),
     pushOrder () {
       // const root = this
       // this.isPushingOrder = true
@@ -229,18 +160,19 @@ export default {
     },
     toggleOrderTable () {
       const z = this
-      z.$store.commit('toggleOrderTable')
-      if (this.showOrderTable) {
-        setTimeout(function () {
-          const offset = window.innerWidth - document.getElementsByClassName('order-table')[0].getBoundingClientRect().right
-          if (offset < 0) {
-            z.$store.commit('panBy', {
-              x: offset - 20,
-              y: 0
-            })
-          }
-        }, 100)
-      }
+      // z.$store.commit('toggleOrderTable')
+      z.$store.dispatch('getOrderList', '20')
+      // if (this.showOrderTable) {
+      //   setTimeout(function () {
+      //     const offset = window.innerWidth - document.getElementsByClassName('order-table')[0].getBoundingClientRect().right
+      //     if (offset < 0) {
+      //       z.$store.commit('panBy', {
+      //         x: offset - 20,
+      //         y: 0
+      //       })
+      //     }
+      //   }, 100)
+      // }
     }
   }
 }
