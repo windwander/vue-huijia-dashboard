@@ -1,10 +1,10 @@
 <template>
 <div class="login-outer">
 <mu-paper class="login-box">
-  <h1>运营地图登录</h1>
-  <mu-text-field label="用户名" labelFloat v-model="phone" /><br/>
-  <mu-text-field label="密码" labelFloat type="password" v-model="password" /><br/>
-  <mu-raised-button label="登录" class="raised-button" @click="login()" secondary/>
+  <h1>运营管理平台登录</h1>
+  <mu-text-field label="用户名" labelFloat v-model="phone" fullWidth/><br/>
+  <mu-text-field label="密码" labelFloat type="password" v-model="password" fullWidth/><br/>
+  <mu-raised-button label="登录" class="raised-button" @click="login()" secondary fullWidth/>
 </mu-paper>
 </div>
 </template>
@@ -50,5 +50,8 @@ export default {
   min-width: 360px;
   padding: 3em;
   margin: 3em;
+}
+.raised-button {
+  margin: 10px 0;
 }
 </style>

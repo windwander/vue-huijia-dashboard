@@ -3,12 +3,12 @@
     <mu-table :fixedHeader="fixedHeader" :fixedFooter="fixedFooter" :height="height" :enableSelectAll="enableSelectAll" :multiSelectable="multiSelectable" :selectable="selectable" :showCheckbox="showCheckbox">
       <mu-thead slot="header" class="table-header">
         <mu-tr>
-          <mu-th v-for="item,index in tableHead" :key="'order-table-head' + index">{{item}}</mu-th>
+          <mu-th v-for="item,index in tableHead" :key="'order-table-head' + index" :title="item">{{item}}</mu-th>
         </mu-tr>
       </mu-thead>
       <mu-tbody>
         <mu-tr v-for="item,index in tableData" :key="item.orderId" :selected="item.selected">
-          <mu-td v-for="(value, key) in item" :key="key">{{value}}</mu-td>
+          <mu-td v-for="(value, key) in item" :key="key" :title="value">{{value}}</mu-td>
         </mu-tr>
       </mu-tbody>
     </mu-table>
@@ -96,5 +96,8 @@ export default {
 .table-header .mu-th {
   color: #333;
   border-bottom: 1px solid #c7c7c7;
+}
+.mu-td {
+  overflow: hidden;
 }
 </style>

@@ -127,7 +127,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'showOrderTable'
+      'showOrderTable',
+      'workerDetail'
     ])
   },
   methods: {
@@ -161,7 +162,13 @@ export default {
     toggleOrderTable () {
       const z = this
       // z.$store.commit('toggleOrderTable')
-      z.$store.dispatch('getOrderList', '20')
+      console.log(z.workerDetail)
+      if (z.infoData.todoOrders > 0) {
+        z.$store.dispatch('getOrderList', {
+          orderStatus: '20',
+          workerId: z.workerDetail.workerId
+        })
+      }
       // if (this.showOrderTable) {
       //   setTimeout(function () {
       //     const offset = window.innerWidth - document.getElementsByClassName('order-table')[0].getBoundingClientRect().right

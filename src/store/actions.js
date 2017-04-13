@@ -122,12 +122,16 @@ export const actions = {
     location (string, optional)
   }
   */
-  getOrderList ({commit, state}, orderStatus) {
-    axios.get('/api/v2/fworker/rest/v/Dashboard/orderList?orderStatus=' + orderStatus)
+  getOrderList ({commit, state}, data) {
+    let workerIdString = ''
+    if (data.orderStatus === '20') {
+      workerIdString = '&workerId=' + data.workerId
+    }
+    axios.get('/api/v2/fworker/rest/v/Dashboard/orderList?orderStatus=' + data.orderStatus + workerIdString)
     .then(res => {
       // 订单状态 当日待接单订单-10 美车师待服务订单-20
       console.log(res)
-      if (orderStatus === '10') {
+      if (data.orderStatus === '10') {
         state.tableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
         state.tableData = res.data.map(o => {
           const order = {
@@ -141,7 +145,7 @@ export const actions = {
           return order
         })
         commit('showPopup', 'order')
-      } else if (orderStatus === '20') {
+      } else if (data.orderStatus === '20') {
         state.workerOrderList = res.data
         state.tableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
         state.tableData = res.data.map(o => {

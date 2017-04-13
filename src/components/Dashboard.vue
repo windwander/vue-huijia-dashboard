@@ -157,7 +157,9 @@ export default {
       // new Promise ((resolve, reject) => {
       // })
       if (type === 'order') {
-        z.getOrderList('10')
+        z.getOrderList({
+          orderStatus: '10'
+        })
       } else if (type === 'people') {
         z.getWorkerList()
       }
