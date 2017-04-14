@@ -34,10 +34,15 @@ export const state = {
   // workerOrderList: [],
   // offlineWorkerList: [],
   tableHead: [],
-  tableData: []
+  tableData: [],
+  errorLogin: {}
 }
 
 export const mutations = {
+  // 登录出错
+  errorLogin (state, res) {
+    state.errorLogin = res
+  },
   // 初始化地图
   initMap (state, { center, zoom }) {
     state.amap = new AMap.Map('amapContainer', {
@@ -47,11 +52,11 @@ export const mutations = {
       center: center
     })
     // 地图插件
-    // AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.OverView'], function () {
-    //   state.amap.addControl(new AMap.ToolBar())
-    //   state.amap.addControl(new AMap.Scale())
-    //   state.amap.addControl(new AMap.OverView({ isOpen: true }))
-    // })
+    AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.OverView'], function () {
+      state.amap.addControl(new AMap.ToolBar())
+      state.amap.addControl(new AMap.Scale())
+      // state.amap.addControl(new AMap.OverView({ isOpen: true }))
+    })
     AMap.service('AMap.Geocoder', function () { // 回调函数
       // 实例化Geocoder
       state.geocoder = new AMap.Geocoder({
@@ -116,7 +121,14 @@ export const mutations = {
     setTimeout(function () {
       const el = document.getElementsByClassName('modal-popup')[0]
       const marginBottom = (window.height - el.getBoundingClientRect().height) / 2
-      if (marginBottom > 0) el.style.marginBottom = marginBottom + 'px'
+      if (marginBottom > 20) {
+        el.style.marginBottom = marginBottom + 'px'
+      } else {
+        const table = el.children[1].children[0].children[0].children[1]
+        table.style.overflowY = 'auto'
+        table.style.maxHeight = 'calc(80vh - 120px)'
+        el.style.marginBottom = '10vh'
+      }
       console.log(el.style.marginBottom)
     }, 100)
   },

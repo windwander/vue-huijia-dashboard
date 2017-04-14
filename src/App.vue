@@ -11,9 +11,13 @@ export default {
 </script>
 
 <style>
-body {
-  font-family: "Hiragino Sans GB", "Lucida Grande", "微软雅黑", Helvetica, Arial, sans-serif;
+html, body {
+  font-family: "Hiragino Sans GB", "Lucida Grande", "微软雅黑", Helvetica, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 620px;
+  min-width: 1000px;
+  width: 100%;
+  height: 100%;
 }
 </style>

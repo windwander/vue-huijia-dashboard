@@ -154,13 +154,11 @@ export default {
       //   z.tableData = type === 'order' ? z.todayOrderList : z.offlineWorkerList
       //   z.showPopup()
       // }
-      // new Promise ((resolve, reject) => {
-      // })
-      if (type === 'order') {
+      if (type === 'order' && z.overallCount.toBeAcceptCount > 0) {
         z.getOrderList({
           orderStatus: '10'
         })
-      } else if (type === 'people') {
+      } else if (type === 'people' && z.overallCount.outWorkerCount > 0) {
         z.getWorkerList()
       }
     }
@@ -189,6 +187,7 @@ export default {
 #headSearchBox .search-input {
   top: -5px;
   left: 2px;
+  padding: 0 0.5em;
 }
 #headSearchBox .search-button {
   width: 48px;

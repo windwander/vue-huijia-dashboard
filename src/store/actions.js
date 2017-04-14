@@ -46,15 +46,19 @@ export const actions = {
       }
     })
   },
-  doLogin ({commit, state, rootState}, user) {
+  doLogin ({commit, state}, user) {
     axios.get('/api/v2/login?username=' + user.phone + '&password=' + user.password)
     .then(res => {
       console.log(res)
       if (res.data.code === '0000') { // 登录成功
         router.push('/')
+      } else {
+        commit('errorLogin', res.data)
       }
     })
-    .catch(error => console.error(error))
+    .catch(error => {
+      console.error(error)
+    })
   },
   /* 视图总情况查询
   CountVO {

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="home-div">
   <div id="amapContainer"></div>
   <Dashboard />
   <InfoWindow :infoData="infoWindowData" />
@@ -68,9 +68,9 @@ export default {
 </script>
 
 <style>
-#amapContainer {
-  width: 100vw;
-  height: 100vh;
+#app, .home-div, #amapContainer {
+  width: 100%;
+  height: 100%;
 }
 .marker-info {
   color: coral;
