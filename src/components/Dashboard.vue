@@ -3,8 +3,8 @@
   <div id="headSearchBox">
     <avatar />
     <div class="search-box">
-      <mu-text-field hintText="搜索……" class="search-input" />
-      <mu-flat-button icon="search" class="search-button" backgroundColor="#F05B47" color="#FFF"/>
+      <mu-text-field hintText="搜索完整手机号或单号后三位" class="search-input" v-model="searchString" ref="searchField"/>
+      <mu-flat-button icon="search" class="search-button" backgroundColor="#F05B47" color="#FFF" @click="search()"/>
     </div>
     <div class="search-city">
       <mu-select-field value="1" class="search-city-select">
@@ -64,6 +64,7 @@ export default {
   },
   data () {
     return {
+      searchString: '',
       dashboard: {
         finished: 309,
         processing: 211,
@@ -100,7 +101,10 @@ export default {
       'todayOrderList',
       'offlineWorkerList',
       'tableHead',
-      'tableData'
+      'tableData',
+      'workers',
+      'orders',
+      'points'
     ])
   },
   mounted () {
@@ -117,8 +121,17 @@ export default {
     }
     update()
     setTimeout(function () { // 每隔固定时间更新数据
+      // // 移除点标记
+      // z.removeMarkers()
       update()
     }, 1000 * 60 * 5)
+    // 搜索框，按回车键执行搜索
+    const input = z.$refs.searchField.$el.querySelector('input')
+    input.addEventListener('keyup', function (event) {
+      if (event.keyCode === 13) {
+        z.search()
+      }
+    })
   },
   methods: {
     ...mapMutations([
@@ -132,7 +145,8 @@ export default {
       'getOrderList',
       'getWorkerList',
       'getWorkers',
-      'getOrders'
+      'getOrders',
+      'doSearch'
     ]),
     autoPoints () {
       const z = this
@@ -160,6 +174,19 @@ export default {
         })
       } else if (type === 'people' && z.overallCount.outWorkerCount > 0) {
         z.getWorkerList()
+      }
+    },
+    search () {
+      const z = this
+      let t = {
+        type: 'order',
+        input: z.searchString
+      }
+      if (/^1\d{10}$/.test(z.searchString)) {
+        t.type = 'phone'
+      }
+      if (t.input !== '') {
+        z.doSearch(t)
       }
     }
   }

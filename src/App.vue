@@ -16,8 +16,9 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 620px;
-  min-width: 1000px;
+  min-width: 1330px;
   width: 100%;
   height: 100%;
+  overflow: auto;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="order-table">
     <mu-table :fixedHeader="fixedHeader" :fixedFooter="fixedFooter" :height="height" :enableSelectAll="enableSelectAll" :multiSelectable="multiSelectable" :selectable="selectable" :showCheckbox="showCheckbox">
       <mu-thead slot="header" class="table-header">
         <mu-tr>
@@ -97,7 +97,8 @@ export default {
   color: #333;
   border-bottom: 1px solid #c7c7c7;
 }
-.mu-td {
-  overflow: hidden;
+.order-table .mu-td {
+  padding: 1em;
+  white-space: pre-wrap;
 }
 </style>

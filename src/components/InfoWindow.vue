@@ -43,7 +43,7 @@
       <status-box :number="infoData.todoOrders" title="待服务" direction="row" clickable="clickable" @click="toggleOrderTable()" />
     </div>
     <mu-divider />    
-    <mu-text-field label="输入派单单号" v-model="orderCode" labelFloat fullWidth class="send-order-input" />
+    <mu-text-field label="输入派单单号" labelFloat fullWidth class="send-order-input" v-model="orderId" />
     <mu-raised-button :label="pushOrderText" class="send-order-btn" @click="pushOrder()" :disabled="isPushingOrder" secondary/>
     <transition name="order-table-slide">
       <OrderTable v-if="showOrderTable" class="order-table" height="406px" :tableHead="tableHead" :tableData="tableData"/>
@@ -100,6 +100,7 @@ export default {
   },
   data () {
     return {
+      orderId: '',
       isPushingOrder: false,
       pushOrderText: '派单',
       orderCode: '',
@@ -133,7 +134,8 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getOrderList'
+      'getOrderList',
+      'sendOrder'
     ]),
     pushOrder () {
       // const root = this
@@ -157,7 +159,13 @@ export default {
       //   root.topPopup = true
       //   root.getMsg = JSON.stringify(res)
       // })
-      this.$store.dispatch('wsSend', this.orderCode)
+      // this.$store.dispatch('wsSend', this.orderCode)
+      const z = this
+      const data = {
+        orderId: z.orderId,
+        workerId: z.infoData.workerId
+      }
+      z.sendOrder(data)
     },
     toggleOrderTable () {
       const z = this
@@ -273,7 +281,8 @@ export default {
 }*/
 #infoWindowUI .order-table .mu-th,
 #infoWindowUI .order-table .mu-td {
-  padding: 0 12px;
+  padding: 1em;
+  white-space: pre-wrap;
 }
 .order-table-slide-enter-active {
   transition: all .3s ease;
@@ -297,5 +306,8 @@ export default {
   width: 24px;
   height: 24px;
   background-image: url(../../static/service.png)
+}
+#infoWindowUI .mu-item-wrapper {
+  user-select: initial !important;
 }
 </style>

@@ -3,7 +3,7 @@ import AMap from 'AMap'
 export const state = {
   amap: {},
   geocoder: {},
-  // points: [],
+  points: [],
   workerDetail: {},
   infoWindowData: {},
   testWebsocket: {},
@@ -272,7 +272,8 @@ function openInfoWindow (obj) {
     time: obj.timeRequire || '',
     orderId: obj.orderId || '',
     license: obj.carInfo || '',
-    orderType: obj.productName || ''
+    orderType: obj.productName || '',
+    workerId: obj.workerId || ''
   })
   // 设置信息窗口
   const infoDiv = document.getElementById('infoWindowUI')

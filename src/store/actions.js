@@ -25,6 +25,11 @@ export const actions = {
       }
       div.className = 'marker-div order-' + status
       div.style.backgroundImage = 'url("static/' + type + '-' + status + '.png")'
+      div.dataset.orderId = obj.orderId
+      div.dataset.orderPhone = obj.userPhone
+    } else {
+      div.dataset.workerId = obj.workerId
+      div.dataset.workerPhone = obj.phone
     }
     console.log([obj.lng || obj.longitude || 118.722695, obj.lat || obj.latitude || 32.033995])
     // div.innerHTML = obj.currentOrders || 0
@@ -45,6 +50,7 @@ export const actions = {
         commit('openInfoWindow', obj)
       }
     })
+    state.points.push(point)
   },
   doLogin ({commit, state}, user) {
     axios.get('/api/v2/login?username=' + user.phone + '&password=' + user.password)
@@ -337,6 +343,102 @@ export const actions = {
       console.log(res)
       state.workers = res.data
       state.workers.map(w => dispatch('mapPoint', w))
+    })
+    .catch(error => {
+      console.error(error)
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* 搜索栏查询
+  SearchVO {
+    order (Order, optional),
+    workerDashboardVO (WorkerDashboardVO, optional)
+  }
+  Order {
+    userName (string, optional),
+    userId (integer, optional),
+    orderSource (string, optional),
+    cityCode (string, optional),
+    orderId (string, optional),
+    orderStatus (string, optional),
+    remark (string, optional),
+    areaCode (string, optional),
+    appointTime (date-time, optional),
+    longitude (number, optional),
+    latitude (number, optional),
+    payStatus (string, optional),
+    memo (string, optional),
+    userPhone (string, optional),
+    isOrderFor (boolean, optional),
+    workerName (string, optional),
+    workerId (integer, optional),
+    updateTime (date-time, optional),
+    payAmount (integer, optional),
+    productId (integer, optional),
+    suggest (string, optional),
+    preWorkId (integer, optional),
+    orderTime (date-time, optional),
+    payTime (date-time, optional),
+    carInfo (string, optional),
+    parkingNo (string, optional),
+    timeRequire (string, optional),
+    saleAmount (integer, optional),
+    deductionAmount (integer, optional),
+    realPayAmount (integer, optional),
+    cancelReason (string, optional),
+    deleted (boolean, optional),
+    catalogJson (string, optional),
+    productName (string, optional),
+    location (string, optional)
+  }
+  WorkerDashboardVO {
+    phone (string, optional): 电话,
+    score (number, optional): 星级,
+    workerId (integer, optional),
+    lng (number, optional): 经度,
+    lat (number, optional): 纬度,
+    orderCount (integer, optional): 当天总订单数,
+    taskOverCount (integer, optional): 当日完成订单数,
+    toBeAgentCount (integer, optional): 当日待服务数,
+    icon (string, optional): 头像,
+    status (integer, optional): 状态 0-空闲 1-服务中 2-已下线,
+    address (string, optional): 服务地址,
+    name (string, optional): 名字
+  }
+  */
+  doSearch ({commit, dispatch, state}, data) {
+    let searchString = ''
+    if (data.type === 'phone') {
+      searchString = 'phone=' + data.input
+    } else if (data.type === 'order') {
+      searchString = 'orderId=' + data.input
+    }
+    axios.get('/api/v2/fworker/rest/v/Dashboard/search?' + searchString)
+    .then(res => {
+      const result = res.data
+      if (result.order) {
+        commit('openInfoWindow', result.order)
+      } else if (result.workerDashboardVO) {
+        dispatch('getWorkerDetail', result.workerDashboardVO.workerId)
+      }
+    })
+    .catch(error => {
+      console.error(error)
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* PUT /v/Dashboard/send
+    派单
+  */
+  sendOrder ({state}, data) {
+    axios.put('/api/v2/fworker/rest/v/Dashboard/send?orderId=' + data.orderId + '&workerId=' + data.workerId)
+    .then(res => {
+      console.log(res)
+      router.push('/')
     })
     .catch(error => {
       console.error(error)
