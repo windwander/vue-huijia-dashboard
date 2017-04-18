@@ -58,41 +58,13 @@ export default {
   name: 'dashboard',
   components: {
     'status-box': statusBox,
-    // 'status-title-box': statusTitleBox,
     'avatar': avatar,
     Modal
   },
   data () {
     return {
       searchString: '',
-      dashboard: {
-        finished: 309,
-        processing: 211,
-        todo: 1234
-      },
-      timeInterval: {},
-      modalTitle: '',
-      tableHead: [],
-      tableData: []
-      // orderTableHead: ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型'],
-      // orderTableData: [
-      //   {
-      //     orderId: 'W1702170012811',
-      //     phone: '15951813408',
-      //     time: '2017/3/12 10:00',
-      //     location: '集庆门大街18号',
-      //     license: '苏A12883',
-      //     type: '五座轿车清洗加内饰清洗'
-      //   }
-      // ],
-      // peopleTableHead: ['姓名', '联系方式', '所属小组'],
-      // peopleTableData: [
-      //   {
-      //     name: '张玉华',
-      //     phone: '15951813408',
-      //     type: '联创大厦'
-      //   }
-      // ]
+      modalTitle: ''
     }
   },
   computed: {
@@ -103,14 +75,10 @@ export default {
       'tableHead',
       'tableData',
       'workers',
-      'orders',
-      'points'
+      'orders'
     ])
   },
   mounted () {
-    this.dashboard.finished = Math.floor(Math.random() * 1000)
-    this.dashboard.processing = Math.floor(Math.random() * 1000)
-    this.dashboard.todo = Math.floor(Math.random() * 1000)
     const z = this
     const update = () => {
       // 获取视图总情况查询
@@ -137,7 +105,6 @@ export default {
     ...mapMutations([
       'removeMarkers',
       'resetView',
-      'doGeneratePoints',
       'showPopup'
     ]),
     ...mapActions([
@@ -148,26 +115,9 @@ export default {
       'getOrders',
       'doSearch'
     ]),
-    autoPoints () {
-      const z = this
-      z.timeInterval = setInterval(() => {
-        for (let i = 0; i < 20; i++) {
-          z.doGeneratePoints()
-        }
-      }, 3000)
-    },
-    removePoints () {
-      clearInterval(this.timeInterval)
-      this.removeMarkers()
-    },
     showModal (title, type) {
       const z = this
       z.modalTitle = title
-      // function show () {
-      //   z.tableHead = type === 'order' ? z.orderTableHead : z.peopleTableHead
-      //   z.tableData = type === 'order' ? z.todayOrderList : z.offlineWorkerList
-      //   z.showPopup()
-      // }
       if (type === 'order' && z.overallCount.toBeAcceptCount > 0) {
         z.getOrderList({
           orderStatus: '10'

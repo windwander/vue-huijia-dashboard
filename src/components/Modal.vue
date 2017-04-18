@@ -4,7 +4,7 @@
       <mu-icon-button slot="right" icon="close" @click="close()"/>
     </mu-appbar>
     <mu-content-block class="modal-table-box">
-      <OrderTable height="auto" :tableHead="tableHead" :tableData="tableData"/>
+      <OrderTable height="auto"/>
     </mu-content-block>
   </mu-popup>
 </template>
@@ -33,12 +33,6 @@ export default {
     showPopup: {
       type: Boolean,
       default: true
-    },
-    tableHead: {
-      type: Array
-    },
-    tableData: {
-      type: Array
     }
   },
   computed: {
@@ -57,7 +51,6 @@ export default {
 .modal-popup {
   max-width: 1000px;
   max-height: 800px;
-  /*overflow: auto;*/
 }
 .modal-popup .modal-popup-title {
   color: #474a4f;

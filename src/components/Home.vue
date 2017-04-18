@@ -3,7 +3,7 @@
   <div id="amapContainer"></div>
   <Dashboard />
   <InfoWindow :infoData="infoWindowData" />
-  <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar()" @close="hideSnackbar()"/>
+  <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="刷新页面" @actionClick="refresh()" @close="hideSnackbar()"/>
   <mu-popup position="top" :overlay="false" popupClass="popup-top" :open="topPopup">
     <p @click="closePopup()">{{recieveMsg}}</p>
   </mu-popup>
@@ -28,7 +28,7 @@ export default {
   },
   data () {
     return {
-      wsUri: 'wss://echo.websocket.org',
+      // wsUri: 'wss://echo.websocket.org',
       center: [118.722695, 32.033995],
       zoom: 12
     }
@@ -62,6 +62,9 @@ export default {
     ]),
     updateMessage (e) {
       this.$store.commit('updateMessage', e.target.value)
+    },
+    refresh () {
+      window.location.reload()
     }
   }
 }

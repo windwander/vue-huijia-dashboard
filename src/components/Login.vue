@@ -17,7 +17,6 @@ import { mapState } from 'vuex'
 import paper from 'muse-components/paper'
 import textField from 'muse-components/textField'
 import raisedButton from 'muse-components/raisedButton'
-// import icon from 'muse-components/icon';
 
 Vue.component(paper.name, paper)
 Vue.component(textField.name, textField)
@@ -41,7 +40,6 @@ export default {
         phone: this.phone,
         password: this.password
       })
-      // this.$store.dispatch('getOverallCount')
     }
   },
   mounted () {

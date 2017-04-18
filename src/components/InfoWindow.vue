@@ -14,7 +14,7 @@
           <mu-icon value="star"/>
           <mu-icon value="star"/>
         </div>
-        <mu-badge v-if="infoData.type === 'worker'" :content="infoData.star" primary/>
+        <mu-badge v-if="infoData.type === 'worker'" :content="String(infoData.star)" primary/>
         <div v-if="infoData.type === 'order'">订单编号：{{infoData.orderId}}</div>
       </div>
     </div>
@@ -44,9 +44,9 @@
     </div>
     <mu-divider />    
     <mu-text-field label="输入派单单号" labelFloat fullWidth class="send-order-input" v-model="orderId" />
-    <mu-raised-button :label="pushOrderText" class="send-order-btn" @click="pushOrder()" :disabled="isPushingOrder" secondary/>
+    <mu-raised-button label="派单" class="send-order-btn" @click="pushOrder()" secondary/>
     <transition name="order-table-slide">
-      <OrderTable v-if="showOrderTable" class="order-table" height="406px" :tableHead="tableHead" :tableData="tableData"/>
+      <OrderTable v-if="showOrderTable" class="order-table" height="406px"/>
     </transition>
     </div>
   </div>
@@ -100,30 +100,7 @@ export default {
   },
   data () {
     return {
-      orderId: '',
-      isPushingOrder: false,
-      pushOrderText: '派单',
-      orderCode: '',
-      // showOrderTable: false,
-      tableHead: ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型'],
-      tableData: [
-        {
-          orderId: 'W1702170012811',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        },
-        {
-          orderId: 'W1702170012812',
-          phone: '15951813408',
-          time: '2017/3/12 10:00',
-          location: '集庆门大街18号',
-          license: '苏A12883',
-          type: '五座轿车清洗加内饰清洗'
-        }
-      ]
+      orderId: ''
     }
   },
   computed: {
@@ -138,28 +115,6 @@ export default {
       'sendOrder'
     ]),
     pushOrder () {
-      // const root = this
-      // this.isPushingOrder = true
-      // this.pushOrderText = '派单中……'
-      // this.$ajax({
-      //   method: 'GET',
-      //   url: '/api/app/rest/a/area/city',
-      // }).then((res) => {
-      //   root.isPushingOrder = false
-      //   root.pushOrderText = '派单'
-      //   root.snackbarMsg = '派单成功'
-      //   root.showSnackbar()
-      //   root.topPopup = true
-      //   root.getMsg = JSON.stringify(res)
-      // }).catch((res) => {
-      //   root.isPushingOrder = false
-      //   root.pushOrderText = '派单'
-      //   root.snackbarMsg = '派单失败'
-      //   root.showSnackbar()
-      //   root.topPopup = true
-      //   root.getMsg = JSON.stringify(res)
-      // })
-      // this.$store.dispatch('wsSend', this.orderCode)
       const z = this
       const data = {
         orderId: z.orderId,
@@ -169,25 +124,12 @@ export default {
     },
     toggleOrderTable () {
       const z = this
-      // z.$store.commit('toggleOrderTable')
-      console.log(z.workerDetail)
       if (z.infoData.todoOrders > 0) {
-        z.$store.dispatch('getOrderList', {
+        z.getOrderList({
           orderStatus: '20',
           workerId: z.workerDetail.workerId
         })
       }
-      // if (this.showOrderTable) {
-      //   setTimeout(function () {
-      //     const offset = window.innerWidth - document.getElementsByClassName('order-table')[0].getBoundingClientRect().right
-      //     if (offset < 0) {
-      //       z.$store.commit('panBy', {
-      //         x: offset - 20,
-      //         y: 0
-      //       })
-      //     }
-      //   }, 100)
-      // }
     }
   }
 }

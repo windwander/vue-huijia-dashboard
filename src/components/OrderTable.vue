@@ -57,27 +57,6 @@ export default {
     height: {
       type: String,
       default: '480px'
-    // },
-    // tableHead: {
-    //   type: Array
-    // },
-    // tableData: {
-    //   type: Array
-    }
-  },
-  data () {
-    return {
-      // tableHead: ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型'],
-      // tableData: [
-      //   {
-      //     orderId: 'W1702170012817',
-      //     phone: '15951813408',
-      //     time: '2017/3/12 10:00',
-      //     location: '集庆门大街18号',
-      //     license: '苏A12883',
-      //     type: '五座轿车清洗加内饰清洗'
-      //   }
-      // ]
     }
   },
   computed: {

@@ -3,21 +3,15 @@ import axios from 'axios'
 import router from '../router'
 
 export const actions = {
-  initWebsocket ({commit}, uri) {
-    commit('initWebsocket', uri)
-  },
-  wsSend ({commit, state}, message) {
-    console.log(state.testWebsocket)
-    state.testWebsocket.send(message)
-    commit('wsSend', message)
-  },
-  // 设置点标记
+  /*
+    设置点标记
+  */
   mapPoint ({commit, dispatch, state}, obj) {
     let type = 'worker'
     let div = document.createElement('div')
     div.className = 'marker-div ' + type + '-' + obj.status
     div.style.backgroundImage = 'url("static/' + type + '-' + obj.status + '.png")'
-    if (!obj.workerId) {
+    if (!obj.workerId) { // 订单
       type = 'order'
       let status = 'normal'
       if (new Date() - obj.orderTime > 10 * 60 * 1000) {
@@ -27,12 +21,10 @@ export const actions = {
       div.style.backgroundImage = 'url("static/' + type + '-' + status + '.png")'
       div.dataset.orderId = obj.orderId
       div.dataset.orderPhone = obj.userPhone
-    } else {
+    } else { // 美车师
       div.dataset.workerId = obj.workerId
       div.dataset.workerPhone = obj.phone
     }
-    console.log([obj.lng || obj.longitude || 118.722695, obj.lat || obj.latitude || 32.033995])
-    // div.innerHTML = obj.currentOrders || 0
     const point = new AMap.Marker({
       map: state.amap,
       position: [obj.lng || obj.longitude || 118.722695, obj.lat || obj.latitude || 32.033995],
@@ -41,17 +33,16 @@ export const actions = {
       content: div  // 自定义点标记覆盖物内容
     })
     point.on('click', function () {
-      console.log(!obj.carInfo)
-      if (!obj.carInfo) {
+      if (!obj.carInfo) { // 美车师
         dispatch('getWorkerDetail', obj.workerId)
-      } else {
-        console.log('click')
-        console.log(obj)
+      } else { // 订单
         commit('openInfoWindow', obj)
       }
     })
-    state.points.push(point)
   },
+  /*
+    用户登录
+  */
   doLogin ({commit, state}, user) {
     axios.get('/api/v2/login?username=' + user.phone + '&password=' + user.password)
     .then(res => {
@@ -434,14 +425,18 @@ export const actions = {
   /* PUT /v/Dashboard/send
     派单
   */
-  sendOrder ({state}, data) {
+  sendOrder ({commit, state}, data) {
     axios.put('/api/v2/fworker/rest/v/Dashboard/send?orderId=' + data.orderId + '&workerId=' + data.workerId)
     .then(res => {
       console.log(res)
-      router.push('/')
+      state.snackbarMsg = '派单成功'
+      commit('showSnackbar')
+      // router.push('/')
     })
     .catch(error => {
       console.error(error)
+      state.snackbarMsg = '派单失败'
+      commit('showSnackbar')
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
       }
