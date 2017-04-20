@@ -137,7 +137,7 @@ function openInfoWindow (obj) {
     time = new Date(time)
     const month = time.getMonth() + 1
     const date = time.getDate()
-    const hours = time.getHours() % 12 === 0 ? 12 : time.getHours() > 12 ? '下午' + time.getHours() % 12 : '上午' + time.getHours()
+    const hours = time.getHours() % 12 === 0 ? 12 : (time.getHours() > 12 ? '下午' + time.getHours() % 12 : '上午' + time.getHours())
     const minutes = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()
     return month + '月' + date + '日 ' + hours + ':' + minutes
   }
@@ -145,7 +145,7 @@ function openInfoWindow (obj) {
     type: !obj.carInfo ? 'worker' : 'order',
     account: obj.phone || obj.userPhone || '',
     name: obj.userName || obj.name || '',
-    status: !obj.carInfo ? (status[obj.status] || status[0]) : (new Date() - obj.orderTime < 10 * 60 * 1000 ? orderStatus[0] : orderStatus[1]),
+    status: !obj.carInfo ? (status[obj.status] || status[0]) : (new Date() < obj.appointTime ? orderStatus[0] : orderStatus[1]),
     star: obj.score || '0',
     location: [obj.lng || obj.longitude || 118.722695, obj.lat || obj.latitude || 32.033995],
     address: obj.address || obj.location || '',
