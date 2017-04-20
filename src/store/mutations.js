@@ -133,6 +133,14 @@ function removeMarkers () {
 function openInfoWindow (obj) {
   const status = ['空闲', '服务中', '已下线']
   const orderStatus = ['未超时', '已超时']
+  function formatTimeString (time) {
+    time = new Date(time)
+    const month = time.getMonth() + 1
+    const date = time.getDate()
+    const hours = time.getHours() % 12 === 0 ? 12 : time.getHours() > 12 ? '下午' + time.getHours() % 12 : '上午' + time.getHours()
+    const minutes = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()
+    return month + '月' + date + '日 ' + hours + ':' + minutes
+  }
   state.infoWindowData = Object.assign({}, {
     type: !obj.carInfo ? 'worker' : 'order',
     account: obj.phone || obj.userPhone || '',
@@ -144,7 +152,7 @@ function openInfoWindow (obj) {
     currentOrders: obj.taskOverCount || 0,
     totalOrders: obj.orderCount || 0,
     todoOrders: obj.toBeAgentCount || 0,
-    time: obj.timeRequire || '',
+    time: formatTimeString(obj.appointTime) || obj.appointTime || obj.timeRequire || '',
     orderId: obj.orderId || '',
     license: obj.carInfo || '',
     orderType: obj.productName || '',

@@ -14,7 +14,7 @@ export const actions = {
     if (!obj.workerId) { // 订单
       type = 'order'
       let status = 'normal'
-      if (new Date() - obj.orderTime > 10 * 60 * 1000) {
+      if (new Date() > obj.appointTime) {
         status = 'urgent'
       }
       div.className = 'marker-div order-' + status
@@ -132,13 +132,21 @@ export const actions = {
     .then(res => {
       // 订单状态 当日待接单订单-10 美车师待服务订单-20
       console.log(res)
+      function formatTimeString (time) {
+        time = new Date(time)
+        const month = time.getMonth() + 1
+        const date = time.getDate()
+        const hours = time.getHours() % 12 === 0 ? 12 : time.getHours() > 12 ? '下午' + time.getHours() % 12 : '上午' + time.getHours()
+        const minutes = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()
+        return month + '月' + date + '日 ' + hours + ':' + minutes
+      }
       if (data.orderStatus === '10') {
         state.tableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
         state.tableData = res.data.map(o => {
           const order = {
             'orderId': o.orderId,
             'userPhone': o.userPhone,
-            'timeRequire': o.timeRequire,
+            'appointTime': formatTimeString(o.appointTime),
             'location': o.location,
             'carInfo': o.carInfo,
             'productName': o.productName
@@ -153,7 +161,7 @@ export const actions = {
           const order = {
             'orderId': o.orderId,
             'userPhone': o.userPhone,
-            'timeRequire': o.timeRequire,
+            'appointTime': formatTimeString(o.appointTime),
             'location': o.location,
             'carInfo': o.carInfo,
             'productName': o.productName
