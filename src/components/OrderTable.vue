@@ -11,6 +11,9 @@
           <mu-td v-for="(value, key) in item" :key="key" :title="value">{{value}}</mu-td>
         </mu-tr>
       </mu-tbody>
+      <mu-tfoot v-if="todayOrdersTotal/todayOrdersPageSize > 1" slot="footer" class="table-footer-pagination">
+        <mu-pagination :total="todayOrdersTotal" :current="todayOrdersPage" :pageSize="todayOrdersPageSize" @pageChange="pageChange" />
+      </mu-tfoot>
     </mu-table>
   </div>
 </template>
@@ -19,7 +22,9 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import {table, thead, tbody, tfoot, tr, th, td} from 'muse-components/table'
+import pagination from 'muse-components/pagination'
 
+Vue.component(pagination.name, pagination)
 Vue.component(table.name, table)
 Vue.component(thead.name, thead)
 Vue.component(tbody.name, tbody)
@@ -29,6 +34,9 @@ Vue.component(th.name, th)
 Vue.component(td.name, td)
 export default {
   name: 'OrderTable',
+  components: {
+    pagination
+  },
   props: {
     fixedHeader: {
       type: Boolean,
@@ -62,8 +70,16 @@ export default {
   computed: {
     ...mapState([
       'tableHead',
-      'tableData'
+      'tableData',
+      'todayOrdersPage',
+      'todayOrdersPageSize',
+      'todayOrdersTotal'
     ])
+  },
+  methods: {
+    pageChange (newIndex) {
+      this.$store.commit('changePage', newIndex)
+    }
   }
 }
 </script>
@@ -79,5 +95,12 @@ export default {
 .order-table .mu-td {
   padding: 1em;
   white-space: pre-wrap;
+}
+.table-footer-pagination {
+  display: block;
+  padding: 1em;
+}
+.table-footer-pagination .mu-pagination {
+  justify-content: center;
 }
 </style>

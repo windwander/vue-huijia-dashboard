@@ -14,12 +14,12 @@
   </div>
   <div id="orderStatusBox">
     <status-box icon="assignment" title="订单状况" arrowPosition="right" />
-    <status-box :number="overallCount.orderCount" title="当日订单" direction="row" />
+    <status-box :number="overallCount.orderCount" title="当日订单" direction="row" clickable="clickable" @click="showModal('当日订单', 'order', 'all')" />
     <status-box :number="overallCount.toBeServiceCount" title="待服务订单" direction="row" />
     <status-box :number="overallCount.inServiceCount" title="服务中订单" direction="row" />
     <status-box :number="overallCount.cancelCount" title="已取消订单" direction="row" />
     <status-box :number="overallCount.payCount" title="已支付订单" direction="row" />
-    <status-box :number="overallCount.toBeAcceptCount" title="待接单订单" direction="row" clickable="clickable" @click="showModal('待接单订单', 'order')" />
+    <status-box :number="overallCount.toBeAcceptCount" title="待接单订单" direction="row" clickable="clickable" @click="showModal('待接单订单', 'order', 'wait')" />
   </div>
   <div id="serviceStatusBox">
     <status-box icon="people" title="美车师" arrowPosition="bottom" />
@@ -28,7 +28,7 @@
     <status-box :number="overallCount.busyWorkerCount" title="忙碌人数" direction="column" />
     <status-box :number="overallCount.freeWorkerCount" title="空闲人数" direction="column" />
   </div>
-  <Modal :title="modalTitle" :tableHead="tableHead" :tableData="tableData"/>
+  <Modal :title="modalTitle" />
 </div>
 </template>
 
@@ -75,7 +75,9 @@ export default {
       'tableHead',
       'tableData',
       'workers',
-      'orders'
+      'orders',
+      'todayOrdersPage',
+      'todayOrdersPageSize'
     ])
   },
   mounted () {
@@ -115,13 +117,21 @@ export default {
       'getOrders',
       'doSearch'
     ]),
-    showModal (title, type) {
+    showModal (title, type, sub) {
       const z = this
       z.modalTitle = title
-      if (type === 'order' && z.overallCount.toBeAcceptCount > 0) {
-        z.getOrderList({
-          orderStatus: '10'
-        })
+      if (type === 'order') {
+        if (sub === 'wait' && z.overallCount.toBeAcceptCount > 0) {
+          z.getOrderList({
+            orderStatus: '10'
+          })
+        } else if (sub === 'all') {
+          z.getOrderList({
+            orderStatus: '',
+            page: z.todayOrdersPage - 1,
+            size: z.todayOrdersPageSize
+          })
+        }
       } else if (type === 'people' && z.overallCount.outWorkerCount > 0) {
         z.getWorkerList()
       }
@@ -138,6 +148,11 @@ export default {
       if (t.input !== '') {
         z.doSearch(t)
       }
+    }
+  },
+  watch: {
+    todayOrdersPage: function () {
+      this.showModal('当日订单', 'order', 'all')
     }
   }
 }

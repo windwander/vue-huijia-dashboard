@@ -124,11 +124,19 @@ export const actions = {
   }
   */
   getOrderList ({commit, state}, data) {
-    let workerIdString = ''
-    if (data.orderStatus === '20') {
-      workerIdString = '&workerId=' + data.workerId
+    let queryString = ''
+    if (data.orderStatus) {
+      if (data.orderStatus === '10') {
+        queryString = 'orderList?orderStatus=10'
+      } else if (data.orderStatus === '20') {
+        queryString = 'orderList?orderStatus=20&workerId=' + data.workerId
+      }
+    } else if (data.orderStatus === '') {
+      let page = data.page || 0
+      let size = data.size || 10
+      queryString = 'ordersPage?page=' + page + '&size=' + size + '&sort=APPOINT_TIME,desc'
     }
-    axios.get('/api/v2/fworker/rest/v/Dashboard/orderList?orderStatus=' + data.orderStatus + workerIdString)
+    axios.get('/api/v2/fworker/rest/v/Dashboard/' + queryString)
     .then(res => {
       // 订单状态 当日待接单订单-10 美车师待服务订单-20
       console.log(res)
@@ -180,6 +188,21 @@ export const actions = {
             }
           }, 100)
         }
+      } else if (data.orderStatus === '') {
+        state.tableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
+        state.tableData = res.data.content.map(o => {
+          const order = {
+            'orderId': o.orderId,
+            'userPhone': o.userPhone,
+            'appointTime': formatTimeString(o.appointTime),
+            'location': o.location,
+            'carInfo': o.carInfo,
+            'productName': o.productName
+          }
+          return order
+        })
+        state.todayOrdersTotal = res.data.totalElements
+        commit('showPopup', 'order')
       }
     })
     .catch(error => {

@@ -18,7 +18,10 @@ export const state = {
   overallCount: {},
   tableHead: [],
   tableData: [],
-  errorLogin: {}
+  errorLogin: {},
+  todayOrdersPage: 1,
+  todayOrdersPageSize: 10,
+  todayOrdersTotal: 0
 }
 
 export const mutations = {
@@ -93,12 +96,16 @@ export const mutations = {
   },
   hidePopup () {
     state.modalPopup = false
+    state.todayOrdersTotal = 0
   },
   panBy (state, offset) {
     state.amap.panBy(offset.x, offset.y)
   },
   toggleOrderTable () {
     state.showOrderTable = !state.showOrderTable
+  },
+  changePage (state, newIndex) {
+    state.todayOrdersPage = newIndex
   }
 }
 // 设置点标记
