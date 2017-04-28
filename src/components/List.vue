@@ -45,10 +45,12 @@ export default {
     WorkerTable
   },
   data () {
+    const dateYear = new Date().getFullYear().toString()
+    const dateMonth = new Date().getMonth() + 1
     return {
       city: '320100',
-      year: '2017',
-      month: '04'
+      year: dateYear,
+      month: dateMonth < 10 ? ('0' + dateMonth) : dateMonth
     }
   },
   computed: {

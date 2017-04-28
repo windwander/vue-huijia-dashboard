@@ -199,6 +199,7 @@ export default {
   height: 2em;
   margin: 0;
   display: none;
+  white-space: normal;
 }
 .worker-table .show-save-btn .save-btn {
   display: inline-block;
