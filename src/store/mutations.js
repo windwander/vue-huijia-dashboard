@@ -21,7 +21,8 @@ export const state = {
   errorLogin: {},
   todayOrdersPage: 1,
   todayOrdersPageSize: 10,
-  todayOrdersTotal: 0
+  todayOrdersTotal: 0,
+  preSaveWorkerMonthList: {}
 }
 
 export const mutations = {

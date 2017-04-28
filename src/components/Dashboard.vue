@@ -165,7 +165,7 @@ export default {
 #headSearchBox {
   position: absolute;
   top: 10px;
-  left: 10px;
+  left: 80px;
   z-index: 100;
   display: flex;
 }

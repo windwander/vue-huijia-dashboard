@@ -472,5 +472,64 @@ export const actions = {
         router.push('login')
       }
     })
+  },
+  /*
+    POST 获取美车师结算设置列表
+    /fworker/rest/a/getPreSaveWorkerMonthList?workMonth=2017-04&cityCode=320100
+  */
+  getPreSaveWorkerMonthList ({commit, state}, data) {
+    axios.post('/api/v2/fworker/rest/a/getPreSaveWorkerMonthList?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
+    .then(res => {
+      console.log(res)
+      state.preSaveWorkerMonthList = res.data
+      state.tableHead = ['姓名', '美车师账号', '上岗时间', '职务', '本月工作天数', '伯乐奖', '培训补贴天数', '延迟履约', '投诉追责', '费用骗取', '培训费用', '延迟接单', '服务不规范', '转单延迟1', '转单延迟2', '操作']
+      state.tableData = res.data.map(w => {
+        const worker = {
+          'workerId': w.workerId,
+          'workerName': w.workerName,
+          'phone': w.phone,
+          'startDate': w.startDate,
+          'position': w.position,
+          'workDays': w.workDays,
+          'pearlWards': w.pearlWards,
+          'trainAllowance': w.trainAllowance,
+          'delayAgreement': w.delayAgreement,
+          'complaint': w.complaint,
+          'cheat': w.cheat,
+          'train': w.train,
+          'delayTake': w.delayTake,
+          'nonstandard': w.nonstandard,
+          'delayTurnFrom': w.delayTurnFrom,
+          'delayTurnTo': w.delayTurnTo
+        }
+        return worker
+      })
+      // router.push('/')
+    })
+    .catch(error => {
+      console.error(error)
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* POST /a/preSaveWorkerMonth
+    美车师奖惩结算预保存
+  */
+  preSaveWorkerMonth ({commit, state}, data) {
+    axios.post('/api/v2/fworker/rest/a/preSaveWorkerMonth', data)
+    .then(res => {
+      console.log(res)
+      state.snackbarMsg = '保存成功'
+      commit('showSnackbar')
+    })
+    .catch(error => {
+      console.error(error)
+      state.snackbarMsg = '保存失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
   }
 }

@@ -1,5 +1,6 @@
 <template>
 <div class="home-div">
+  <mainMenu />
   <div id="amapContainer"></div>
   <Dashboard />
   <InfoWindow :infoData="infoWindowData" />
@@ -15,6 +16,7 @@ import Vue from 'vue'
 import { mapState, mapMutations } from 'vuex'
 import Dashboard from './Dashboard'
 import InfoWindow from './InfoWindow'
+import mainMenu from './units/mainMenu'
 import snackbar from 'muse-components/snackbar'
 import popup from 'muse-components/popup'
 
@@ -24,7 +26,8 @@ export default {
   name: 'Home',
   components: {
     Dashboard,
-    InfoWindow
+    InfoWindow,
+    mainMenu
   },
   data () {
     return {

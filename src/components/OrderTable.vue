@@ -89,8 +89,12 @@ export default {
   background-color: #eee;
 }
 .table-header .mu-th {
+  padding: 0 1em;
   color: #333;
   border-bottom: 1px solid #c7c7c7;
+}
+.order-table .mu-th-wrapper {
+  white-space: pre-wrap;
 }
 .order-table .mu-td {
   padding: 1em;
