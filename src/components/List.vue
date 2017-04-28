@@ -20,6 +20,10 @@
         <mu-menu-item v-for="n in 12" :key="n" :value="n < 10 ? ('0' + n) : n" :title="n + '月'" />
       </mu-dropDown-menu>
     </div>
+    <div class="top-btn" slot="right">
+      <mu-raised-button label="预保存" icon="save" class="raised-button" @click="topBtnSave" primary/>
+      <mu-raised-button label="导出表格" icon="print" class="raised-button" @click="topBtnPrint" secondary style="display: none;"/>
+    </div>
   </mu-appbar>
   <WorkerTable height="auto" />
   <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar"/>
@@ -34,7 +38,9 @@ import WorkerTable from './WorkerTable'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
+import raisedButton from 'muse-components/raisedButton'
 
+Vue.component(raisedButton.name, raisedButton)
 Vue.component(snackbar.name, snackbar)
 Vue.component(dropDownMenu.name, dropDownMenu)
 Vue.component(menuItem.name, menuItem)
@@ -67,7 +73,9 @@ export default {
       'hideSnackbar'
     ]),
     ...mapActions([
-      'getPreSaveWorkerMonthList'
+      'getPreSaveWorkerMonthList',
+      'doAddBonusPenalty',
+      'exportWorkMonth'
     ]),
     getData () {
       this.getPreSaveWorkerMonthList({
@@ -86,6 +94,18 @@ export default {
     handleChangeMonth (value) {
       this.month = value
       this.getData()
+    },
+    topBtnSave () {
+      this.doAddBonusPenalty({
+        cityCode: this.city,
+        workMonth: this.year + '-' + this.month
+      })
+    },
+    topBtnPrint () {
+      this.exportWorkMonth({
+        cityCode: this.city,
+        workMonth: this.year + '-' + this.month
+      })
     }
   }
 }

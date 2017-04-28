@@ -54,7 +54,7 @@ export const actions = {
       }
     })
     .catch(error => {
-      console.error(error)
+      console.dir(error)
     })
   },
   /* 视图总情况查询
@@ -206,7 +206,7 @@ export const actions = {
       }
     })
     .catch(error => {
-      console.error(error)
+      console.dir(error)
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
       }
@@ -259,7 +259,7 @@ export const actions = {
       state.orders.map(o => dispatch('mapPoint', o))
     })
     .catch(error => {
-      console.error(error)
+      console.dir(error)
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
       }
@@ -290,7 +290,7 @@ export const actions = {
       commit('openInfoWindow', state.workerDetail)
     })
     .catch(error => {
-      console.error(error)
+      console.dir(error)
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
       }
@@ -337,7 +337,7 @@ export const actions = {
       commit('showPopup', 'people')
     })
     .catch(error => {
-      console.error(error)
+      console.dir(error)
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
       }
@@ -367,7 +367,7 @@ export const actions = {
       state.workers.map(w => dispatch('mapPoint', w))
     })
     .catch(error => {
-      console.error(error)
+      console.dir(error)
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
       }
@@ -447,7 +447,7 @@ export const actions = {
       }
     })
     .catch(error => {
-      console.error(error)
+      console.dir(error)
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
       }
@@ -465,7 +465,7 @@ export const actions = {
       // router.push('/')
     })
     .catch(error => {
-      console.error(error)
+      console.dir(error)
       state.snackbarMsg = '派单失败'
       commit('showSnackbar')
       if (error.toString().indexOf('401') > -1) {
@@ -507,7 +507,7 @@ export const actions = {
       // router.push('/')
     })
     .catch(error => {
-      console.error(error)
+      console.dir(error)
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
       }
@@ -524,8 +524,53 @@ export const actions = {
       commit('showSnackbar')
     })
     .catch(error => {
-      console.error(error)
+      console.dir(error)
       state.snackbarMsg = '保存失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* POST /a/doAddBonusPenalty
+    美车师结算入库
+   */
+  doAddBonusPenalty ({commit, state}, data) {
+    axios.post('/api/v2/fworker/rest/a/doAddBonusPenalty?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
+    .then(res => {
+      console.log(res)
+      state.snackbarMsg = '结算入库成功'
+      commit('showSnackbar')
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = (error.response.data && error.response.data.message) || '结算入库失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /a/exportWorkMonth
+    导出奖惩月结算预存信息
+  */
+  exportWorkMonth ({commit, state}, data) {
+    // let url = ('/api/v2/fworker/rest/a/exportWorkMonth?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
+    // window.open(url, '_blank')
+    axios.get('/api/v2/fworker/rest/a/exportWorkMonth?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode, {
+      responseType: 'document'
+    })
+    .then(res => {
+      console.log(res)
+      // let blob = new Blob([res.data], { type: 'application/excel' })
+      // const url = window.URL.createObjectURL(blob)
+      // window.open(url)
+      state.snackbarMsg = '导出'
+      commit('showSnackbar')
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = '导出失败'
       commit('showSnackbar')
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
