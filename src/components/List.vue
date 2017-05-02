@@ -23,7 +23,7 @@
       </mu-dropDown-menu>
     </div>
     <div class="top-btn" slot="right">
-      <mu-raised-button :label="bonusPenaltyFinished ? '当月已结算' : '预保存结算'" icon="save" class="raised-button" @click="topBtnSave" primary :disabled="bonusPenaltyFinished"/>
+      <mu-raised-button :label="bonusPenaltyFinished ? '当月已结算' : '确认生成结算'" icon="save" class="raised-button" @click="topBtnSave" primary :disabled="bonusPenaltyFinished"/>
       <mu-raised-button label="导出表格" icon="print" class="raised-button" @click="topBtnPrint" secondary/>
     </div>
   </mu-appbar>
