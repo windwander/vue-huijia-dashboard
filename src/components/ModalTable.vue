@@ -3,11 +3,11 @@
     <mu-table :fixedHeader="fixedHeader" :fixedFooter="fixedFooter" :height="height" :enableSelectAll="enableSelectAll" :multiSelectable="multiSelectable" :selectable="selectable" :showCheckbox="showCheckbox">
       <mu-thead slot="header" class="table-header">
         <mu-tr>
-          <mu-th v-for="item,index in tableHead" :key="'order-table-head' + index" :title="item">{{item}}</mu-th>
+          <mu-th v-for="item,index in modalTableHead" :key="'order-table-head' + index" :title="item">{{item}}</mu-th>
         </mu-tr>
       </mu-thead>
       <mu-tbody>
-        <mu-tr v-for="item,index in tableData" :key="item.orderId" :selected="item.selected">
+        <mu-tr v-for="item,index in modalTableData" :key="item.orderId" :selected="item.selected">
           <mu-td v-for="(value, key) in item" :key="key" :title="value">{{value}}</mu-td>
         </mu-tr>
       </mu-tbody>
@@ -33,7 +33,7 @@ Vue.component(tr.name, tr)
 Vue.component(th.name, th)
 Vue.component(td.name, td)
 export default {
-  name: 'OrderTable',
+  name: 'ModalTable',
   components: {
     pagination
   },
@@ -69,8 +69,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'tableHead',
-      'tableData',
+      'modalTableHead',
+      'modalTableData',
       'todayOrdersPage',
       'todayOrdersPageSize',
       'todayOrdersTotal'

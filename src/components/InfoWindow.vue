@@ -40,13 +40,13 @@
     <div class="info-window-flex">
       <status-box :number="infoData.totalOrders" title="总订单量" direction="row" />
       <status-box :number="infoData.currentOrders" title="已完成" direction="row" />
-      <status-box :number="infoData.todoOrders" title="待服务" direction="row" clickable="clickable" @click="toggleOrderTable()" />
+      <status-box :number="infoData.todoOrders" title="待服务" direction="row" clickable="clickable" @click="toggleModalTable()" />
     </div>
     <mu-divider />    
     <mu-text-field label="输入派单单号" labelFloat fullWidth class="send-order-input" v-model="orderId" />
     <mu-raised-button label="派单" class="send-order-btn" @click="pushOrder()" secondary/>
     <transition name="order-table-slide">
-      <OrderTable v-if="showOrderTable" class="order-table" height="406px"/>
+      <ModalTable v-if="showModalTable" class="order-table" height="406px"/>
     </transition>
     </div>
   </div>
@@ -62,7 +62,7 @@ import divider from 'muse-components/divider'
 import {list, listItem} from 'muse-components/list'
 import avatar from './units/avatar'
 import statusBox from './units/statusBox'
-import OrderTable from './OrderTable'
+import ModalTable from './ModalTable'
 
 Vue.component(icon.name, icon)
 Vue.component(raisedButton.name, raisedButton)
@@ -77,7 +77,7 @@ export default {
   components: {
     avatar,
     statusBox,
-    OrderTable
+    ModalTable
   },
   props: {
     infoData: {
@@ -105,7 +105,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'showOrderTable',
+      'showModalTable',
       'workerDetail'
     ])
   },
@@ -122,7 +122,7 @@ export default {
       }
       z.sendOrder(data)
     },
-    toggleOrderTable () {
+    toggleModalTable () {
       const z = this
       if (z.infoData.todoOrders > 0) {
         z.getOrderList({

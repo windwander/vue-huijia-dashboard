@@ -7,8 +7,8 @@
       <mu-flat-button icon="search" class="search-button" backgroundColor="#F05B47" color="#FFF" @click="search()"/>
     </div>
     <div class="search-city">
-      <mu-select-field value="1" class="search-city-select">
-        <mu-menu-item value="1" title="南京"/>
+      <mu-select-field v-if="cities.length" :value="city" @change="handleChangeCity" class="search-city-select">
+        <mu-menu-item v-for="item in cities" :key="item.cityId" :value="item.cityId" :title="item.cityName"/>
       </mu-select-field>
     </div>
   </div>
@@ -63,6 +63,7 @@ export default {
   },
   data () {
     return {
+      city: 320100,
       searchString: '',
       modalTitle: ''
     }
@@ -72,16 +73,18 @@ export default {
       'overallCount',
       'todayOrderList',
       'offlineWorkerList',
-      'tableHead',
-      'tableData',
+      'workerTableHead',
+      'workerTableData',
       'workers',
       'orders',
       'todayOrdersPage',
-      'todayOrdersPageSize'
+      'todayOrdersPageSize',
+      'cities'
     ])
   },
   mounted () {
     const z = this
+    z.getCities()
     const update = () => {
       // 获取视图总情况查询
       z.getOverallCount()
@@ -115,7 +118,8 @@ export default {
       'getWorkerList',
       'getWorkers',
       'getOrders',
-      'doSearch'
+      'doSearch',
+      'getCities'
     ]),
     showModal (title, type, sub) {
       const z = this
@@ -125,7 +129,7 @@ export default {
           z.getOrderList({
             orderStatus: '10'
           })
-        } else if (sub === 'all') {
+        } else if (sub === 'all' && z.overallCount.orderCount > 0) {
           z.getOrderList({
             orderStatus: '',
             page: z.todayOrdersPage - 1,
@@ -148,6 +152,9 @@ export default {
       if (t.input !== '') {
         z.doSearch(t)
       }
+    },
+    handleChangeCity () {
+      console.log(this.city)
     }
   },
   watch: {

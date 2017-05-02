@@ -13,16 +13,20 @@ export const state = {
   recieveMsg: '',
   modalPopup: false,
   showOrderTable: false,
+  cities: [],
   workers: [],
   orders: [],
   overallCount: {},
-  tableHead: [],
-  tableData: [],
+  workerTableHead: [],
+  workerTableData: [],
+  modalTableHead: [],
+  modalTableData: [],
   errorLogin: {},
   todayOrdersPage: 1,
   todayOrdersPageSize: 10,
   todayOrdersTotal: 0,
-  preSaveWorkerMonthList: {}
+  preSaveWorkerMonthList: {},
+  bonusPenaltyFinished: false
 }
 
 export const mutations = {
@@ -107,6 +111,9 @@ export const mutations = {
   },
   changePage (state, newIndex) {
     state.todayOrdersPage = newIndex
+  },
+  hasDoneBonusPenalty (state, bool) {
+    state.bonusPenaltyFinished = bool
   }
 }
 // 设置点标记

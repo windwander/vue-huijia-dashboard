@@ -3,12 +3,12 @@
     <mu-table :fixedHeader="fixedHeader" :fixedFooter="fixedFooter" :height="height" :enableSelectAll="enableSelectAll" :multiSelectable="multiSelectable" :selectable="selectable" :showCheckbox="showCheckbox" @rowClick="rowClick">
       <mu-thead slot="header" class="table-header">
         <mu-tr>
-          <mu-th v-for="item,index in tableHead" :key="'worker-table-head' + index" :class="'worker-td-'+ index" :title="item">{{item}}</mu-th>
+          <mu-th v-for="item,index in workerTableHead" :key="'worker-table-head' + index" :class="'worker-td-'+ index" :title="item">{{item}}</mu-th>
         </mu-tr>
       </mu-thead>
       <mu-tbody>
-        <mu-tr v-for="item,index in tableData" :key="item.workerId" :data-id="item.workerId" v-bind:class="(Number(selectedId) === item.workerId) ? 'show-save-btn' : ''">
-          <mu-td v-for="(value, key, index) in item" :key="key" :title="(index > 0) && tableHead[--index] + ': ' + value" :class="'worker-td-'+ (index - 1)">
+        <mu-tr v-for="item,index in workerTableData" :key="item.workerId" :data-id="item.workerId" v-bind:class="(Number(selectedId) === item.workerId) ? 'show-save-btn' : ''">
+          <mu-td v-for="(value, key, index) in item" :key="key" :title="(index > 0) && workerTableHead[--index] + ': ' + value" :class="'worker-td-'+ (index - 1)">
             <mu-select-field v-if="key==='position'" :value="value" :labelFocusClass="['label-foucs']">
               <mu-menu-item key="1" value="1" title="实习美车师" />
               <mu-menu-item key="2" value="2" title="正式美车师" />
@@ -22,11 +22,13 @@
             <div v-else :name="key" class="td-text">{{value}}</div>
           </mu-td>
           <mu-td>
-            <mu-raised-button label="保存" class="save-btn" secondary ref="saveBtn" @click="saveRow"/>
+            <mu-raised-button v-if="!bonusPenaltyFinished" label="保存" class="save-btn" secondary ref="saveBtn" @click="saveRow"/>
+            <mu-raised-button v-else label="查看" class="detail-btn" secondary ref="detailBtn" @click="getDetail(item.workerId, item.workerName)"/>
           </mu-td>
         </mu-tr>
       </mu-tbody>
     </mu-table>
+    <Modal :title="modalTitle" :modalTitleBtn="true" modalTitleBtnIcon="print" :modalTitleBtnClick="printWorkerDetail"/>
   </div>
 </template>
 
@@ -37,6 +39,7 @@ import {table, thead, tbody, tfoot, tr, th, td} from 'muse-components/table'
 import pagination from 'muse-components/pagination'
 import raisedButton from 'muse-components/raisedButton'
 import datePicker from 'muse-components/datePicker'
+import Modal from './Modal'
 
 Vue.component(datePicker.name, datePicker)
 Vue.component(raisedButton.name, raisedButton)
@@ -51,7 +54,8 @@ Vue.component(td.name, td)
 export default {
   name: 'workerTable',
   components: {
-    pagination
+    pagination,
+    Modal
   },
   props: {
     fixedHeader: {
@@ -86,19 +90,26 @@ export default {
   data () {
     return {
       row: {},
-      selectedId: ''
+      selectedId: '',
+      modalTitle: '',
+      workerName: '',
+      workerId: '',
+      workMonth: ''
     }
   },
   computed: {
     ...mapState([
-      'tableHead',
-      'tableData',
-      'preSaveWorkerMonthList'
+      'workerTableHead',
+      'workerTableData',
+      'preSaveWorkerMonthList',
+      'bonusPenaltyFinished'
     ])
   },
   methods: {
     ...mapActions([
-      'preSaveWorkerMonth'
+      'preSaveWorkerMonth',
+      'getWorkerBonusPenaltyByMonth',
+      'exportBonusPenalty'
     ]),
     rowClick: function (index, tr) {
       this.row = tr
@@ -130,19 +141,42 @@ export default {
       })
       saveData = Object.assign({}, originData, newObj)
       z.preSaveWorkerMonth(saveData)
+    },
+    getDetail: function (workerId, workerName) {
+      const z = this
+      z.modalTitle = workerName + ' 美车师的结算项详情'
+      z.workerName = workerName
+      z.workerId = workerId
+      z.workMonth = z.preSaveWorkerMonthList[0].workMonth
+      const getData = {
+        workerId: z.workerId,
+        workMonth: z.workMonth
+      }
+      z.getWorkerBonusPenaltyByMonth(getData)
+    },
+    printWorkerDetail: function () {
+      const z = this
+      const getData = {
+        workerName: z.workerName,
+        workerId: z.workerId,
+        workMonth: z.workMonth,
+        cityCode: '320100'
+      }
+      z.exportBonusPenalty(getData)
     }
   }
 }
 </script>
 
 <style lang="css">
-.table-header {
+.worker-table .table-header {
   background-color: #eee;
 }
-.table-header .mu-th {
-  padding: 0 2em;
+.worker-table .table-header .mu-th {
+  padding: 0;
   color: #333;
   border-bottom: 1px solid #c7c7c7;
+  text-align: center;
 }
 .worker-table .mu-th-wrapper {
   white-space: pre-wrap;
@@ -152,11 +186,11 @@ export default {
   white-space: pre-wrap;
   line-height: .01;
 }
-.table-footer-pagination {
+.worker-table .table-footer-pagination {
   display: block;
   padding: 1em;
 }
-.table-footer-pagination .mu-pagination {
+.worker-table .table-footer-pagination .mu-pagination {
   justify-content: center;
 }
 .worker-table .mu-text-field {
@@ -193,13 +227,16 @@ export default {
 .worker-table .worker-td-3 {
   width: 10em;
 }
-.worker-table .save-btn {
-  min-width: 3em;
-  line-height: 2em;
+.worker-table .save-btn, .worker-table .detail-btn {
+  min-width: 60px;
+  line-height: 2;
   height: 2em;
+  font-size: 14px;
   margin: 0;
-  display: none;
   white-space: normal;
+}
+.worker-table .save-btn {
+  display: none;
 }
 .worker-table .show-save-btn .save-btn {
   display: inline-block;

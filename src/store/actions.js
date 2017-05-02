@@ -149,8 +149,8 @@ export const actions = {
         return month + '月' + date + '日 ' + hours + ':' + minutes
       }
       if (data.orderStatus === '10') {
-        state.tableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
-        state.tableData = res.data.map(o => {
+        state.modalTableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
+        state.modalTableData = res.data.map(o => {
           const order = {
             'orderId': o.orderId,
             'userPhone': o.userPhone,
@@ -164,8 +164,8 @@ export const actions = {
         commit('showPopup', 'order')
       } else if (data.orderStatus === '20') {
         state.workerOrderList = res.data
-        state.tableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
-        state.tableData = res.data.map(o => {
+        state.modalTableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
+        state.modalTableData = res.data.map(o => {
           const order = {
             'orderId': o.orderId,
             'userPhone': o.userPhone,
@@ -189,8 +189,8 @@ export const actions = {
           }, 100)
         }
       } else if (data.orderStatus === '') {
-        state.tableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
-        state.tableData = res.data.content.map(o => {
+        state.modalTableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
+        state.modalTableData = res.data.content.map(o => {
           const order = {
             'orderId': o.orderId,
             'userPhone': o.userPhone,
@@ -325,8 +325,8 @@ export const actions = {
     axios.get('/api/v2/fworker/rest/v/Dashboard/workerList')
     .then(res => {
       console.log(res)
-      state.tableHead = ['姓名', '联系方式', '所属小组']
-      state.tableData = res.data.map(p => {
+      state.modalTableHead = ['姓名', '联系方式', '所属小组']
+      state.modalTableData = res.data.map(p => {
         const people = {
           'name': p.name,
           'phone': p.phone,
@@ -482,8 +482,8 @@ export const actions = {
     .then(res => {
       console.log(res)
       state.preSaveWorkerMonthList = res.data
-      state.tableHead = ['姓名', '美车师账号', '上岗时间', '职务', '本月工作天数', '伯乐奖', '培训补贴天数', '延迟履约', '投诉追责', '费用骗取', '培训费用', '延迟接单', '服务不规范', '转单延迟1', '转单延迟2', '操作']
-      state.tableData = res.data.map(w => {
+      state.workerTableHead = ['姓名', '美车师账号', '上岗时间', '职务', '本月工作天数', '伯乐奖', '培训补贴天数', '延迟履约', '投诉追责', '费用骗取', '培训费用', '延迟接单', '服务不规范', '转单延迟1', '转单延迟2', '操作']
+      state.workerTableData = res.data.map(w => {
         const worker = {
           'workerId': w.workerId,
           'workerName': w.workerName,
@@ -555,23 +555,146 @@ export const actions = {
     导出奖惩月结算预存信息
   */
   exportWorkMonth ({commit, state}, data) {
-    // let url = ('/api/v2/fworker/rest/a/exportWorkMonth?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
-    // window.open(url, '_blank')
     axios.get('/api/v2/fworker/rest/a/exportWorkMonth?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode, {
-      responseType: 'document'
+      responseType: 'blob'
     })
     .then(res => {
       console.log(res)
-      // let blob = new Blob([res.data], { type: 'application/excel' })
-      // const url = window.URL.createObjectURL(blob)
-      // window.open(url)
-      state.snackbarMsg = '导出'
+      const filename = '美车师结算项设置(' + data.workMonth + ')'
+      const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        // IE workaround for "HTML7007: One or more blob URLs were
+        // revoked by closing the blob for which they were created.
+        // These URLs will no longer resolve as the data backing
+        // the URL has been freed."
+        window.navigator.msSaveBlob(blob, filename)
+      } else {
+        const blobURL = window.URL.createObjectURL(blob)
+        let tempLink = document.createElement('a')
+        tempLink.href = blobURL
+        tempLink.setAttribute('download', filename)
+        tempLink.setAttribute('target', '_blank')
+        document.body.appendChild(tempLink)
+        tempLink.click()
+        document.body.removeChild(tempLink)
+      }
+      state.snackbarMsg = '导出成功'
       commit('showSnackbar')
     })
     .catch(error => {
       console.dir(error)
       state.snackbarMsg = '导出失败'
       commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* POST /a/hasDoneBonusPenalty
+    是否已完成当月奖惩结算
+   */
+  hasDoneBonusPenalty ({commit, state}, data) {
+    axios.post('/api/v2/fworker/rest/a/hasDoneBonusPenalty?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
+    .then(res => {
+      console.log(res)
+      commit('hasDoneBonusPenalty', res.data)
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = (error.response.data && error.response.data.message) || '获取当月奖惩结算完成状态失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /a/getWorkerBonusPenaltyByMonth
+    获取美车师当月奖惩
+   */
+  getWorkerBonusPenaltyByMonth ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest/a/getWorkerBonusPenaltyByMonth?workMonth=' + data.workMonth + '&workerId=' + data.workerId)
+    .then(res => {
+      console.log(res)
+      console.table(res.data)
+      state.modalTableHead = ['结算项名称', '数量', '单次金额', '总金额']
+      let sumCost = 0
+      state.modalTableData = res.data.map(p => {
+        sumCost += p.totalCost
+        const people = {
+          'description': p.description,
+          'num': p.num,
+          'unitCost': p.unitCost,
+          'totalCost': p.totalCost
+        }
+        return people
+      })
+      state.modalTableData.push({
+        'description': '总计',
+        'num': '',
+        'unitCost': '',
+        'totalCost': sumCost
+      })
+      commit('showPopup', 'people')
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = (error.response.data && error.response.data.message) || '获取美车师当月奖惩失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /a/exportBonusPenalty
+    导出指定美车师奖惩月结算信息
+  */
+  exportBonusPenalty ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest/a/exportBonusPenalty?workerId=' + data.workerId + '&workMonth=' + data.workMonth + '&cityCode=' + data.cityCode, {
+      responseType: 'blob'
+    })
+    .then(res => {
+      console.log(res)
+      const filename = data.workerName + '美车师月结算信息(' + data.workMonth + ')'
+      const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        // IE workaround for "HTML7007: One or more blob URLs were
+        // revoked by closing the blob for which they were created.
+        // These URLs will no longer resolve as the data backing
+        // the URL has been freed."
+        window.navigator.msSaveBlob(blob, filename)
+      } else {
+        const blobURL = window.URL.createObjectURL(blob)
+        let tempLink = document.createElement('a')
+        tempLink.href = blobURL
+        tempLink.setAttribute('download', filename)
+        tempLink.setAttribute('target', '_blank')
+        document.body.appendChild(tempLink)
+        tempLink.click()
+        document.body.removeChild(tempLink)
+      }
+      state.snackbarMsg = '导出成功'
+      commit('showSnackbar')
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = '导出失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /a/cities
+    城市列表查询
+   */
+  getCities ({commit, state}, data) {
+    axios.get('/api/v2/fuser/rest/a/cities')
+    .then(res => {
+      console.log(res)
+      state.cities = res.data
+    })
+    .catch(error => {
+      console.dir(error)
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
       }

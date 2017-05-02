@@ -1,10 +1,11 @@
 <template>
   <mu-popup position="bottom" popupClass="modal-popup" :open="modalPopup" @close="close()">
     <mu-appbar :title="title" class="modal-popup-title">
+      <mu-icon-button v-if="modalTitleBtn" :icon="modalTitleBtnIcon" @click="modalTitleBtnClick" slot="right"/>
       <mu-icon-button slot="right" icon="close" @click="close()"/>
     </mu-appbar>
     <mu-content-block class="modal-table-box">
-      <OrderTable height="auto"/>
+      <ModalTable height="auto"/>
     </mu-content-block>
   </mu-popup>
 </template>
@@ -15,7 +16,7 @@ import popup from 'muse-components/popup'
 import appbar from 'muse-components/appbar'
 import contentBlock from 'muse-components/contentBlock'
 import iconButton from 'muse-components/iconButton'
-import OrderTable from './OrderTable'
+import ModalTable from './ModalTable'
 
 Vue.component(popup.name, popup)
 Vue.component(appbar.name, appbar)
@@ -24,7 +25,7 @@ Vue.component(iconButton.name, iconButton)
 export default {
   name: 'modal',
   components: {
-    OrderTable
+    ModalTable
   },
   props: {
     title: {
@@ -33,6 +34,16 @@ export default {
     showPopup: {
       type: Boolean,
       default: true
+    },
+    modalTitleBtn: {
+      type: Boolean,
+      default: false
+    },
+    modalTitleBtnIcon: {
+      type: String
+    },
+    modalTitleBtnClick: {
+      type: Function
     }
   },
   computed: {
