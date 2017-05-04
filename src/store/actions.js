@@ -699,5 +699,132 @@ export const actions = {
         router.push('login')
       }
     })
+  },
+  /* GET /rest/a/getSettlementStatistic
+    查询结算汇总信息接口
+   */
+  getSettlementStatistic ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest/rest/a/getSettlementStatistic?cityCode=' + data.cityCode + '&month=' + data.month)
+    .then(res => {
+      console.log(res)
+    })
+    .catch(error => {
+      console.dir(error)
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /rest/a/downSettlementStatistic
+    导出结算汇总信息接口
+   */
+  downSettlementStatistic ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest/rest/a/downSettlementStatistic?cityCode=' + data.cityCode + '&month=' + data.month, {
+      responseType: 'blob'
+    })
+    .then(res => {
+      console.log(res)
+      const filename = '美车师结算汇总(' + data.month + ')'
+      const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        // IE workaround for "HTML7007: One or more blob URLs were
+        // revoked by closing the blob for which they were created.
+        // These URLs will no longer resolve as the data backing
+        // the URL has been freed."
+        window.navigator.msSaveBlob(blob, filename)
+      } else {
+        const blobURL = window.URL.createObjectURL(blob)
+        let tempLink = document.createElement('a')
+        tempLink.href = blobURL
+        tempLink.setAttribute('download', filename)
+        tempLink.setAttribute('target', '_blank')
+        document.body.appendChild(tempLink)
+        tempLink.click()
+        document.body.removeChild(tempLink)
+      }
+      state.snackbarMsg = '导出成功'
+      commit('showSnackbar')
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = '导出失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /rest/a/getSettlementByWorker
+    查询美车师结算接口
+   */
+  getSettlementByWorker ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest/rest/a/getSettlementByWorker?workerId=' + data.workerId + '&month=' + data.month)
+    .then(res => {
+      console.log(res)
+    })
+    .catch(error => {
+      console.dir(error)
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /rest/a/downSettlementByWorker
+    导出美车师结算接口
+   */
+  downSettlementByWorker ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest/rest/a/downSettlementByWorker?workerId=' + data.workerId + '&month=' + data.month, {
+      responseType: 'blob'
+    })
+    .then(res => {
+      console.log(res)
+      const filename = data.workerName + '美车师结算(' + data.month + ', ID' + data.workerId + ')'
+      const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        // IE workaround for "HTML7007: One or more blob URLs were
+        // revoked by closing the blob for which they were created.
+        // These URLs will no longer resolve as the data backing
+        // the URL has been freed."
+        window.navigator.msSaveBlob(blob, filename)
+      } else {
+        const blobURL = window.URL.createObjectURL(blob)
+        let tempLink = document.createElement('a')
+        tempLink.href = blobURL
+        tempLink.setAttribute('download', filename)
+        tempLink.setAttribute('target', '_blank')
+        document.body.appendChild(tempLink)
+        tempLink.click()
+        document.body.removeChild(tempLink)
+      }
+      state.snackbarMsg = '导出成功'
+      commit('showSnackbar')
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = '导出失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /rest/a/solveSettleProblem
+    美车师结算问题修复接口
+   */
+  solveSettleProblem ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest/rest/a/solveSettleProblem?month=' + data.month)
+    .then(res => {
+      console.log(res)
+      state.snackbarMsg = '执行修复成功'
+      commit('showSnackbar')
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = '执行修复失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
   }
 }

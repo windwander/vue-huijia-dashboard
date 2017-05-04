@@ -16,6 +16,9 @@
           <mu-list-item slot="nested" title="美车师结算项设置" to="list">
             <mu-icon slot="left" value="edit"/>
           </mu-list-item>
+          <mu-list-item slot="nested" title="美车师结算下载" to="fixCalc">
+            <mu-icon slot="left" value="save"/>
+          </mu-list-item>
         </mu-list-item>
       </mu-list>
     </mu-drawer>

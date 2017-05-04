@@ -1,7 +1,7 @@
 <template>
 <div>
   <mainMenu />
-  <mu-appbar title="美车师结算项设置" class="setting-appbar">
+  <mu-appbar title="美车师结算下载" class="setting-appbar">
     <div class="setting-dropdown" slot="right">
       <label for="cityDropDown">城市：</label>
       <mu-dropDown-menu v-if="cities.length" :value="city" @change="handleChangeCity" id="cityDropDown">
@@ -23,20 +23,22 @@
       </mu-dropDown-menu>
     </div>
     <div class="top-btn" slot="right">
-      <mu-raised-button :label="bonusPenaltyFinished ? '当月已结算' : '确认生成结算'" icon="save" class="raised-button" @click="topBtnSave" primary :disabled="bonusPenaltyFinished"/>
-      <mu-raised-button label="导出表格" icon="print" class="raised-button" @click="topBtnPrint" secondary/>
+      <mu-raised-button label="结算问题修复" icon="build" class="raised-button" @click="topBtnBuild" primary/>
+      <mu-raised-button label="导出结算汇总表" icon="print" class="raised-button" @click="downloadAll" secondary/>
     </div>
   </mu-appbar>
-  <WorkerTable :height="tableHeight" />
+  <div class="worker-form">
+    <mu-text-field label="美车师ID（必填）" v-model="workerId" labelFloat/><br/>
+    <mu-text-field label="美车师姓名（选填，作为文件名）" v-model="workerName" labelFloat/><br/>
+    <mu-raised-button label="导出该美车师结算汇总表" icon="print" class="raised-button" @click="downloadWorker" secondary/>
+  </div>
   <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar"/>
 </div>
 </template>
-
 <script>
 import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import mainMenu from './units/mainMenu'
-import WorkerTable from './WorkerTable'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
@@ -47,10 +49,9 @@ Vue.component(snackbar.name, snackbar)
 Vue.component(dropDownMenu.name, dropDownMenu)
 Vue.component(menuItem.name, menuItem)
 export default {
-  name: 'Home',
+  name: 'FixCalc',
   components: {
-    mainMenu,
-    WorkerTable
+    mainMenu
   },
   data () {
     const dateYear = new Date().getFullYear().toString()
@@ -59,41 +60,30 @@ export default {
       city: 320100,
       year: dateYear,
       month: dateMonth < 10 ? ('0' + dateMonth) : dateMonth,
-      tableHeight: ''
+      workerId: '',
+      workerName: ''
     }
   },
   computed: {
     ...mapState([
       'cities',
       'snackbar',
-      'snackbarMsg',
-      'bonusPenaltyFinished'
+      'snackbarMsg'
     ])
   },
   mounted () {
     this.getCities()
-    this.getData()
-    this.tableHeight = 'calc(100vh - 135px)'
   },
   methods: {
     ...mapMutations([
       'hideSnackbar'
     ]),
     ...mapActions([
-      'getPreSaveWorkerMonthList',
-      'doAddBonusPenalty',
-      'exportWorkMonth',
-      'hasDoneBonusPenalty',
+      'downSettlementStatistic',
+      'downSettlementByWorker',
+      'solveSettleProblem',
       'getCities'
     ]),
-    getData () {
-      const postData = {
-        cityCode: this.city,
-        workMonth: this.year + '-' + this.month
-      }
-      this.hasDoneBonusPenalty(postData)
-      this.getPreSaveWorkerMonthList(postData)
-    },
     handleChangeCity (value) {
       this.city = value
       this.getData()
@@ -106,43 +96,29 @@ export default {
       this.month = value
       this.getData()
     },
-    topBtnSave () {
-      this.doAddBonusPenalty({
-        cityCode: this.city,
-        workMonth: this.year + '-' + this.month
+    topBtnBuild () {
+      this.solveSettleProblem({
+        month: this.year + '-' + this.month
       })
     },
-    topBtnPrint () {
-      this.exportWorkMonth({
+    downloadAll () {
+      this.downSettlementStatistic({
         cityCode: this.city,
-        workMonth: this.year + '-' + this.month
+        month: this.year + '-' + this.month
+      })
+    },
+    downloadWorker () {
+      this.downSettlementByWorker({
+        workerId: this.workerId,
+        month: this.year + '-' + this.month,
+        workerName: this.workerName
       })
     }
   }
 }
 </script>
-
 <style>
-html, body {
-  overflow-x: auto;
-  overflow-y: hidden; 
-}
-.setting-appbar.mu-appbar {
-  height: 74px;
-  padding-left: 100px;
-  background-color: #00bcd4;
-}
-.setting-dropdown {
-  line-height: 46px;
-  margin-right: 48px;
-}
-.setting-dropdown label {
-  vertical-align: text-bottom;
-}
-.setting-dropdown .mu-dropDown-menu-text {
-  color: #fff;
-}
-#yearDropDown {
-  margin-right: -34px;
+.worker-form {
+  margin: 24px;
 }
 </style>
