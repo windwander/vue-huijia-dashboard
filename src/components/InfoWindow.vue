@@ -5,7 +5,7 @@
       <div class="info-window-head-title">
         <h3>
           {{infoData.name}} <span v-if="infoData.type === 'worker'"> 美车师</span>
-          <mu-badge :content="infoData.status" secondary/>
+          <mu-badge :content="infoData.status" :class="(infoData.status === '未超时' || infoData.status === '空闲') ? 'badge-green' : infoData.status === '已下线' ? 'badge-grey' : ''" secondary/>
         </h3>
         <div v-if="infoData.type === 'worker'" class="icon-contaner" v-bind:style="{width: infoData.star * 24 + 'px' }">
           <mu-icon value="star"/>
@@ -251,5 +251,11 @@ export default {
 }
 #infoWindowUI .mu-item-wrapper {
   user-select: initial !important;
+}
+#infoWindowUI .badge-green .mu-badge {
+  background-color: #009944;
+}
+#infoWindowUI .badge-grey .mu-badge {
+  background-color: #999;
 }
 </style>
