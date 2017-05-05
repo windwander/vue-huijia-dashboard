@@ -707,6 +707,28 @@ export const actions = {
     axios.get('/api/v2/fworker/rest/rest/a/getSettlementStatistic?cityCode=' + data.cityCode + '&month=' + data.month)
     .then(res => {
       console.log(res)
+      state.settlementStatistic = res.data.map(w => {
+        const worker = {
+          'workerId': w.workerId,
+          'workerName': w.workerName,
+          'orderFee': w.orderFee,
+          'orderNum': w.orderNum,
+          'reward': w.reward,
+          'productFee': w.productFee,
+          'serviceFee': w.serviceFee,
+          'workerServiceFee': w.workerServiceFee,
+          'workerBonusPenalty': w.workerBonusPenalty,
+          'workerTotal': w.workerTotal,
+          'cityProductFee': w.cityProductFee,
+          'cityServiceFee': w.cityServiceFee,
+          'cityBonusPenalty': w.cityBonusPenalty,
+          'cityPlatformFee': w.cityPlatformFee,
+          'cityTotal': w.cityTotal,
+          'platformFee': w.platformFee,
+          'platformTotal': w.platformTotal
+        }
+        return worker
+      })
     })
     .catch(error => {
       console.dir(error)
@@ -761,9 +783,38 @@ export const actions = {
     axios.get('/api/v2/fworker/rest/rest/a/getSettlementByWorker?workerId=' + data.workerId + '&month=' + data.month)
     .then(res => {
       console.log(res)
+      state.modalTableHead = ['服务种类', '订单费', '产品费', '服务费用', '美车师结算\n服务费提成', '美车师结算\n奖惩', '美车师结算\n合计', '城市结算\n产品费', '城市结算\n服务费提成', '城市结算\n奖惩', '城市结算\n平台费', '城市结算\n合计', '平台结算\n平台费', '平台结算\n合计']
+      state.modalTableData = res.data.settlements && res.data.settlements.map(p => {
+        const people = {
+          'productName': p.productName,
+          'orderFee': p.orderFee,
+          'productFee': p.productFee,
+          'serviceFee': p.serviceFee,
+          'workerServiceFee': p.workerServiceFee,
+          'workerBonusPenalty': p.workerBonusPenalty,
+          'workerTotal': p.workerTotal,
+          'cityProductFee': p.cityProductFee,
+          'cityServiceFee': p.cityServiceFee,
+          'cityBonusPenalty': p.cityBonusPenalty,
+          'cityPlatformFee': p.cityPlatformFee,
+          'cityTotal': p.cityTotal,
+          'platformFee': p.platformFee,
+          'platformTotal': p.platformTotal
+        }
+        return people
+      })
+      const last = state.modalTableData[state.modalTableData.length - 1]
+      console.table(state.modalTableData)
+      last.workerBonusPenalty = res.data.workerBonusPenalty
+      last.workerTotal = res.data.workerTotal
+      last.cityBonusPenalty = res.data.cityBonusPenalty
+      last.cityTotal = res.data.cityTotal
+      commit('showPopup', 'people')
     })
     .catch(error => {
       console.dir(error)
+      state.snackbarMsg = '查看失败'
+      commit('showSnackbar')
       if (error.toString().indexOf('401') > -1) {
         router.push('login')
       }
@@ -778,7 +829,7 @@ export const actions = {
     })
     .then(res => {
       console.log(res)
-      const filename = data.workerName + '美车师结算(' + data.month + ', ID' + data.workerId + ')'
+      const filename = data.workerName + '美车师结算(' + data.month + ')'
       const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
       if (typeof window.navigator.msSaveBlob !== 'undefined') {
         // IE workaround for "HTML7007: One or more blob URLs were
@@ -812,6 +863,8 @@ export const actions = {
     美车师结算问题修复接口
    */
   solveSettleProblem ({commit, state}, data) {
+    state.snackbarMsg = '正在执行修复，请稍后……'
+    commit('showSnackbar')
     axios.get('/api/v2/fworker/rest/rest/a/solveSettleProblem?month=' + data.month)
     .then(res => {
       console.log(res)

@@ -26,7 +26,8 @@ export const state = {
   todayOrdersPageSize: 10,
   todayOrdersTotal: 0,
   preSaveWorkerMonthList: {},
-  bonusPenaltyFinished: false
+  bonusPenaltyFinished: false,
+  settlementStatistic: []
 }
 
 export const mutations = {
