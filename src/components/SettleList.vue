@@ -210,6 +210,7 @@ html, body {
   white-space: pre-wrap;
 }
 .settle-table .mu-td {
+  font-size: 16px;
   padding: 1em;
   white-space: pre-wrap;
   text-align: center;

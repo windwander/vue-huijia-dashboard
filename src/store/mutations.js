@@ -12,7 +12,7 @@ export const state = {
   topPopup: false,
   recieveMsg: '',
   modalPopup: false,
-  showOrderTable: false,
+  showModalTable: false,
   cities: [],
   workers: [],
   orders: [],
@@ -107,8 +107,8 @@ export const mutations = {
   panBy (state, offset) {
     state.amap.panBy(offset.x, offset.y)
   },
-  toggleOrderTable () {
-    state.showOrderTable = !state.showOrderTable
+  toggleModalTable () {
+    state.showModalTable = !state.showModalTable
   },
   changePage (state, newIndex) {
     state.todayOrdersPage = newIndex
@@ -183,7 +183,7 @@ function openInfoWindow (obj) {
   })
   infoWindow.open(state.amap, state.infoWindowData.location)
   AMap.event.addListener(infoWindow, 'close', function () {
-    state.showOrderTable = false
+    state.showModalTable = false
   })
 }
 // 显示snackbar

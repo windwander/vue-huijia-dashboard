@@ -176,8 +176,8 @@ export const actions = {
           }
           return order
         })
-        commit('toggleOrderTable')
-        if (state.showOrderTable) {
+        commit('toggleModalTable')
+        if (state.showModalTable) {
           setTimeout(function () {
             const offset = window.innerWidth - document.getElementsByClassName('order-table')[0].getBoundingClientRect().right
             if (offset < 0) {
