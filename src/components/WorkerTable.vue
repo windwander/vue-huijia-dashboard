@@ -9,7 +9,7 @@
       <mu-tbody>
         <mu-tr v-for="item,index in workerTableData" :key="item.workerId" :data-id="item.workerId" v-bind:class="(Number(selectedId) === item.workerId) ? 'show-save-btn' : ''">
           <mu-td v-for="(value, key, index) in item" :key="key" :title="(index > 0) && workerTableHead[--index] + ': ' + value" :class="'worker-td-'+ (index - 1)">
-            <mu-select-field v-if="key==='position'" :value="value" :labelFocusClass="['label-foucs']">
+            <mu-select-field v-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && key === 'position'" :value="value" :labelFocusClass="['label-foucs']">
               <mu-menu-item key="1" value="1" title="实习美车师" />
               <mu-menu-item key="2" value="2" title="正式美车师" />
               <mu-menu-item key="3" value="3" title="实习业务组长" />
@@ -17,8 +17,9 @@
               <mu-menu-item key="5" value="5" title="实习销售经理" />
               <mu-menu-item key="6" value="6" title="正式销售经理" />
             </mu-select-field>
-            <mu-date-picker v-else-if="key==='startDate'" :value="value" :name="key"/>
-            <mu-text-field v-else-if="index > 2" class="text-field" :value="value" :name="key"/>
+            <mu-date-picker v-else-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && key === 'startDate'" :value="value" :name="key"/>
+            <mu-text-field v-else-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && index > 2" class="text-field" :value="value" :name="key"/>
+            <div v-else-if="key === 'position'" :name="key" class="td-text">{{['实习美车师', '正式美车师', '实习业务组长', '正式业务组长', '实习销售经理', '正式销售经理'][value-1]}}</div>
             <div v-else :name="key" class="td-text">{{value}}</div>
           </mu-td>
           <mu-td>
@@ -180,6 +181,9 @@ export default {
 }
 .worker-table .mu-th-wrapper {
   white-space: pre-wrap;
+}
+.worker-table .mu-tr {
+  height: 60px;
 }
 .worker-table .mu-td {
   padding: 1em;

@@ -229,9 +229,6 @@ html, body {
   width: 1200px;
   max-width: 1200px;
 }
-.settle-table tbody tr:last-child, .modal-popup tbody tr:last-child {
-  background-color: #ddf3f2;
-}
 .modal-popup {
   width: 1200px;
   max-width: 1200px;
