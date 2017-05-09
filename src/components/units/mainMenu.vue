@@ -17,6 +17,9 @@
             <mu-icon slot="left" value="edit"/>
           </mu-list-item>
           <mu-list-item slot="nested" title="美车师结算汇总" to="settleList">
+            <mu-icon slot="left" value="assignment"/>
+          </mu-list-item>
+          <mu-list-item slot="nested" title="运营图表" to="charts">
             <mu-icon slot="left" value="assessment"/>
           </mu-list-item>
         </mu-list-item>

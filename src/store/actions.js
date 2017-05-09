@@ -482,10 +482,11 @@ export const actions = {
     .then(res => {
       console.log(res)
       state.preSaveWorkerMonthList = res.data
-      state.workerTableHead = ['姓名', '美车师账号', '上岗时间', '职务', '本月工作天数', '伯乐奖', '培训补贴天数', '延迟履约', '投诉追责', '费用骗取', '培训费用', '延迟接单', '服务不规范', '转单延迟1', '转单延迟2', '操作']
-      state.workerTableData = res.data.map(w => {
+      state.workerTableHead = ['#', '姓名', '美车师账号', '上岗时间', '职务', '本月工作天数', '伯乐奖', '培训补贴天数', '延迟履约', '投诉追责', '费用骗取', '培训费用', '延迟接单', '服务不规范', '转单延迟1', '转单延迟2', '操作']
+      state.workerTableData = res.data.map((w, index) => {
         const worker = {
           'workerId': w.workerId,
+          'index': index + 1,
           'workerName': w.workerName,
           'phone': w.phone,
           'startDate': w.startDate,
@@ -704,10 +705,10 @@ export const actions = {
     查询结算汇总信息接口
    */
   getSettlementStatistic ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest/rest/a/getSettlementStatistic?cityCode=' + data.cityCode + '&month=' + data.month)
+    axios.get('/api/v2/fworker/rest/a/getSettlementStatistic?cityCode=' + data.cityCode + '&month=' + data.month)
     .then(res => {
       console.log(res)
-      state.settlementStatistic = res.data.map(w => {
+      state.settlementStatistic = res.data.map((w) => {
         const worker = {
           'workerId': w.workerId,
           'workerName': w.workerName,
@@ -741,7 +742,7 @@ export const actions = {
     导出结算汇总信息接口
    */
   downSettlementStatistic ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest/rest/a/downSettlementStatistic?cityCode=' + data.cityCode + '&month=' + data.month, {
+    axios.get('/api/v2/fworker/rest/a/downSettlementStatistic?cityCode=' + data.cityCode + '&month=' + data.month, {
       responseType: 'blob'
     })
     .then(res => {
@@ -780,7 +781,7 @@ export const actions = {
     查询美车师结算接口
    */
   getSettlementByWorker ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest/rest/a/getSettlementByWorker?workerId=' + data.workerId + '&month=' + data.month)
+    axios.get('/api/v2/fworker/rest/a/getSettlementByWorker?workerId=' + data.workerId + '&month=' + data.month)
     .then(res => {
       console.log(res)
       state.modalTableHead = ['服务种类', '订单费', '产品费', '服务费用', '美车师结算\n服务费提成', '美车师结算\n奖惩', '美车师结算\n合计', '城市结算\n产品费', '城市结算\n服务费提成', '城市结算\n奖惩', '城市结算\n平台费', '城市结算\n合计', '平台结算\n平台费', '平台结算\n合计']
@@ -824,7 +825,7 @@ export const actions = {
     导出美车师结算接口
    */
   downSettlementByWorker ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest/rest/a/downSettlementByWorker?workerId=' + data.workerId + '&month=' + data.month, {
+    axios.get('/api/v2/fworker/rest/a/downSettlementByWorker?workerId=' + data.workerId + '&month=' + data.month, {
       responseType: 'blob'
     })
     .then(res => {
@@ -865,7 +866,7 @@ export const actions = {
   solveSettleProblem ({commit, state}, data) {
     state.snackbarMsg = '正在执行修复，请稍后……'
     commit('showSnackbar')
-    axios.get('/api/v2/fworker/rest/rest/a/solveSettleProblem?month=' + data.month)
+    axios.get('/api/v2/fworker/rest/a/solveSettleProblem?month=' + data.month)
     .then(res => {
       console.log(res)
       state.snackbarMsg = '执行修复成功'

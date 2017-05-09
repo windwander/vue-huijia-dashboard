@@ -189,6 +189,10 @@ export default {
   padding: 1em;
   white-space: pre-wrap;
   line-height: .01;
+  text-align: center;
+}
+.worker-table tbody .mu-td input {
+  text-align: center;
 }
 .worker-table .table-footer-pagination {
   display: block;
@@ -219,16 +223,16 @@ export default {
 .worker-table .worker-td--1 {
   display: none;
 }
-.worker-table .worker-td-0 {
+.worker-table .worker-td-1 {
   width: 7em;
 }
-.worker-table .worker-td-1 {
+.worker-table .worker-td-2 {
   width: 10em;
 }
-.worker-table .worker-td-2 {
+.worker-table .worker-td-3 {
   width: 9em;
 }
-.worker-table .worker-td-3 {
+.worker-table .worker-td-4 {
   width: 10em;
 }
 .worker-table .save-btn, .worker-table .detail-btn {
