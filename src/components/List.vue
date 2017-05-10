@@ -3,10 +3,7 @@
   <mainMenu />
   <mu-appbar title="美车师结算项设置" class="setting-appbar">
     <div class="setting-dropdown" slot="right">
-      <label for="cityDropDown">城市：</label>
-      <mu-dropDown-menu v-if="cities.length" :value="city" @change="handleChangeCity" id="cityDropDown">
-        <mu-menu-item v-for="item in cities" :key="item.cityId" :value="item.cityId" :title="item.cityName"/>
-      </mu-dropDown-menu>
+      <Group :handleChange="changeGroup" />
     </div>
     <div class="setting-dropdown" slot="right">
       <label for="monthDropDown">月份：</label>
@@ -37,6 +34,7 @@ import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import mainMenu from './units/mainMenu'
 import WorkerTable from './WorkerTable'
+import Group from './units/group'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
@@ -50,13 +48,13 @@ export default {
   name: 'Home',
   components: {
     mainMenu,
-    WorkerTable
+    WorkerTable,
+    Group
   },
   data () {
     const dateYear = new Date().getFullYear().toString()
     const dateMonth = new Date().getMonth() + 1
     return {
-      city: 320100,
       year: dateYear,
       month: dateMonth < 10 ? ('0' + dateMonth) : dateMonth,
       tableHeight: ''
@@ -64,14 +62,14 @@ export default {
   },
   computed: {
     ...mapState([
-      'cities',
+      'city',
+      'group',
       'snackbar',
       'snackbarMsg',
       'bonusPenaltyFinished'
     ])
   },
   mounted () {
-    this.getCities()
     this.getData()
     this.tableHeight = 'calc(100vh - 135px)'
   },
@@ -83,8 +81,7 @@ export default {
       'getPreSaveWorkerMonthList',
       'doAddBonusPenalty',
       'exportWorkMonth',
-      'hasDoneBonusPenalty',
-      'getCities'
+      'hasDoneBonusPenalty'
     ]),
     getData () {
       const postData = {
@@ -94,8 +91,7 @@ export default {
       this.hasDoneBonusPenalty(postData)
       this.getPreSaveWorkerMonthList(postData)
     },
-    handleChangeCity (value) {
-      this.city = value
+    changeGroup () {
       this.getData()
     },
     handleChangeYear (value) {

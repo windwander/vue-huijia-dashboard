@@ -6,11 +6,7 @@
       <mu-text-field hintText="搜索完整手机号或单号后三位" class="search-input" v-model="searchString" ref="searchField"/>
       <mu-flat-button icon="search" class="search-button" backgroundColor="#F05B47" color="#FFF" @click="search()"/>
     </div>
-    <div class="search-city">
-      <mu-select-field v-if="cities.length" :value="city" @change="handleChangeCity" class="search-city-select">
-        <mu-menu-item v-for="item in cities" :key="item.cityId" :value="item.cityId" :title="item.cityName"/>
-      </mu-select-field>
-    </div>
+    <Group />
   </div>
   <div id="orderStatusBox">
     <status-box icon="assignment" title="订单状况" arrowPosition="right" />
@@ -44,6 +40,7 @@ import selectField from 'muse-components/selectField'
 import {menuItem} from 'muse-components/menu'
 import statusBox from './units/statusBox'
 import avatar from './units/avatar'
+import Group from './units/group'
 import Modal from './Modal'
 
 Vue.component(paper.name, paper)
@@ -59,11 +56,11 @@ export default {
   components: {
     'status-box': statusBox,
     'avatar': avatar,
-    Modal
+    Modal,
+    Group
   },
   data () {
     return {
-      city: 320100,
       searchString: '',
       modalTitle: ''
     }
@@ -78,13 +75,11 @@ export default {
       'workers',
       'orders',
       'todayOrdersPage',
-      'todayOrdersPageSize',
-      'cities'
+      'todayOrdersPageSize'
     ])
   },
   mounted () {
     const z = this
-    z.getCities()
     const update = () => {
       // 获取视图总情况查询
       z.getOverallCount()
@@ -118,8 +113,7 @@ export default {
       'getWorkerList',
       'getWorkers',
       'getOrders',
-      'doSearch',
-      'getCities'
+      'doSearch'
     ]),
     showModal (title, type, sub) {
       const z = this
@@ -152,9 +146,6 @@ export default {
       if (t.input !== '') {
         z.doSearch(t)
       }
-    },
-    handleChangeCity () {
-      console.log(this.city)
     }
   },
   watch: {
@@ -192,18 +183,9 @@ export default {
   width: 48px;
   min-width: 48px;
 }
-#headSearchBox .search-city {
+#headSearchBox .city-select, #headSearchBox .group-select {
   box-shadow: 0px 0px 6px 0px #bdbdbd;
   background-color: #fff;
-  height: 36px;
-  margin-top: 5px;
-  margin-left: 10px;
-  padding: 0 10px;
-  min-height: 36px;
-}
-#headSearchBox .search-city-select {
-  width: 5em;
-  top: -1px;
 }
 #orderStatusBox {
   position: absolute;

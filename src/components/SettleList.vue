@@ -3,10 +3,7 @@
   <mainMenu />
   <mu-appbar title="美车师结算汇总信息" class="setting-appbar">
     <div class="setting-dropdown" slot="right">
-      <label for="cityDropDown">城市：</label>
-      <mu-dropDown-menu v-if="cities.length" :value="city" @change="handleChangeCity" id="cityDropDown">
-        <mu-menu-item v-for="item in cities" :key="item.cityId" :value="item.cityId" :title="item.cityName" />
-      </mu-dropDown-menu>
+      <Group :handleChange="changeGroup" />
     </div>
     <div class="setting-dropdown" slot="right">
       <label for="monthDropDown">月份：</label>
@@ -54,6 +51,7 @@ import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import mainMenu from './units/mainMenu'
 import Modal from './Modal'
+import Group from './units/group'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
@@ -67,25 +65,25 @@ export default {
   name: 'Home',
   components: {
     mainMenu,
-    Modal
+    Modal,
+    Group
   },
   data () {
     const dateYear = new Date().getFullYear().toString()
     const dateMonth = new Date().getMonth() + 1
     return {
       selectedWorker: '',
-      city: 320100,
       year: dateYear,
       month: dateMonth < 10 ? ('0' + dateMonth) : dateMonth,
       tableHeight: '',
-      tableHead: ['美车师ID', '美车师姓名', '订单费', '订单数量', '用户打赏', '产品费', '服务费用', '美车师结算\n服务费提成', '美车师结算\n奖惩', '美车师结算\n合计', '城市结算\n产品费', '城市结算\n服务费提成', '城市结算\n奖惩', '城市结算\n平台费', '城市结算\n合计', '平台结算\n平台费', '平台结算\n合计', '操作'],
+      tableHead: ['美车师ID', '#', '美车师姓名', '订单费', '订单数量', '用户打赏', '产品费', '服务费用', '美车师结算\n服务费提成', '美车师结算\n奖惩', '美车师结算\n合计', '城市结算\n产品费', '城市结算\n服务费提成', '城市结算\n奖惩', '城市结算\n平台费', '城市结算\n合计', '平台结算\n平台费', '平台结算\n合计', '操作'],
       tableData: [],
       modalTitle: ''
     }
   },
   computed: {
     ...mapState([
-      'cities',
+      'city',
       'workers',
       'snackbar',
       'snackbarMsg',
@@ -94,7 +92,6 @@ export default {
     ])
   },
   mounted () {
-    this.getCities()
     this.getData()
     this.tableHeight = 'calc(100vh - 135px)'
     console.table(this.settlementStatistic)
@@ -108,8 +105,7 @@ export default {
       'downSettlementStatistic',
       'getSettlementByWorker',
       'downSettlementByWorker',
-      'solveSettleProblem',
-      'getCities'
+      'solveSettleProblem'
     ]),
     getData () {
       const postData = {
@@ -118,8 +114,7 @@ export default {
       }
       this.getSettlementStatistic(postData)
     },
-    handleChangeCity (value) {
-      this.city = value
+    changeGroup () {
       this.getData()
     },
     handleChangeYear (value) {
@@ -166,7 +161,7 @@ export default {
         workerName: z.workerName,
         workerId: z.workerId,
         month: z.workMonth,
-        cityCode: '320100'
+        cityCode: z.city
       }
       z.downSettlementByWorker(getData)
     }

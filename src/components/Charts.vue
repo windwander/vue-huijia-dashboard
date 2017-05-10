@@ -3,10 +3,7 @@
     <mainMenu />
     <mu-appbar title="运营图表" class="setting-appbar">
       <div class="setting-dropdown" slot="right">
-        <label for="cityDropDown">城市：</label>
-        <mu-dropDown-menu v-if="cities.length" :value="city" @change="handleChangeCity" id="cityDropDown">
-          <mu-menu-item v-for="item in cities" :key="item.cityId" :value="item.cityId" :title="item.cityName" />
-        </mu-dropDown-menu>
+        <Group :handleChange="changeGroup" />
       </div>
       <div class="setting-dropdown" slot="right">
         <label for="monthDropDown">时间范围：</label>
@@ -28,7 +25,7 @@
         <mu-raised-button label="导出汇总表" icon="print" class="raised-button" @click="downloadAll" secondary/>
       </div>-->
     </mu-appbar>
-    <ECharts :options="chartOption" auto-resize/>
+    <ECharts :options="chartOption" auto-resize ref="bar"/>
     <!--<Modal :title="modalTitle" :modalTitleBtn="true" modalTitleBtnIcon="print" :modalTitleBtnClick="printWorkerDetail" />
     <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar" />-->
   </div>
@@ -38,6 +35,7 @@ import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import mainMenu from './units/mainMenu'
 import Modal from './Modal'
+import Group from './units/group'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
@@ -58,14 +56,14 @@ export default {
   components: {
     mainMenu,
     Modal,
-    ECharts
+    ECharts,
+    Group
   },
   data () {
     const dateYear = new Date().getFullYear().toString()
     const dateMonth = new Date().getMonth() + 1
     return {
       selectedWorker: '',
-      city: 320100,
       year: dateYear,
       month: dateMonth < 10 ? ('0' + dateMonth) : dateMonth,
       timeScope: 'month',
@@ -164,7 +162,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'cities',
+      'city',
       'workers',
       'snackbar',
       'snackbarMsg',
@@ -173,7 +171,6 @@ export default {
     ])
   },
   mounted () {
-    this.getCities()
     this.getData()
     this.tableHeight = 'calc(100vh - 135px)'
   },
@@ -186,8 +183,7 @@ export default {
       'downSettlementStatistic',
       'getSettlementByWorker',
       'downSettlementByWorker',
-      'solveSettleProblem',
-      'getCities'
+      'solveSettleProblem'
     ]),
     getData () {
       // const postData = {
@@ -196,14 +192,51 @@ export default {
       // }
       // this.getSettlementStatistic(postData)
     },
-    handleChangeCity (value) {
-      this.city = value
+    changeGroup () {
+      this.getData()
     },
     handleChangeYear (value) {
       this.year = value
     },
     handleChangeMonth (value) {
       this.month = value
+      let bar = this.$refs.bar
+      let newData = {
+        series: [{
+          data: (function () {
+            let arr = []
+            for (let i = 1; i <= 31; i++) {
+              arr.push(Math.floor(Math.random() * 80))
+            }
+            return arr
+          })()
+        }, {
+          data: (function () {
+            let arr = []
+            for (let i = 1; i <= 31; i++) {
+              arr.push(Math.floor(Math.random() * 20))
+            }
+            return arr
+          })()
+        }, {
+          data: (function () {
+            let arr = []
+            for (let i = 1; i <= 31; i++) {
+              arr.push(Math.floor(Math.random() * 100))
+            }
+            return arr
+          })()
+        }, {
+          data: (function () {
+            let arr = []
+            for (let i = 1; i <= 31; i++) {
+              arr.push(Math.floor(Math.random() * 100))
+            }
+            return arr
+          })()
+        }]
+      }
+      bar.mergeOptions(newData)
     },
     handleChangeScope (value) {
       this.timeScope = value

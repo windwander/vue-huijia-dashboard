@@ -3,9 +3,7 @@ import axios from 'axios'
 import router from '../router'
 
 export const actions = {
-  /*
-    设置点标记
-  */
+  /* 设置点标记 */
   mapPoint ({commit, dispatch, state}, obj) {
     let type = 'worker'
     let div = document.createElement('div')
@@ -40,10 +38,8 @@ export const actions = {
       }
     })
   },
-  /*
-    用户登录
-  */
-  doLogin ({commit, state}, user) {
+  /* 用户登录 */
+  doLogin ({dispatch, commit, state}, user) {
     axios.get('/api/v2/login?username=' + user.phone + '&password=' + user.password)
     .then(res => {
       console.log(res)
@@ -54,6 +50,30 @@ export const actions = {
       }
     })
     .catch(error => {
+      console.dir(error)
+    })
+  },
+  /* GET /v/NewDashboard/config 配置权限查询 */
+  getConfig ({commit, state}) {
+    axios.get('/api/v2/fworker/rest/v/NewDashboard/config')
+    .then(res => {
+      console.log(res)
+      state.cities = res.data.citys
+      state.groups = res.data.herders
+    })
+    .catch(error => {
+      console.dir(error)
+    })
+  },
+  /* GET /v/NewDashboard/menu 菜单权限查询 */
+  getMenu ({commit, state}) {
+    axios.get('/api/v2/fworker/rest/v/NewDashboard/menu')
+    .then(res => {
+      console.log(res)
+      state.menus = res.data
+    })
+    .catch(error => {
+      router.push('login')
       console.dir(error)
     })
   },
@@ -212,45 +232,7 @@ export const actions = {
       }
     })
   },
-  /* 订单查询
-  Order {
-    userName (string, optional),
-    workerName (string, optional),
-    orderSource (string, optional),
-    cityCode (string, optional),
-    orderId (string, optional),
-    orderStatus (string, optional),
-    remark (string, optional),
-    areaCode (string, optional),
-    appointTime (date-time, optional),
-    longitude (number, optional),
-    latitude (number, optional),
-    payStatus (string, optional),
-    userPhone (string, optional),
-    memo (string, optional),
-    workerId (integer, optional),
-    updateTime (date-time, optional),
-    payAmount (integer, optional),
-    productId (integer, optional),
-    suggest (string, optional),
-    preWorkId (integer, optional),
-    orderTime (date-time, optional),
-    payTime (date-time, optional),
-    carInfo (string, optional),
-    parkingNo (string, optional),
-    timeRequire (string, optional),
-    saleAmount (integer, optional),
-    deductionAmount (integer, optional),
-    realPayAmount (integer, optional),
-    cancelReason (string, optional),
-    isOrderFor (boolean, optional),
-    deleted (boolean, optional),
-    catalogJson (string, optional),
-    userId (integer, optional),
-    productName (string, optional),
-    location (string, optional)
-  }
-  */
+  /* 订单查询 */
   getOrders ({dispatch, state}) {
     axios.get('/api/v2/fworker/rest/v/Dashboard/orders')
     .then(res => {
@@ -265,22 +247,7 @@ export const actions = {
       }
     })
   },
-  /* 离线美车师详情查询
-  WorkerDashboardVO {
-    phone (string, optional): 电话,
-    score (number, optional): 星级,
-    workerId (integer, optional),
-    lng (string, optional): 经度,
-    lat (string, optional): 纬度,
-    orderCount (integer, optional): 当天总订单数,
-    taskOverCount (integer, optional): 当日完成订单数,
-    toBeAgentCount (integer, optional): 当日待服务数,
-    icon (string, optional): 头像,
-    status (string, optional): 状态,
-    address (string, optional): 服务地址,
-    name (string, optional): 名字
-  }
-  */
+  /* 离线美车师详情查询 */
   getWorkerDetail ({commit, state}, workerId) {
     axios.get('/api/v2/fworker/rest/v/Dashboard/workerDetial?workerId=' + workerId)
     .then(res => {
@@ -296,31 +263,7 @@ export const actions = {
       }
     })
   },
-  /* 离线美车师列表查询
-  WcwWorker {
-    cityCode (string, optional),
-    phone (string, optional),
-    workerId (integer, optional),
-    workerCode (string, optional),
-    idCard (string, optional),
-    applyTime (date-time, optional),
-    checkTime (date-time, optional),
-    referrerCode (string, optional),
-    gender (string, optional),
-    provinceCode (string, optional),
-    districtCode (string, optional),
-    parentId (integer, optional),
-    rootId (integer, optional),
-    rootPath (string, optional),
-    workPhone (string, optional),
-    userId (integer, optional),
-    level (integer, optional),
-    icon (string, optional),
-    status (string, optional),
-    serviceStatus (integer, optional),
-    name (string, optional)
-  }
-  */
+  /* 离线美车师列表查询 */
   getWorkerList ({commit, state}) {
     axios.get('/api/v2/fworker/rest/v/Dashboard/workerList')
     .then(res => {
@@ -343,22 +286,7 @@ export const actions = {
       }
     })
   },
-  /* 美车师查询
-  WorkerDashboardVO {
-    phone (string, optional): 电话,
-    score (number, optional): 星级,
-    workerId (integer, optional),
-    lng (string, optional): 经度,
-    lat (string, optional): 纬度,
-    orderCount (integer, optional): 当天总订单数,
-    taskOverCount (integer, optional): 当日完成订单数,
-    toBeAgentCount (integer, optional): 当日待服务数,
-    icon (string, optional): 头像,
-    status (string, optional): 状态,
-    address (string, optional): 服务地址,
-    name (string, optional): 名字
-  }
-  */
+  /* 美车师查询 */
   getWorkers ({dispatch, state}) {
     axios.get('/api/v2/fworker/rest/v/Dashboard/workers')
     .then(res => {
@@ -373,63 +301,7 @@ export const actions = {
       }
     })
   },
-  /* 搜索栏查询
-  SearchVO {
-    order (Order, optional),
-    workerDashboardVO (WorkerDashboardVO, optional)
-  }
-  Order {
-    userName (string, optional),
-    userId (integer, optional),
-    orderSource (string, optional),
-    cityCode (string, optional),
-    orderId (string, optional),
-    orderStatus (string, optional),
-    remark (string, optional),
-    areaCode (string, optional),
-    appointTime (date-time, optional),
-    longitude (number, optional),
-    latitude (number, optional),
-    payStatus (string, optional),
-    memo (string, optional),
-    userPhone (string, optional),
-    isOrderFor (boolean, optional),
-    workerName (string, optional),
-    workerId (integer, optional),
-    updateTime (date-time, optional),
-    payAmount (integer, optional),
-    productId (integer, optional),
-    suggest (string, optional),
-    preWorkId (integer, optional),
-    orderTime (date-time, optional),
-    payTime (date-time, optional),
-    carInfo (string, optional),
-    parkingNo (string, optional),
-    timeRequire (string, optional),
-    saleAmount (integer, optional),
-    deductionAmount (integer, optional),
-    realPayAmount (integer, optional),
-    cancelReason (string, optional),
-    deleted (boolean, optional),
-    catalogJson (string, optional),
-    productName (string, optional),
-    location (string, optional)
-  }
-  WorkerDashboardVO {
-    phone (string, optional): 电话,
-    score (number, optional): 星级,
-    workerId (integer, optional),
-    lng (number, optional): 经度,
-    lat (number, optional): 纬度,
-    orderCount (integer, optional): 当天总订单数,
-    taskOverCount (integer, optional): 当日完成订单数,
-    toBeAgentCount (integer, optional): 当日待服务数,
-    icon (string, optional): 头像,
-    status (integer, optional): 状态 0-空闲 1-服务中 2-已下线,
-    address (string, optional): 服务地址,
-    name (string, optional): 名字
-  }
-  */
+  /* 搜索栏查询 */
   doSearch ({commit, dispatch, state}, data) {
     let searchString = ''
     if (data.type === 'phone') {
@@ -473,10 +345,7 @@ export const actions = {
       }
     })
   },
-  /*
-    POST 获取美车师结算设置列表
-    /fworker/rest/a/getPreSaveWorkerMonthList?workMonth=2017-04&cityCode=320100
-  */
+  /* POST 获取美车师结算设置列表 */
   getPreSaveWorkerMonthList ({commit, state}, data) {
     axios.post('/api/v2/fworker/rest/a/getPreSaveWorkerMonthList?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
     .then(res => {
@@ -514,14 +383,16 @@ export const actions = {
       }
     })
   },
-  /* POST /a/preSaveWorkerMonth
-    美车师奖惩结算预保存
-  */
-  preSaveWorkerMonth ({commit, state}, data) {
+  /* POST /a/preSaveWorkerMonth 美车师奖惩结算预保存 */
+  preSaveWorkerMonth ({dispatch, commit, state}, data) {
     axios.post('/api/v2/fworker/rest/a/preSaveWorkerMonth', data)
     .then(res => {
       console.log(res)
       state.snackbarMsg = '保存成功'
+      dispatch('getPreSaveWorkerMonthList', {
+        workMonth: data.workMonth,
+        cityCode: data.cityCode
+      })
       commit('showSnackbar')
     })
     .catch(error => {
@@ -533,9 +404,7 @@ export const actions = {
       }
     })
   },
-  /* POST /a/doAddBonusPenalty
-    美车师结算入库
-   */
+  /* POST /a/doAddBonusPenalty 美车师结算入库 */
   doAddBonusPenalty ({commit, state}, data) {
     axios.post('/api/v2/fworker/rest/a/doAddBonusPenalty?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
     .then(res => {
@@ -552,9 +421,7 @@ export const actions = {
       }
     })
   },
-  /* GET /a/exportWorkMonth
-    导出奖惩月结算预存信息
-  */
+  /* GET /a/exportWorkMonth 导出奖惩月结算预存信息 */
   exportWorkMonth ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest/a/exportWorkMonth?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode, {
       responseType: 'blob'
@@ -591,9 +458,7 @@ export const actions = {
       }
     })
   },
-  /* POST /a/hasDoneBonusPenalty
-    是否已完成当月奖惩结算
-   */
+  /* POST /a/hasDoneBonusPenalty 是否已完成当月奖惩结算 */
   hasDoneBonusPenalty ({commit, state}, data) {
     axios.post('/api/v2/fworker/rest/a/hasDoneBonusPenalty?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
     .then(res => {
@@ -609,9 +474,7 @@ export const actions = {
       }
     })
   },
-  /* GET /a/getWorkerBonusPenaltyByMonth
-    获取美车师当月奖惩
-   */
+  /* GET /a/getWorkerBonusPenaltyByMonth 获取美车师当月奖惩 */
   getWorkerBonusPenaltyByMonth ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest/a/getWorkerBonusPenaltyByMonth?workMonth=' + data.workMonth + '&workerId=' + data.workerId)
     .then(res => {
@@ -646,9 +509,7 @@ export const actions = {
       }
     })
   },
-  /* GET /a/exportBonusPenalty
-    导出指定美车师奖惩月结算信息
-  */
+  /* GET /a/exportBonusPenalty 导出指定美车师奖惩月结算信息 */
   exportBonusPenalty ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest/a/exportBonusPenalty?workerId=' + data.workerId + '&workMonth=' + data.workMonth + '&cityCode=' + data.cityCode, {
       responseType: 'blob'
@@ -685,9 +546,7 @@ export const actions = {
       }
     })
   },
-  /* GET /a/cities
-    城市列表查询
-   */
+  /* GET /a/cities 城市列表查询 */
   getCities ({commit, state}, data) {
     axios.get('/api/v2/fuser/rest/a/cities')
     .then(res => {
@@ -701,20 +560,19 @@ export const actions = {
       }
     })
   },
-  /* GET /rest/a/getSettlementStatistic
-    查询结算汇总信息接口
-   */
+  /* GET /rest/a/getSettlementStatistic 查询结算汇总信息接口 */
   getSettlementStatistic ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest/a/getSettlementStatistic?cityCode=' + data.cityCode + '&month=' + data.month)
     .then(res => {
       console.log(res)
-      state.settlementStatistic = res.data.map((w) => {
+      state.settlementStatistic = res.data.map((w, index) => {
         const worker = {
           'workerId': w.workerId,
+          'index': index + 1,
           'workerName': w.workerName,
           'orderFee': w.orderFee,
           'orderNum': w.orderNum,
-          'reward': w.reward,
+          'reward': Number(w.reward),
           'productFee': w.productFee,
           'serviceFee': w.serviceFee,
           'workerServiceFee': w.workerServiceFee,
@@ -738,9 +596,7 @@ export const actions = {
       }
     })
   },
-  /* GET /rest/a/downSettlementStatistic
-    导出结算汇总信息接口
-   */
+  /* GET /rest/a/downSettlementStatistic 导出结算汇总信息接口 */
   downSettlementStatistic ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest/a/downSettlementStatistic?cityCode=' + data.cityCode + '&month=' + data.month, {
       responseType: 'blob'
@@ -777,9 +633,7 @@ export const actions = {
       }
     })
   },
-  /* GET /rest/a/getSettlementByWorker
-    查询美车师结算接口
-   */
+  /* GET /rest/a/getSettlementByWorker 查询美车师结算接口 */
   getSettlementByWorker ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest/a/getSettlementByWorker?workerId=' + data.workerId + '&month=' + data.month)
     .then(res => {
@@ -797,10 +651,10 @@ export const actions = {
           'cityProductFee': p.cityProductFee,
           'cityServiceFee': p.cityServiceFee,
           'cityBonusPenalty': p.cityBonusPenalty,
-          'cityPlatformFee': p.cityPlatformFee,
+          'cityPlatformFee': 0 - Number(p.platformFee),
           'cityTotal': p.cityTotal,
           'platformFee': p.platformFee,
-          'platformTotal': p.platformTotal
+          'platformTotal': p.platformFee
         }
         return people
       })
@@ -821,9 +675,7 @@ export const actions = {
       }
     })
   },
-  /* GET /rest/a/downSettlementByWorker
-    导出美车师结算接口
-   */
+  /* GET /rest/a/downSettlementByWorker 导出美车师结算接口 */
   downSettlementByWorker ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest/a/downSettlementByWorker?workerId=' + data.workerId + '&month=' + data.month, {
       responseType: 'blob'
@@ -860,9 +712,7 @@ export const actions = {
       }
     })
   },
-  /* GET /rest/a/solveSettleProblem
-    美车师结算问题修复接口
-   */
+  /* GET /rest/a/solveSettleProblem 美车师结算问题修复接口 */
   solveSettleProblem ({commit, state}, data) {
     state.snackbarMsg = '正在执行修复，请稍后……'
     commit('showSnackbar')

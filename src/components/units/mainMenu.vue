@@ -8,19 +8,23 @@
                :docked="false"
                @close="toggle()">
       <mu-list @itemClick="toggle()">
-        <mu-list-item title="运营视图" to="/">
+        <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'Home'))" title="运营视图" to="/">
           <mu-icon slot="left" value="map"/>
         </mu-list-item>
         <mu-list-item title="结算报表" toggleNested>
           <mu-icon slot="left" value="list"/>
-          <mu-list-item slot="nested" title="美车师结算项设置" to="list">
+          <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'bonusList'))" slot="nested" title="美车师结算项设置" to="list">
             <mu-icon slot="left" value="edit"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="美车师结算汇总" to="settleList">
+          <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'settleList'))" slot="nested" title="美车师结算汇总" to="settleList">
             <mu-icon slot="left" value="assignment"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="运营图表" to="charts">
+          <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'overallChart'))" slot="nested" title="运营图表" to="charts">
             <mu-icon slot="left" value="assessment"/>
+          </mu-list-item>
+        </mu-list-item>
+          <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'compareChart'))" slot="nested" title="对比图表" to="charts">
+            <mu-icon slot="left" value="compare"/>
           </mu-list-item>
         </mu-list-item>
       </mu-list>
@@ -30,6 +34,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapState, mapActions } from 'vuex'
 import floatButton from 'muse-components/floatButton'
 import drawer from 'muse-components/drawer'
 import { list, listItem } from 'muse-components/list'
@@ -44,10 +49,23 @@ export default {
       open: false
     }
   },
+  created () {
+    if (!(this.menus && this.menus.length)) {
+      this.getMenu()
+    }
+  },
   methods: {
+    ...mapActions([
+      'getMenu'
+    ]),
     toggle () {
       this.open = !this.open
     }
+  },
+  computed: {
+    ...mapState([
+      'menus'
+    ])
   }
 }
 </script>

@@ -13,7 +13,11 @@ export const state = {
   recieveMsg: '',
   modalPopup: false,
   showModalTable: false,
+  menus: [],
   cities: [],
+  city: '320100',
+  groups: [],
+  group: 0,
   workers: [],
   orders: [],
   overallCount: {},
@@ -115,6 +119,12 @@ export const mutations = {
   },
   hasDoneBonusPenalty (state, bool) {
     state.bonusPenaltyFinished = bool
+  },
+  setCity (state, cityCode) {
+    state.city = cityCode
+  },
+  setGroup (state, herderId) {
+    state.group = herderId
   }
 }
 // 设置点标记
