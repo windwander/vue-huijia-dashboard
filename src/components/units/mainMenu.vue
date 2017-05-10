@@ -19,13 +19,12 @@
           <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'settleList'))" slot="nested" title="美车师结算汇总" to="settleList">
             <mu-icon slot="left" value="assignment"/>
           </mu-list-item>
-          <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'overallChart'))" slot="nested" title="运营图表" to="charts">
+          <!--<mu-list-item v-if="Boolean(menus.find(m => m.menu === 'overallChart'))" slot="nested" title="运营图表" to="charts">
             <mu-icon slot="left" value="assessment"/>
           </mu-list-item>
-        </mu-list-item>
           <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'compareChart'))" slot="nested" title="对比图表" to="charts">
             <mu-icon slot="left" value="compare"/>
-          </mu-list-item>
+          </mu-list-item>-->
         </mu-list-item>
       </mu-list>
     </mu-drawer>
