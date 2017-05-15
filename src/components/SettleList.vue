@@ -209,6 +209,8 @@ html, body {
   padding: 1em;
   white-space: pre-wrap;
   text-align: center;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 .settle-table .detail-btn {
   min-width: 60px;

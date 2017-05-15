@@ -6,12 +6,12 @@
         <mu-menu-item v-for="item in cities" :key="item.cityCode" :value="item.cityCode" :title="item.cityName"/>
       </mu-select-field>
     </div>
-    <!--<div v-if="groups && groups.length" class="group-select">
+    <div v-if="groups && groups.length" class="group-select">
       <mu-select-field :value="group" @change="handleChangeGroup" class="group-select-field">
         <mu-menu-item :value="0" title="组别"/>
         <mu-menu-item v-for="item in groups" :key="item.herderId" :value="item.herderId" :title="item.herderName"/>
       </mu-select-field>
-    </div>-->
+    </div>
   </div>
 </template>
 <script>

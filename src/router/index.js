@@ -4,7 +4,8 @@ import Home from '@/components/Home'
 import Login from '@/components/Login'
 import List from '@/components/List'
 import SettleList from '@/components/SettleList'
-import Charts from '@/components/Charts'
+import overallChart from '@/components/overallChart'
+import compareChart from '@/components/compareChart'
 
 Vue.use(Router)
 
@@ -27,9 +28,13 @@ export default new Router({
       name: 'settleList',
       component: SettleList
     }, {
-      path: '/charts',
-      name: 'charts',
-      component: Charts
+      path: '/overallChart',
+      name: 'overallChart',
+      component: overallChart
+    }, {
+      path: '/compareChart',
+      name: 'compareChart',
+      component: compareChart
     }
   ]
 })
