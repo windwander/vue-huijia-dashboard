@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as getters from './getters'
+import {getters} from './getters'
 import {actions} from './actions'
 import {state, mutations} from './mutations'
 import Amap from './modules/Amap'

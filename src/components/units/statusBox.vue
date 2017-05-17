@@ -1,5 +1,5 @@
 <template>
-  <div class="status-box" :class="[arrowPosition, direction, clickable]" @click="handleClick()">
+  <div class="status-box" :class="[arrowPosition, direction, clickable, selected]" @click="handleClick()">
     <mu-flat-button v-if="icon" :icon="icon" class="status-button" icon-class="status-button-icon" :label="title" :backgroundColor="backgroundColor" :color="color"/>
     <mu-flat-button v-if="!icon" class="status-button" icon-class="status-button-icon" :label="title" :backgroundColor="backgroundColor" :color="color">
       <h3 class="head-status-number">{{number}}</h3>
@@ -35,6 +35,9 @@ export default {
     //   default: 'rgba(255,255,255,0.9)'
     },
     clickable: {
+      type: String
+    },
+    selected: {
       type: String
     }
   },

@@ -35,7 +35,7 @@ import { mapState } from 'vuex'
 import paper from 'muse-components/paper'
 import textField from 'muse-components/textField'
 import raisedButton from 'muse-components/raisedButton'
-import VueParticles from './units/vue-particles'
+import VueParticles from './units/particles'
 
 Vue.component(paper.name, paper)
 Vue.component(textField.name, textField)

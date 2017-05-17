@@ -42,7 +42,6 @@ export const actions = {
   doLogin ({dispatch, commit, state}, user) {
     axios.get('/api/v2/login?username=' + user.phone + '&password=' + user.password)
     .then(res => {
-      console.log(res)
       if (res.data.code === '0000') { // 登录成功
         router.push('/')
       } else {
@@ -57,7 +56,6 @@ export const actions = {
   getConfig ({commit, state}) {
     axios.get('/api/v2/fworker/rest/v/NewDashboard/config')
     .then(res => {
-      console.log(res)
       state.cities = res.data.citys
       state.groups = res.data.herders
     })
@@ -69,7 +67,6 @@ export const actions = {
   getMenu ({commit, state}) {
     axios.get('/api/v2/fworker/rest/v/NewDashboard/menu')
     .then(res => {
-      console.log(res)
       state.menus = res.data
     })
     .catch(error => {
@@ -94,7 +91,6 @@ export const actions = {
   getOverallCount ({commit, state}) {
     axios.get('/api/v2/fworker/rest/v/Dashboard/count')
     .then(res => {
-      console.log(res)
       state.overallCount = res.data
     })
     .catch(error => {
@@ -159,7 +155,6 @@ export const actions = {
     axios.get('/api/v2/fworker/rest/v/Dashboard/' + queryString)
     .then(res => {
       // 订单状态 当日待接单订单-10 美车师待服务订单-20
-      console.log(res)
       function formatTimeString (time) {
         time = new Date(time)
         const month = time.getMonth() + 1
@@ -236,7 +231,6 @@ export const actions = {
   getOrders ({dispatch, state}) {
     axios.get('/api/v2/fworker/rest/v/Dashboard/orders')
     .then(res => {
-      console.log(res)
       state.orders = res.data
       state.orders.map(o => dispatch('mapPoint', o))
     })
@@ -251,9 +245,7 @@ export const actions = {
   getWorkerDetail ({commit, state}, workerId) {
     axios.get('/api/v2/fworker/rest/v/Dashboard/workerDetial?workerId=' + workerId)
     .then(res => {
-      console.log(res)
       state.workerDetail = res.data
-      console.log(state.workerDetail)
       commit('openInfoWindow', state.workerDetail)
     })
     .catch(error => {
@@ -267,7 +259,6 @@ export const actions = {
   getWorkerList ({commit, state}) {
     axios.get('/api/v2/fworker/rest/v/Dashboard/workerList')
     .then(res => {
-      console.log(res)
       state.modalTableHead = ['姓名', '联系方式', '所属小组']
       state.modalTableData = res.data.map(p => {
         const people = {
@@ -290,7 +281,6 @@ export const actions = {
   getWorkers ({dispatch, state}) {
     axios.get('/api/v2/fworker/rest/v/Dashboard/workers')
     .then(res => {
-      console.log(res)
       state.workers = res.data
       state.workers.map(w => dispatch('mapPoint', w))
     })
@@ -331,7 +321,6 @@ export const actions = {
   sendOrder ({commit, state}, data) {
     axios.put('/api/v2/fworker/rest/v/Dashboard/send?orderId=' + data.orderId + '&workerId=' + data.workerId)
     .then(res => {
-      console.log(res)
       state.snackbarMsg = '派单成功'
       commit('showSnackbar')
       // router.push('/')
@@ -349,7 +338,6 @@ export const actions = {
   getPreSaveWorkerMonthList ({commit, state}, data) {
     axios.post('/api/v2/fworker/rest/a/getPreSaveWorkerMonthList?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
     .then(res => {
-      console.log(res)
       state.preSaveWorkerMonthList = res.data
       state.workerTableHead = ['#', '姓名', '美车师账号', '上岗时间', '职务', '本月工作天数', '伯乐奖', '培训补贴天数', '延迟履约', '投诉追责', '费用骗取', '培训费用', '延迟接单', '服务不规范', '转单延迟1', '转单延迟2', '操作']
       state.workerTableData = res.data.map((w, index) => {
@@ -387,7 +375,6 @@ export const actions = {
   preSaveWorkerMonth ({dispatch, commit, state}, data) {
     axios.post('/api/v2/fworker/rest/a/preSaveWorkerMonth', data)
     .then(res => {
-      console.log(res)
       state.snackbarMsg = '保存成功'
       dispatch('getPreSaveWorkerMonthList', {
         workMonth: data.workMonth,
@@ -408,7 +395,6 @@ export const actions = {
   doAddBonusPenalty ({commit, state}, data) {
     axios.post('/api/v2/fworker/rest/a/doAddBonusPenalty?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
     .then(res => {
-      console.log(res)
       state.snackbarMsg = '结算入库成功'
       commit('showSnackbar')
     })
@@ -427,7 +413,6 @@ export const actions = {
       responseType: 'blob'
     })
     .then(res => {
-      console.log(res)
       const filename = '美车师结算项设置(' + data.workMonth + ')'
       const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
       if (typeof window.navigator.msSaveBlob !== 'undefined') {
@@ -462,7 +447,6 @@ export const actions = {
   hasDoneBonusPenalty ({commit, state}, data) {
     axios.post('/api/v2/fworker/rest/a/hasDoneBonusPenalty?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
     .then(res => {
-      console.log(res)
       commit('hasDoneBonusPenalty', res.data)
     })
     .catch(error => {
@@ -478,8 +462,6 @@ export const actions = {
   getWorkerBonusPenaltyByMonth ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest/a/getWorkerBonusPenaltyByMonth?workMonth=' + data.workMonth + '&workerId=' + data.workerId)
     .then(res => {
-      console.log(res)
-      console.table(res.data)
       state.modalTableHead = ['结算项名称', '数量', '单次金额', '总金额']
       let sumCost = 0
       state.modalTableData = res.data.map(p => {
@@ -515,7 +497,6 @@ export const actions = {
       responseType: 'blob'
     })
     .then(res => {
-      console.log(res)
       const filename = data.workerName + '美车师月结算信息(' + data.workMonth + ')'
       const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
       if (typeof window.navigator.msSaveBlob !== 'undefined') {
@@ -550,7 +531,6 @@ export const actions = {
   getCities ({commit, state}, data) {
     axios.get('/api/v2/fuser/rest/a/cities')
     .then(res => {
-      console.log(res)
       state.cities = res.data
     })
     .catch(error => {
@@ -564,7 +544,6 @@ export const actions = {
   getSettlementStatistic ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest/a/getSettlementStatistic?cityCode=' + data.cityCode + '&month=' + data.month)
     .then(res => {
-      console.log(res)
       state.settlementStatistic = res.data.map((w, index) => {
         const worker = {
           'workerId': w.workerId,
@@ -602,7 +581,6 @@ export const actions = {
       responseType: 'blob'
     })
     .then(res => {
-      console.log(res)
       const filename = '美车师结算汇总(' + data.month + ')'
       const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
       if (typeof window.navigator.msSaveBlob !== 'undefined') {
@@ -637,7 +615,6 @@ export const actions = {
   getSettlementByWorker ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest/a/getSettlementByWorker?workerId=' + data.workerId + '&month=' + data.month)
     .then(res => {
-      console.log(res)
       state.modalTableHead = ['服务种类', '订单费', '产品费', '服务费用', '美车师结算\n服务费提成', '美车师结算\n奖惩', '美车师结算\n合计', '城市结算\n产品费', '城市结算\n服务费提成', '城市结算\n奖惩', '城市结算\n平台费', '城市结算\n合计', '平台结算\n平台费', '平台结算\n合计']
       state.modalTableData = res.data.settlements && res.data.settlements.map(p => {
         const people = {
@@ -659,7 +636,6 @@ export const actions = {
         return people
       })
       const last = state.modalTableData[state.modalTableData.length - 1]
-      console.table(state.modalTableData)
       last.workerBonusPenalty = res.data.workerBonusPenalty
       last.workerTotal = res.data.workerTotal
       last.cityBonusPenalty = res.data.cityBonusPenalty
@@ -681,7 +657,6 @@ export const actions = {
       responseType: 'blob'
     })
     .then(res => {
-      console.log(res)
       const filename = data.workerName + '美车师结算(' + data.month + ')'
       const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
       if (typeof window.navigator.msSaveBlob !== 'undefined') {
@@ -718,13 +693,73 @@ export const actions = {
     commit('showSnackbar')
     axios.get('/api/v2/fworker/rest/a/solveSettleProblem?month=' + data.month)
     .then(res => {
-      console.log(res)
       state.snackbarMsg = '执行修复成功'
       commit('showSnackbar')
     })
     .catch(error => {
       console.dir(error)
       state.snackbarMsg = '执行修复失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /a/getGeneralOrderStatistics 查询概要运营数据 */
+  getGeneralOrderStatistics ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest//a/getGeneralOrderStatistics?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode)
+    .then(res => {
+      state.generalOrderStatistics = res.data
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = '查询概要运营数据失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /a/getOperationTrendDate 查询运营统计数据 */
+  getOperationTrendDate ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest//a/getOperationTrendDate?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
+    .then(res => {
+      state.operationTrendData = res.data
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = '查询运营统计数据失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /a/statisticsOperationData 统计运营数据 */
+  statisticsOperationData ({commit, state}) {
+    axios.get('/api/v2/fworker/rest//a/statisticsOperationData')
+    .then(res => {
+      state.snackbarMsg = res.data.resultMessage || '统计运营数据成功'
+      commit('showSnackbar')
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = '统计运营数据失败'
+      commit('showSnackbar')
+      if (error.toString().indexOf('401') > -1) {
+        router.push('login')
+      }
+    })
+  },
+  /* GET /a/getOperationTrendCity 查询运营对比数据 */
+  getOperationTrendCity ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest//a/getOperationTrendCity?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
+    .then(res => {
+      state.operationTrendCity = res.data
+    })
+    .catch(error => {
+      console.dir(error)
+      state.snackbarMsg = '查询运营对比数据失败'
       commit('showSnackbar')
       if (error.toString().indexOf('401') > -1) {
         router.push('login')

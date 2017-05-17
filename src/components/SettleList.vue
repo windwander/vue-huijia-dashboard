@@ -3,21 +3,10 @@
   <mainMenu />
   <mu-appbar title="美车师结算汇总信息" class="setting-appbar">
     <div class="setting-dropdown" slot="right">
-      <Group :handleChange="changeGroup" />
+      <Group :handleChange="changeSelect" />
     </div>
     <div class="setting-dropdown" slot="right">
-      <label for="monthDropDown">月份：</label>
-      <mu-dropDown-menu :value="year" @change="handleChangeYear" id="yearDropDown">
-        <mu-menu-item value="2017" title="2017年" />
-        <mu-menu-item value="2018" title="2018年" />
-        <mu-menu-item value="2019" title="2019年" />
-        <mu-menu-item value="2020" title="2020年" />
-        <mu-menu-item value="2020" title="2021年" />
-        <mu-menu-item value="2020" title="2022年" />
-      </mu-dropDown-menu>
-      <mu-dropDown-menu :value="month" @change="handleChangeMonth" id="monthDropDown">
-        <mu-menu-item v-for="n in 12" :key="n" :value="n < 10 ? ('0' + n) : n" :title="n + '月'" />
-      </mu-dropDown-menu>
+      <dateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
     </div>
     <div class="top-btn" slot="right">
       <mu-raised-button label="结算问题修复" icon="build" class="raised-button" @click="topBtnBuild" primary/>
@@ -52,6 +41,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import mainMenu from './units/mainMenu'
 import Modal from './Modal'
 import Group from './units/group'
+import dateSelect from './units/dateSelect'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
@@ -66,15 +56,12 @@ export default {
   components: {
     mainMenu,
     Modal,
-    Group
+    Group,
+    dateSelect
   },
   data () {
-    const dateYear = new Date().getFullYear().toString()
-    const dateMonth = new Date().getMonth() + 1
     return {
       selectedWorker: '',
-      year: dateYear,
-      month: dateMonth < 10 ? ('0' + dateMonth) : dateMonth,
       tableHeight: '',
       tableHead: ['美车师ID', '#', '美车师姓名', '订单费', '订单数量', '用户打赏', '产品费', '服务费用', '美车师结算\n服务费提成', '美车师结算\n奖惩', '美车师结算\n合计', '城市结算\n产品费', '城市结算\n服务费提成', '城市结算\n奖惩', '城市结算\n平台费', '城市结算\n合计', '平台结算\n平台费', '平台结算\n合计', '操作'],
       tableData: [],
@@ -84,6 +71,8 @@ export default {
   computed: {
     ...mapState([
       'city',
+      'year',
+      'month',
       'workers',
       'snackbar',
       'snackbarMsg',
@@ -114,15 +103,7 @@ export default {
       }
       this.getSettlementStatistic(postData)
     },
-    changeGroup () {
-      this.getData()
-    },
-    handleChangeYear (value) {
-      this.year = value
-      this.getData()
-    },
-    handleChangeMonth (value) {
-      this.month = value
+    changeSelect () {
       this.getData()
     },
     topBtnBuild () {

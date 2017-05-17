@@ -1,12 +1,14 @@
-// export const count = state => state.count
+import { state } from './mutations'
 
-// const limit = 5
-
-// export const recentHistory = state => {
-//   const end = state.history.length
-//   const begin = end - limit < 0 ? 0 : end - limit
-//   return state.history
-//     .slice(begin, end)
-//     .toString()
-//     .replace(/,/g, ', ')
-// }
+export const getters = {
+  fullDate: function () {
+    let date = state.year
+    if (state.month !== '0') {
+      date += '-' + state.month
+    }
+    if (state.date !== '0') {
+      date += '-' + state.date
+    }
+    return date
+  }
+}

@@ -1,14 +1,14 @@
 <template>
   <div>
     <div v-if="cities && cities.length" class="city-select">
-      <mu-select-field :value="city" @change="handleChangeCity" class="city-select-field">
+      <mu-select-field :value="city" @change="handleChangeCity" class="city-select-field" ref="city">
         <mu-menu-item value="" title="城市"/>
         <mu-menu-item v-for="item in cities" :key="item.cityCode" :value="item.cityCode" :title="item.cityName"/>
       </mu-select-field>
     </div>
     <div v-if="groups && groups.length" class="group-select">
-      <mu-select-field :value="group" @change="handleChangeGroup" class="group-select-field">
-        <mu-menu-item :value="0" title="组别"/>
+      <mu-select-field :value="group" @change="handleChangeGroup" class="group-select-field" ref="group">
+        <mu-menu-item value="" title="组别"/>
         <mu-menu-item v-for="item in groups" :key="item.herderId" :value="item.herderId" :title="item.herderName"/>
       </mu-select-field>
     </div>
@@ -40,6 +40,12 @@ export default {
       'groups',
       'group'
     ])
+  },
+  mounted () {
+    // this.setCity(this.$refs.city.value)
+    // if (!this.group) {
+    //   this.setGroup(this.$refs.group && this.$refs.group.value)
+    // }
   },
   methods: {
     ...mapActions([

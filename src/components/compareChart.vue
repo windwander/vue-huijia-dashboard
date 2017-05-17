@@ -1,48 +1,47 @@
 <template>
   <div>
     <mainMenu />
-    <mu-appbar title="运营整体趋势" class="setting-appbar">
+    <mu-appbar title="运营数据对比" class="setting-appbar">
       <div class="setting-dropdown" slot="right">
-        <Group :handleChange="changeGroup" />
+        <Group :handleChange="changeSelect" />
       </div>
       <div class="setting-dropdown" slot="right">
-        <label for="monthDropDown">时间范围：</label>
-        <mu-dropDown-menu :value="year" @change="handleChangeYear" id="yearDropDown">
-          <mu-menu-item value="2017" title="2017年" />
-          <mu-menu-item value="2018" title="2018年" />
-          <mu-menu-item value="2019" title="2019年" />
-          <mu-menu-item value="2020" title="2020年" />
-          <mu-menu-item value="2020" title="2021年" />
-          <mu-menu-item value="2020" title="2022年" />
+        <!--<label for="monthDropDown">时间范围：</label>-->
+        <dateSelect :handleChange="changeSelect" />
+      </div>
+      <div class="setting-dropdown" slot="right">
+        <mu-dropDown-menu :value="categoryData.code" @change="handleChangeService" id="serviceDropDown">
+          <mu-menu-item value="" title="全部服务" />
+          <mu-menu-item v-for="item in generalOrderStatistics" :key="item.categoryCode" :value="item.categoryCode" :title="item.categoryName" />
         </mu-dropDown-menu>
-        <mu-dropDown-menu :value="month" @change="handleChangeMonth" id="monthDropDown">
-          <mu-menu-item value="0" title="全年" />
-          <mu-menu-item v-for="n in 12" :key="n" :value="n < 10 ? ('0' + n) : n" :title="n + '月'" />
-        </mu-dropDown-menu>
-        <label for="serviceDropDown">服务种类：</label>
-        <mu-dropDown-menu :value="service" @change="handleChangeService" id="serviceDropDown">
-          <mu-menu-item value="0" title="全部" />
-          <mu-menu-item v-for="item in services" :key="item.serviceId" :value="item.serviceId" :title="item.serviceName" />
-        </mu-dropDown-menu>
+      </div>
+      <div class="top-btn" slot="right">
+        <mu-raised-button label="统计运营数据" icon="trending_up" class="raised-button" @click="topBtnCalc" secondary/>
       </div>
     </mu-appbar>
-    <ECharts :options="chartOption" auto-resize ref="bar"/>
+    <div id="mainContent">
+      <ECharts :options="chartOption" auto-resize ref="bar"/>
+    </div>
+    <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar"/>
   </div>
 </template>
 <script>
 import Vue from 'vue'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import mainMenu from './units/mainMenu'
 import Modal from './Modal'
 import Group from './units/group'
+import dateSelect from './units/dateSelect'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
 import ECharts from 'vue-echarts/components/ECharts.vue'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
+import 'echarts/lib/component/title'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/toolbox'
 
 Vue.component(snackbar.name, snackbar)
 Vue.component(dropDownMenu.name, dropDownMenu)
@@ -53,29 +52,24 @@ export default {
     mainMenu,
     Modal,
     ECharts,
-    Group
+    Group,
+    dateSelect
   },
   data () {
-    const dateYear = new Date().getFullYear().toString()
-    const dateMonth = new Date().getMonth() + 1
     return {
       selectedWorker: '',
-      year: dateYear,
-      month: dateMonth < 10 ? ('0' + dateMonth) : dateMonth,
-      timeScope: 'month',
-      services: [{
-        serviceId: 1,
-        serviceName: '无水洗车'
-      }, {
-        serviceId: 2,
-        serviceName: '玻璃镀膜'
-      }],
-      service: 1,
-      tableHeight: '',
-      tableHead: ['美车师ID', '美车师姓名', '订单费', '订单数量', '用户打赏', '产品费', '服务费用', '美车师结算\n服务费提成', '美车师结算\n奖惩', '美车师结算\n合计', '城市结算\n产品费', '城市结算\n服务费提成', '城市结算\n奖惩', '城市结算\n平台费', '城市结算\n合计', '平台结算\n平台费', '平台结算\n合计', '操作'],
-      tableData: [],
-      modalTitle: '',
+      categoryData: {
+        code: '',
+        name: '全部服务'
+      },
       chartOption: {
+        title: {
+          show: true,
+          text: '运营对比图',
+          subtext: this.fullDate,
+          top: 'top',
+          left: 'center'
+        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -83,9 +77,19 @@ export default {
           }
         },
         legend: {
-          data: ['完成单量', '目标单量', '环比增长率', '目标达成率']
+          top: '12%'
+        },
+        toolbox: {
+          orient: 'vertical',
+          itemSize: 24,
+          right: 24,
+          top: 12,
+          feature: {
+            saveAsImage: {}
+          }
         },
         grid: {
+          top: '24%',
           left: '3%',
           right: '4%',
           bottom: '3%',
@@ -93,160 +97,197 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: (function () {
-            let arr = []
-            for (let i = 1; i <= 31; i++) {
-              arr.push(i)
-            }
-            return arr
-          })()
+          boundaryGap: true
         }],
         yAxis: [{
           type: 'value',
           name: '单量'
-        }, {
-          type: 'value',
-          name: '比率',
-          // min: 0,
-          // max: 25,
-          // interval: 5,
-          axisLabel: {
-            formatter: '{value} %'
-          }
         }],
-        series: [{
-          name: '完成单量',
-          type: 'bar',
-          stack: '单量',
-          data: (function () {
-            let arr = []
-            for (let i = 1; i <= 31; i++) {
-              arr.push(Math.floor(Math.random() * 80))
-            }
-            return arr
-          })()
-        }, {
-          name: '目标单量',
-          type: 'bar',
-          stack: '单量',
-          data: (function () {
-            let arr = []
-            for (let i = 1; i <= 31; i++) {
-              arr.push(Math.floor(Math.random() * 20))
-            }
-            return arr
-          })()
-        }, {
-          name: '环比增长率',
-          type: 'line',
-          yAxisIndex: 1,
-          data: (function () {
-            let arr = []
-            for (let i = 1; i <= 31; i++) {
-              arr.push(Math.floor(Math.random() * 100))
-            }
-            return arr
-          })(),
-          formatter: '{value} %'
-        }, {
-          name: '目标达成率',
-          type: 'line',
-          yAxisIndex: 1,
-          data: (function () {
-            let arr = []
-            for (let i = 1; i <= 31; i++) {
-              arr.push(Math.floor(Math.random() * 100))
-            }
-            return arr
-          })(),
-          formatter: '{value} %'
-        }]
+        series: []
       }
     }
   },
   computed: {
     ...mapState([
       'city',
-      'workers',
+      'group',
       'snackbar',
       'snackbarMsg',
-      'bonusPenaltyFinished',
-      'settlementStatistic'
-    ])
+      'generalOrderStatistics',
+      'operationTrendCity'
+    ]),
+    ...mapGetters([
+      'fullDate'
+    ]),
+    targetNum: function () {
+      let arr
+      if (this.operationTrendCity) {
+        arr = this.operationTrendCity.map(d => d.targetNum)
+      }
+      return arr
+    },
+    completionNum: function () {
+      let arr
+      if (this.operationTrendCity) {
+        arr = this.operationTrendCity.map(d => d.completionNum)
+      }
+      return arr
+    },
+    achievingRate: function () {
+      let arr
+      if (this.operationTrendCity) {
+        arr = this.operationTrendCity.map(d => d.achievingRate)
+      }
+      return arr
+    },
+    linkGrowthRate: function () {
+      let arr
+      if (this.operationTrendCity) {
+        arr = this.operationTrendCity.map(d => d.linkGrowthRate)
+      }
+      return arr
+    },
+    dimension: function () {
+      let arr
+      if (this.operationTrendCity) {
+        arr = this.operationTrendCity.map(d => d.cityName)
+      }
+      return arr
+    }
   },
   mounted () {
+    let bar = this.$refs.bar
+    bar.showLoading({
+      text: '加载中',
+      color: '#c23531',
+      textColor: '#000',
+      maskColor: 'rgba(255, 255, 255, 0.8)',
+      zlevel: 0
+    })
     this.getData()
-    this.tableHeight = 'calc(100vh - 135px)'
   },
   methods: {
     ...mapMutations([
       'hideSnackbar'
     ]),
     ...mapActions([
-      'getSettlementStatistic',
-      'downSettlementStatistic',
-      'getSettlementByWorker',
-      'downSettlementByWorker',
-      'solveSettleProblem'
+      'getGeneralOrderStatistics',
+      'getOperationTrendCity',
+      'statisticsOperationData'
     ]),
     getData () {
-      // const postData = {
-      //   cityCode: this.city,
-      //   month: this.year + '-' + this.month
-      // }
-      // this.getSettlementStatistic(postData)
+      const z = this
+      const dataA = {
+        cityCode: this.city,
+        date: this.fullDate,
+        parentId: this.group
+      }
+      const dataB = Object.assign(dataA, {
+        categoryCode: this.categoryData.code
+      })
+      this.getGeneralOrderStatistics(dataA)
+      this.getOperationTrendCity(dataB)
+      setTimeout(function () {
+        z.updateBar()
+      }, 500)
     },
-    changeGroup () {
+    handleChangeService (v) {
+      let name = '全部服务'
+      if (v !== '') {
+        name = this.generalOrderStatistics.filter(t => t.categoryCode === v)[0].categoryName
+      }
+      this.categoryData = {
+        code: v,
+        name: name
+      }
       this.getData()
     },
-    handleChangeService (value) {
-      this.service = value
+    changeSelect () {
+      this.getData()
     },
-    handleChangeYear (value) {
-      this.year = value
-    },
-    handleChangeMonth (value) {
-      this.month = value
-      let bar = this.$refs.bar
+    updateBar () {
+      const z = this
+      let bar = z.$refs.bar
+      let lengend = []
+      let series = []
+      if (z.targetNum && z.targetNum[0] !== null) {
+        lengend.push('目标单量')
+        series.push({
+          name: '目标单量',
+          type: 'bar',
+          // stack: '单量',
+          areaStyle: {normal: {}},
+          // itemStyle: {
+          //   normal: {
+          //     color: '#26c6da'
+          //   },
+          //   emphasis: {
+          //     color: '#80deea'
+          //   }
+          // },
+          data: z.targetNum
+        })
+      }
+      if (z.completionNum && z.completionNum[0] !== null) {
+        lengend.push('完成单量')
+        series.push({
+          name: '完成单量',
+          type: 'bar',
+          // stack: '单量',
+          areaStyle: {normal: {}},
+          // itemStyle: {
+          //   normal: {
+          //     color: '#66bb6a'
+          //   },
+          //   emphasis: {
+          //     color: '#a5d6a7'
+          //   }
+          // },
+          data: z.completionNum
+        })
+      }
+      if (z.achievingRate && z.achievingRate[0] !== null) {
+        lengend.push('目标达成率')
+        series.push({
+          name: '目标达成率',
+          type: 'line',
+          yAxisIndex: 1,
+          formatter: '{value} %',
+          data: z.achievingRate
+        })
+      }
+      if (z.linkGrowthRate && z.linkGrowthRate[0] !== null) {
+        lengend.push('环比增长率')
+        series.push({
+          name: '环比增长率',
+          type: 'line',
+          yAxisIndex: 1,
+          formatter: '{value} %',
+          data: z.linkGrowthRate
+        })
+      }
       let newData = {
-        series: [{
-          data: (function () {
-            let arr = []
-            for (let i = 1; i <= 31; i++) {
-              arr.push(Math.floor(Math.random() * 80))
-            }
-            return arr
-          })()
-        }, {
-          data: (function () {
-            let arr = []
-            for (let i = 1; i <= 31; i++) {
-              arr.push(Math.floor(Math.random() * 20))
-            }
-            return arr
-          })()
-        }, {
-          data: (function () {
-            let arr = []
-            for (let i = 1; i <= 31; i++) {
-              arr.push(Math.floor(Math.random() * 100))
-            }
-            return arr
-          })()
-        }, {
-          data: (function () {
-            let arr = []
-            for (let i = 1; i <= 31; i++) {
-              arr.push(Math.floor(Math.random() * 100))
-            }
-            return arr
-          })()
-        }]
+        title: {
+          text: z.categoryData.name + '-运营对比图',
+          subtext: this.fullDate
+        },
+        legend: {
+          data: lengend
+        },
+        xAxis: [{
+          data: z.dimension
+          // name: '时'
+          // nameLocation: 'end',
+          // nameGap: -15,
+          // nameRotate: 0
+        }],
+        series: series
       }
       bar.mergeOptions(newData)
+      bar.hideLoading()
     },
-    handleChangeScope (value) {
-      this.timeScope = value
+    topBtnCalc () {
+      this.statisticsOperationData()
     }
   }
 }
@@ -258,7 +299,10 @@ body {
   overflow-x: auto;
   overflow-y: hidden;
 }
-
+#mainContent {
+  height: calc(100vh - 75px);
+  overflow: auto;
+}
 .setting-appbar.mu-appbar {
   height: 74px;
   padding-left: 100px;
@@ -278,56 +322,40 @@ body {
   color: #fff;
 }
 
-#yearDropDown {
+#orderTypeBox {
+  display: flex;
+  height: 240px;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+}
+#orderTypeBox .status-box {
+  margin: 6px 12px;
+}
+#orderTypeBox .status-box:first-child .status-button {
+  height: 228px;
+  width: 120px;
+}
+#orderTypeBox .status-box .status-button {
+  height: 108px;
+  width: 120px;
+}
+#orderTypeBox .status-box.selected .status-button {
+  background-color: #fffde7 !important;
+}
+#orderTypeBox .status-box .head-status-number {
+  font-size: 24px;
+}
+#orderTypeBox .status-box .mu-flat-button-label {
+  font-size: 18px;
+}
+#app div.echarts {
+  width: 100%;
+  min-height: 500px;
+  height: 100%;
+}
+#yearDropDown, #monthDropDown {
   margin-right: -34px;
-}
-/*
-.settle-table .table-header {
-  background-color: #eee;
-}
-
-.settle-table .table-header .mu-th {
-  padding: 0;
-  color: #333;
-  border-bottom: 1px solid #c7c7c7;
-  text-align: center;
-}
-
-.settle-table .mu-th-wrapper {
-  white-space: pre-wrap;
-}
-
-.settle-table .mu-td {
-  font-size: 16px;
-  padding: 1em;
-  white-space: pre-wrap;
-  text-align: center;
-}
-
-.settle-table .detail-btn {
-  min-width: 60px;
-  line-height: 2;
-  height: 2em;
-  font-size: 14px;
-  margin: 0;
-  white-space: normal;
-}
-
-.settle-table .worker-td-0 {
-  display: none;
-}
-
-.modal-popup {
-  width: 1200px;
-  max-width: 1200px;
-}
-
-.modal-popup {
-  width: 1200px;
-  max-width: 1200px;
-}*/
-#app .echarts {
-  width: 100vw;
-  height: 500px;
 }
 </style>

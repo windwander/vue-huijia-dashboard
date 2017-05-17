@@ -3,21 +3,10 @@
   <mainMenu />
   <mu-appbar title="美车师结算项设置" class="setting-appbar">
     <div class="setting-dropdown" slot="right">
-      <Group :handleChange="changeGroup" />
+      <Group :handleChange="changeSelect" />
     </div>
     <div class="setting-dropdown" slot="right">
-      <label for="monthDropDown">月份：</label>
-      <mu-dropDown-menu :value="year" @change="handleChangeYear" id="yearDropDown">
-        <mu-menu-item value="2017" title="2017年" />
-        <mu-menu-item value="2018" title="2018年" />
-        <mu-menu-item value="2019" title="2019年" />
-        <mu-menu-item value="2020" title="2020年" />
-        <mu-menu-item value="2020" title="2021年" />
-        <mu-menu-item value="2020" title="2022年" />
-      </mu-dropDown-menu>
-      <mu-dropDown-menu :value="month" @change="handleChangeMonth" id="monthDropDown">
-        <mu-menu-item v-for="n in 12" :key="n" :value="n < 10 ? ('0' + n) : n" :title="n + '月'" />
-      </mu-dropDown-menu>
+      <dateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
     </div>
     <div class="top-btn" slot="right">
       <mu-raised-button :label="bonusPenaltyFinished ? '当月已结算' : '确认生成结算'" icon="save" class="raised-button" @click="topBtnSave" primary :disabled="bonusPenaltyFinished"/>
@@ -35,6 +24,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import mainMenu from './units/mainMenu'
 import WorkerTable from './WorkerTable'
 import Group from './units/group'
+import dateSelect from './units/dateSelect'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
@@ -49,14 +39,11 @@ export default {
   components: {
     mainMenu,
     WorkerTable,
-    Group
+    Group,
+    dateSelect
   },
   data () {
-    const dateYear = new Date().getFullYear().toString()
-    const dateMonth = new Date().getMonth() + 1
     return {
-      year: dateYear,
-      month: dateMonth < 10 ? ('0' + dateMonth) : dateMonth,
       tableHeight: ''
     }
   },
@@ -64,6 +51,8 @@ export default {
     ...mapState([
       'city',
       'group',
+      'year',
+      'month',
       'snackbar',
       'snackbarMsg',
       'bonusPenaltyFinished'
@@ -91,15 +80,7 @@ export default {
       this.hasDoneBonusPenalty(postData)
       this.getPreSaveWorkerMonthList(postData)
     },
-    changeGroup () {
-      this.getData()
-    },
-    handleChangeYear (value) {
-      this.year = value
-      this.getData()
-    },
-    handleChangeMonth (value) {
-      this.month = value
+    changeSelect () {
       this.getData()
     },
     topBtnSave () {

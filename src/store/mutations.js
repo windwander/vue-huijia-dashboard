@@ -16,8 +16,19 @@ export const state = {
   menus: [],
   cities: [],
   city: '320100',
+  year: new Date().getFullYear().toString(),
+  month: (function () {
+    let dateMonth = new Date().getMonth() + 1
+    dateMonth = dateMonth < 10 ? ('0' + dateMonth) : dateMonth.toString()
+    return dateMonth
+  })(),
+  date: (function () {
+    let dateDate = new Date().getDate()
+    dateDate = dateDate < 10 ? ('0' + dateDate) : dateDate.toString()
+    return dateDate
+  })(),
   groups: [],
-  group: 0,
+  group: '',
   workers: [],
   orders: [],
   overallCount: {},
@@ -31,7 +42,10 @@ export const state = {
   todayOrdersTotal: 0,
   preSaveWorkerMonthList: {},
   bonusPenaltyFinished: false,
-  settlementStatistic: []
+  settlementStatistic: [],
+  generalOrderStatistics: [],
+  operationTrendData: [],
+  operationTrendCity: []
 }
 
 export const mutations = {
@@ -125,6 +139,15 @@ export const mutations = {
   },
   setGroup (state, herderId) {
     state.group = herderId
+  },
+  setYear (state, year) {
+    state.year = year
+  },
+  setMonth (state, month) {
+    state.month = month
+  },
+  setDate (state, date) {
+    state.date = date
   }
 }
 // 设置点标记
