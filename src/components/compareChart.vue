@@ -10,7 +10,7 @@
         <dateSelect :handleChange="changeSelect" />
       </div>
       <div class="setting-dropdown" slot="right">
-        <mu-dropDown-menu :value="categoryData.code" @change="handleChangeService" id="serviceDropDown">
+        <mu-dropDown-menu :value="categoryData.code" @change="handleChangeService" :maxHeight="480" id="serviceDropDown">
           <mu-menu-item value="" title="全部服务" />
           <mu-menu-item v-for="item in generalOrderStatistics" :key="item.categoryCode" :value="item.categoryCode" :title="item.categoryName" />
         </mu-dropDown-menu>
@@ -164,6 +164,12 @@ export default {
       maskColor: 'rgba(255, 255, 255, 0.8)',
       zlevel: 0
     })
+    const dataA = {
+      cityCode: this.city,
+      date: this.fullDate,
+      parentId: this.group
+    }
+    this.getGeneralOrderStatistics(dataA)
     this.getData()
   },
   methods: {
@@ -177,19 +183,16 @@ export default {
     ]),
     getData () {
       const z = this
-      const dataA = {
+      const data = {
         cityCode: this.city,
         date: this.fullDate,
-        parentId: this.group
-      }
-      const dataB = Object.assign(dataA, {
+        parentId: this.group,
         categoryCode: this.categoryData.code
-      })
-      this.getGeneralOrderStatistics(dataA)
-      this.getOperationTrendCity(dataB)
+      }
+      this.getOperationTrendCity(data)
       setTimeout(function () {
         z.updateBar()
-      }, 500)
+      }, 100)
     },
     handleChangeService (v) {
       let name = '全部服务'
@@ -200,7 +203,7 @@ export default {
         code: v,
         name: name
       }
-      this.getData()
+      this.changeSelect()
     },
     changeSelect () {
       this.getData()
@@ -244,26 +247,6 @@ export default {
           //   }
           // },
           data: z.completionNum
-        })
-      }
-      if (z.achievingRate && z.achievingRate[0] !== null) {
-        lengend.push('目标达成率')
-        series.push({
-          name: '目标达成率',
-          type: 'line',
-          yAxisIndex: 1,
-          formatter: '{value} %',
-          data: z.achievingRate
-        })
-      }
-      if (z.linkGrowthRate && z.linkGrowthRate[0] !== null) {
-        lengend.push('环比增长率')
-        series.push({
-          name: '环比增长率',
-          type: 'line',
-          yAxisIndex: 1,
-          formatter: '{value} %',
-          data: z.linkGrowthRate
         })
       }
       let newData = {

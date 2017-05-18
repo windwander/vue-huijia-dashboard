@@ -19,7 +19,7 @@
         :value="month"
         @change="handleChangeMonth"
         id="monthDropDown"
-        :maxHeight="320"
+        :maxHeight="480"
       >
         <mu-menu-item v-if="showMonthAll" value="0" title="全年" />
         <mu-menu-item
@@ -34,7 +34,7 @@
         :value="date"
         @change="handleChangeDate"
         id="dateDropDown"
-        :maxHeight="320"
+        :maxHeight="480"
         :disabled="month === '0'"
       >
         <mu-menu-item v-if="showDateAll" value="0" title="全月" />
