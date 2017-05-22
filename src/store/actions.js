@@ -49,7 +49,23 @@ export const actions = {
       }
     })
     .catch(error => {
-      console.dir(error)
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        commit('errorLogin', error.response.data)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message)
+        commit('errorLogin', error.message)
+      }
     })
   },
   /* GET /v/NewDashboard/config 配置权限查询 */
@@ -57,10 +73,32 @@ export const actions = {
     axios.get('/api/v2/fworker/rest/v/NewDashboard/config')
     .then(res => {
       state.cities = res.data.citys
-      state.groups = res.data.herders
+      state.groups = res.data.leaders
+      state.isLoadingConfig = false
     })
     .catch(error => {
-      console.dir(error)
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        state.snackbarMsg = '配置权限查询：' + (error.response.data && error.response.data.message) || '回应失败'
+        commit('showSnackbar')
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+        state.snackbarMsg = '配置权限查询：请求失败'
+        commit('showSnackbar')
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message)
+        state.snackbarMsg = '配置权限查询：' + error.message
+        commit('showSnackbar')
+      }
+      state.isLoadingConfig = false
     })
   },
   /* GET /v/NewDashboard/menu 菜单权限查询 */
@@ -71,90 +109,68 @@ export const actions = {
     })
     .catch(error => {
       router.push('login')
-      console.dir(error)
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message)
+      }
     })
   },
-  /* 视图总情况查询
-  CountVO {
-    orderCount (integer, optional): 当日订单总数,
-    busyWorkerCount (integer, optional): 忙碌人数,
-    freeWorkerCount (integer, optional): 空闲人数,
-    toBeServiceCount (integer, optional): 待服务订单数,
-    toBeAcceptCount (integer, optional): 待接单订单数,
-    inServiceCount (integer, optional): 服务中订单数,
-    payCount (integer, optional): 已支付订单数,
-    cancelCount (integer, optional): 取消订单数,
-    inWorkerCount (integer, optional): 在线人数,
-    outWorkerCount (integer, optional): 离线人数
-  }
-  */
-  getOverallCount ({commit, state}) {
-    axios.get('/api/v2/fworker/rest/v/Dashboard/count')
+  /* GET /v/NewDashboard/count 视图总情况查询 */
+  getOverallCount ({commit, state}, data) {
+    axios.get('/api/v2/fworker/rest/v/NewDashboard/count?cityCode=' + data.cityCode + '&leaderId=' + data.leaderId)
     .then(res => {
       state.overallCount = res.data
     })
     .catch(error => {
-      console.error(error.toString())
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        state.snackbarMsg = '视图总情况查询：' + (error.response.data && error.response.data.message) || '回应失败'
+        commit('showSnackbar')
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+        state.snackbarMsg = '视图总情况查询：请求失败'
+        commit('showSnackbar')
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message)
+        state.snackbarMsg = '视图总情况查询：' + error.message
+        commit('showSnackbar')
       }
     })
   },
-  /* 当日待接单和美车师当日待服务订单列表查询
-  Order {
-    userName (string, optional),
-    workerName (string, optional),
-    orderSource (string, optional),
-    cityCode (string, optional),
-    orderId (string, optional),
-    orderStatus (string, optional),
-    remark (string, optional),
-    areaCode (string, optional),
-    appointTime (date-time, optional),
-    longitude (number, optional),
-    latitude (number, optional),
-    payStatus (string, optional),
-    userPhone (string, optional),
-    memo (string, optional),
-    workerId (integer, optional),
-    updateTime (date-time, optional),
-    payAmount (integer, optional),
-    productId (integer, optional),
-    suggest (string, optional),
-    preWorkId (integer, optional),
-    orderTime (date-time, optional),
-    payTime (date-time, optional),
-    carInfo (string, optional),
-    parkingNo (string, optional),
-    timeRequire (string, optional),
-    saleAmount (integer, optional),
-    deductionAmount (integer, optional),
-    realPayAmount (integer, optional),
-    cancelReason (string, optional),
-    isOrderFor (boolean, optional),
-    deleted (boolean, optional),
-    catalogJson (string, optional),
-    userId (integer, optional),
-    productName (string, optional),
-    location (string, optional)
-  }
-  */
+  /* GET /v/NewDashboard/orderList 当日所有类型和美车师当日待服务订单列表查询查询 */
+  // 订单状态 待接单:10，待服务：20，服务中：30，待付款：40，已支付：50，60，已取消：90，全部：20,30,40,50,60,90，美车师待服务订单:20
   getOrderList ({commit, state}, data) {
-    let queryString = ''
-    if (data.orderStatus) {
-      if (data.orderStatus === '10') {
-        queryString = 'orderList?orderStatus=10'
-      } else if (data.orderStatus === '20') {
-        queryString = 'orderList?orderStatus=20&workerId=' + data.workerId
-      }
-    } else if (data.orderStatus === '') {
-      let page = data.page || 0
-      let size = data.size || 10
-      queryString = 'ordersPage?page=' + page + '&size=' + size + '&sort=APPOINT_TIME,desc'
+    let queryString = 'orderList?cityCode=' + data.cityCode + '&leaderId=' + data.leaderId + '&status=' + data.status + '&page=' + data.page + '&size=' + data.size
+    if (data.sort) {
+      queryString += '&sort=' + data.sort
+    } else {
+      queryString += '&sort=APPOINT_TIME,desc'
     }
-    axios.get('/api/v2/fworker/rest/v/Dashboard/' + queryString)
+    axios.get('/api/v2/fworker/rest/v/NewDashboard/' + queryString)
     .then(res => {
-      // 订单状态 当日待接单订单-10 美车师待服务订单-20
+      state.pagination.page = res.data.number
+      state.pagination.size = res.data.size
+      state.pagination.total = res.data.totalElements
+      state.pagination.totalPages = res.data.totalPages
       function formatTimeString (time) {
         time = new Date(time)
         const month = time.getMonth() + 1
@@ -163,67 +179,126 @@ export const actions = {
         const minutes = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()
         return month + '月' + date + '日 ' + hours + ':' + minutes
       }
-      if (data.orderStatus === '10') {
-        state.modalTableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
-        state.modalTableData = res.data.map(o => {
-          const order = {
-            'orderId': o.orderId,
-            'userPhone': o.userPhone,
-            'appointTime': formatTimeString(o.appointTime),
-            'location': o.location,
-            'carInfo': o.carInfo,
-            'productName': o.productName
-          }
-          return order
-        })
-        commit('showPopup', 'order')
-      } else if (data.orderStatus === '20') {
-        state.workerOrderList = res.data
-        state.modalTableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
-        state.modalTableData = res.data.map(o => {
-          const order = {
-            'orderId': o.orderId,
-            'userPhone': o.userPhone,
-            'appointTime': formatTimeString(o.appointTime),
-            'location': o.location,
-            'carInfo': o.carInfo,
-            'productName': o.productName
-          }
-          return order
-        })
-        commit('toggleModalTable')
-        if (state.showModalTable) {
-          setTimeout(function () {
-            const offset = window.innerWidth - document.getElementsByClassName('order-table')[0].getBoundingClientRect().right
-            if (offset < 0) {
-              commit('panBy', {
-                x: offset - 20,
-                y: 0
-              })
-            }
-          }, 100)
+      function formatOrderStatus (status) {
+        let str = ''
+        switch (status) {
+          case '10':
+            str = '待接单'
+            break
+          case '20':
+            str = '待服务'
+            break
+          case '30':
+            str = '服务中'
+            break
+          case '40':
+            str = '待付款'
+            break
+          case '50':
+          case '60':
+            str = '已支付'
+            break
+          case '90':
+            str = '已取消'
+            break
+          default:
+            str = ''
         }
-      } else if (data.orderStatus === '') {
-        state.modalTableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型']
-        state.modalTableData = res.data.content.map(o => {
-          const order = {
-            'orderId': o.orderId,
-            'userPhone': o.userPhone,
-            'appointTime': formatTimeString(o.appointTime),
-            'location': o.location,
-            'carInfo': o.carInfo,
-            'productName': o.productName
-          }
-          return order
-        })
-        state.todayOrdersTotal = res.data.totalElements
-        commit('showPopup', 'order')
+        return str
       }
+      state.modalTableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型', '完成时间', '订单状态', '备注']
+      state.modalTableData = res.data.content.map(o => {
+        const order = {
+          'orderId': o.orderId,
+          'userPhone': o.userPhone,
+          'appointTime': formatTimeString(o.appointTime),
+          'location': o.location,
+          'carInfo': o.carInfo,
+          'productName': o.productName,
+          'completeTime': o.completeTime,
+          'orderStatus': formatOrderStatus(o.orderStatus),
+          'remark': o.remark
+        }
+        return order
+      })
+      commit('showPopup')
     })
     .catch(error => {
       console.dir(error)
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        state.snackbarMsg = '订单列表查询：' + (error.response.data && error.response.data.message) || '回应失败'
+        commit('showSnackbar')
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+        state.snackbarMsg = '订单列表查询：请求失败'
+        commit('showSnackbar')
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message)
+        state.snackbarMsg = '订单列表查询：' + error.message
+        commit('showSnackbar')
+      }
+    })
+  },
+  /* GET /v/NewDashboard/workerList 美车师列表查询 */
+  // 查询类型1：在线 2：离线 3：忙碌 4：空闲
+  getWorkerList ({commit, state}, data) {
+    let queryString = 'workerList?cityCode=' + data.cityCode + '&leaderId=' + data.leaderId + '&searchType=' + data.status + '&page=' + data.page + '&size=' + data.size
+    if (data.sort) {
+      queryString += '&sort=' + data.sort
+    } else {
+      queryString += '&sort=APPOINT_TIME,desc'
+    }
+    axios.get('/api/v2/fworker/rest/v/NewDashboard/' + queryString)
+    .then(res => {
+      state.pagination.page = res.data.number
+      state.pagination.size = res.data.size
+      state.pagination.total = res.data.totalElements
+      state.pagination.totalPages = res.data.totalPages
+      state.modalTableHead = ['姓名', '联系方式', '所属小组', '当月已完成', '当月目标', '当月完成率']
+      state.modalTableData = res.data.content.map(p => {
+        const people = {
+          'name': p.name,
+          'phone': p.phone,
+          'parent': p.parentName + '(' + p.parentPhone + ')',
+          'totalNum': p.totalNum,
+          'targetNun': p.targetNun,
+          'completionRate': p.completionRate
+        }
+        return people
+      })
+      commit('showPopup')
+    })
+    .catch(error => {
+      console.dir(error)
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        state.snackbarMsg = '美车师列表查询：' + (error.response.data && error.response.data.message) || '回应失败'
+        commit('showSnackbar')
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+        state.snackbarMsg = '美车师列表查询：请求失败'
+        commit('showSnackbar')
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message)
+        state.snackbarMsg = '美车师列表查询：' + error.message
+        commit('showSnackbar')
       }
     })
   },
@@ -247,28 +322,6 @@ export const actions = {
     .then(res => {
       state.workerDetail = res.data
       commit('openInfoWindow', state.workerDetail)
-    })
-    .catch(error => {
-      console.dir(error)
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
-    })
-  },
-  /* 离线美车师列表查询 */
-  getWorkerList ({commit, state}) {
-    axios.get('/api/v2/fworker/rest/v/Dashboard/workerList')
-    .then(res => {
-      state.modalTableHead = ['姓名', '联系方式', '所属小组']
-      state.modalTableData = res.data.map(p => {
-        const people = {
-          'name': p.name,
-          'phone': p.phone,
-          'parentName': p.parentName
-        }
-        return people
-      })
-      commit('showPopup', 'people')
     })
     .catch(error => {
       console.dir(error)

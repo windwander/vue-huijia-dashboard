@@ -5,7 +5,7 @@
       <mu-icon-button slot="right" icon="close" @click="close()"/>
     </mu-appbar>
     <mu-content-block class="modal-table-box">
-      <ModalTable height="auto"/>
+      <ModalTable height="auto" :change="changePage" />
     </mu-content-block>
   </mu-popup>
 </template>
@@ -43,6 +43,9 @@ export default {
       type: String
     },
     modalTitleBtnClick: {
+      type: Function
+    },
+    changePage: {
       type: Function
     }
   },

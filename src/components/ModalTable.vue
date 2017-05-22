@@ -11,8 +11,8 @@
           <mu-td v-for="(value, key) in item" :key="key" :title="value">{{value}}</mu-td>
         </mu-tr>
       </mu-tbody>
-      <mu-tfoot v-if="todayOrdersTotal/todayOrdersPageSize > 1" slot="footer" class="table-footer-pagination">
-        <mu-pagination :total="todayOrdersTotal" :current="todayOrdersPage" :pageSize="todayOrdersPageSize" @pageChange="pageChange" />
+      <mu-tfoot v-if="pagination.totalPages > 1" slot="footer" class="table-footer-pagination">
+        <mu-pagination :total="pagination.total" :current="pagination.page + 1" :pageSize="pagination.size" @pageChange="pageChange" />
       </mu-tfoot>
     </mu-table>
   </div>
@@ -65,20 +65,22 @@ export default {
     height: {
       type: String,
       default: '480px'
+    },
+    change: {
+      type: Function
     }
   },
   computed: {
     ...mapState([
       'modalTableHead',
       'modalTableData',
-      'todayOrdersPage',
-      'todayOrdersPageSize',
-      'todayOrdersTotal'
+      'pagination'
     ])
   },
   methods: {
     pageChange (newIndex) {
-      this.$store.commit('changePage', newIndex)
+      this.$store.commit('changePage', newIndex - 1)
+      this.change()
     }
   }
 }

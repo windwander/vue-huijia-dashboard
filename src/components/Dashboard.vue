@@ -6,31 +6,98 @@
       <mu-text-field hintText="搜索完整手机号或单号后三位" class="search-input" v-model="searchString" ref="searchField"/>
       <mu-flat-button icon="search" class="search-button" backgroundColor="#F05B47" color="#FFF" @click="search()"/>
     </div>
-    <Group />
+    <Group :handleChange="update" />
   </div>
   <div id="orderStatusBox">
     <status-box icon="assignment" title="订单状况" arrowPosition="right" />
-    <status-box :number="overallCount.orderCount" title="当日订单" direction="row" clickable="clickable" @click="showModal('当日订单', 'order', 'all')" />
-    <status-box :number="overallCount.toBeServiceCount" title="待服务订单" direction="row" />
-    <status-box :number="overallCount.inServiceCount" title="服务中订单" direction="row" />
-    <status-box :number="overallCount.cancelCount" title="已取消订单" direction="row" />
-    <status-box :number="overallCount.payCount" title="已支付订单" direction="row" />
-    <status-box :number="overallCount.toBeAcceptCount" title="待接单订单" direction="row" clickable="clickable" @click="showModal('待接单订单', 'order', 'wait')" />
+    <status-box
+      :number="overallCount.orderCount"
+      title="当日订单"
+      direction="row"
+      clickable="clickable"
+      @click="showModal('当日订单', 'order', '20,30,40,50,60,90', overallCount.orderCount)"
+    />
+    <status-box
+      :number="overallCount.toBeAcceptCount"
+      title="待接单订单"
+      direction="row"
+      clickable="clickable"
+      @click="showModal('待接单订单', 'order', '10', overallCount.toBeAcceptCount)"
+    />
+    <status-box
+      :number="overallCount.toBeServiceCount"
+      title="待服务订单"
+      direction="row"
+      clickable="clickable"
+      @click="showModal('待服务订单', 'order', '20', overallCount.toBeServiceCount)"
+    />
+    <status-box
+      :number="overallCount.inServiceCount"
+      title="服务中订单"
+      direction="row"
+      clickable="clickable"
+      @click="showModal('服务中订单', 'order', '30', overallCount.inServiceCount)"
+    />
+    <status-box
+      :number="overallCount.toPayCount"
+      title="待支付订单"
+      direction="row"
+      clickable="clickable"
+      @click="showModal('待支付订单', 'order', '40', overallCount.toPayCount)"
+    />
+    <status-box
+      :number="overallCount.payCount"
+      title="已支付订单"
+      direction="row"
+      clickable="clickable"
+      @click="showModal('已支付订单', 'order', '50,60', overallCount.payCount)"
+    />
+    <status-box
+      :number="overallCount.cancelCount"
+      title="已取消订单"
+      direction="row"
+      clickable="clickable"
+      @click="showModal('已取消订单', 'order', '90', overallCount.cancelCount)"
+    />
   </div>
   <div id="serviceStatusBox">
     <status-box icon="people" title="美车师" arrowPosition="bottom" />
-    <status-box :number="overallCount.inWorkerCount" title="在线人数" direction="column" />
-    <status-box :number="overallCount.outWorkerCount" title="离线人数" direction="column" clickable="clickable" @click="showModal('当前离线', 'people')" />
-    <status-box :number="overallCount.busyWorkerCount" title="忙碌人数" direction="column" />
-    <status-box :number="overallCount.freeWorkerCount" title="空闲人数" direction="column" />
+    <status-box
+      :number="overallCount.inWorkerCount"
+      title="在线人数"
+      direction="column"
+      clickable="clickable"
+      @click="showModal('当前在线', 'people', '1', overallCount.inWorkerCount)"
+    />
+    <status-box
+      :number="overallCount.outWorkerCount"
+      title="离线人数"
+      direction="column"
+      clickable="clickable"
+      @click="showModal('当前离线', 'people', '2', overallCount.outWorkerCount)"
+    />
+    <status-box
+      :number="overallCount.busyWorkerCount"
+      title="忙碌人数"
+      direction="column"
+      clickable="clickable"
+      @click="showModal('当前忙碌', 'people', '3', overallCount.busyWorkerCount)"
+    />
+    <status-box
+      :number="overallCount.freeWorkerCount"
+      title="空闲人数"
+      direction="column"
+      clickable="clickable"
+      @click="showModal('当前空闲', 'people', '4', overallCount.freeWorkerCount)"
+    />
   </div>
-  <Modal :title="modalTitle" />
+  <Modal :title="modalTitle" :changePage="getList" />
 </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import paper from 'muse-components/paper'
 import {flexbox, flexboxItem} from 'muse-components/flexbox'
 import raisedButton from 'muse-components/raisedButton'
@@ -62,7 +129,9 @@ export default {
   data () {
     return {
       searchString: '',
-      modalTitle: ''
+      modalTitle: '',
+      modalType: '',
+      modalParams: {}
     }
   },
   computed: {
@@ -74,25 +143,30 @@ export default {
       'workerTableData',
       'workers',
       'orders',
+      'pagination',
       'todayOrdersPage',
-      'todayOrdersPageSize'
+      'todayOrdersPageSize',
+      'isLoadingConfig'
+    ]),
+    ...mapGetters([
+      'cityAndGroup'
     ])
   },
   mounted () {
     const z = this
-    const update = () => {
-      // 获取视图总情况查询
-      z.getOverallCount()
-      // 获取美车师位置和待接单位置
-      z.getWorkers()
-      z.getOrders()
-    }
-    update()
-    setTimeout(function () { // 每隔固定时间更新数据
+    const initUpdate = setInterval(function () {
+      if (!this.isLoadingConfig) {
+        setTimeout(function () {
+          z.update()
+        }, 100)
+        clearInterval(initUpdate)
+      }
+    }, 100)
+    setInterval(function () { // 每隔固定时间更新数据
       // // 移除点标记
       // z.removeMarkers()
-      update()
-    }, 1000 * 60 * 5)
+      z.update()
+    }, 1000 * 60 * 1)
     // 搜索框，按回车键执行搜索
     const input = z.$refs.searchField.$el.querySelector('input')
     input.addEventListener('keyup', function (event) {
@@ -104,8 +178,7 @@ export default {
   methods: {
     ...mapMutations([
       'removeMarkers',
-      'resetView',
-      'showPopup'
+      'resetView'
     ]),
     ...mapActions([
       'getOverallCount',
@@ -115,23 +188,34 @@ export default {
       'getOrders',
       'doSearch'
     ]),
-    showModal (title, type, sub) {
+    update () {
       const z = this
-      z.modalTitle = title
-      if (type === 'order') {
-        if (sub === 'wait' && z.overallCount.toBeAcceptCount > 0) {
-          z.getOrderList({
-            orderStatus: '10'
-          })
-        } else if (sub === 'all' && z.overallCount.orderCount > 0) {
-          z.getOrderList({
-            orderStatus: '',
-            page: z.todayOrdersPage - 1,
-            size: z.todayOrdersPageSize
-          })
-        }
-      } else if (type === 'people' && z.overallCount.outWorkerCount > 0) {
-        z.getWorkerList()
+      // 获取视图总情况查询
+      z.getOverallCount(z.cityAndGroup)
+      // 获取美车师位置和待接单位置
+      z.getWorkers()
+      z.getOrders()
+    },
+    showModal (title, type, status, number) {
+      if (number) {
+        const z = this
+        z.modalTitle = title
+        z.modalType = type
+        z.pagination.page = 0
+        z.modalParams = Object.assign({
+          status: status
+        }, z.cityAndGroup, z.pagination)
+        z.getList()
+      }
+    },
+    getList () {
+      const z = this
+      z.modalParams = Object.assign(z.modalParams, z.cityAndGroup, z.pagination)
+      if (z.modalType === 'order') {
+        console.log('order')
+        z.getOrderList(z.modalParams)
+      } else if (z.modalType === 'people') {
+        z.getWorkerList(z.modalParams)
       }
     },
     search () {

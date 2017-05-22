@@ -10,5 +10,18 @@ export const getters = {
       date += '-' + state.date
     }
     return date
+  },
+  cityAndGroup: function () {
+    return {
+      cityCode: state.city,
+      leaderId: state.group === '' ? state.groups.map(h => h.leaderId).toString() : state.group
+    }
+  },
+  menusArray: function () {
+    let menus = {}
+    state.menus.map(function (m) {
+      menus[m.menu] = m.id
+    })
+    return menus
   }
 }

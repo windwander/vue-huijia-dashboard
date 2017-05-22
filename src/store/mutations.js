@@ -9,8 +9,6 @@ export const state = {
   snackbarMsg: '',
   snackbar: false,
   snackbarTimer: {},
-  topPopup: false,
-  recieveMsg: '',
   modalPopup: false,
   showModalTable: false,
   menus: [],
@@ -29,6 +27,7 @@ export const state = {
   })(),
   groups: [],
   group: '',
+  isLoadingConfig: true,
   workers: [],
   orders: [],
   overallCount: {},
@@ -37,6 +36,12 @@ export const state = {
   modalTableHead: [],
   modalTableData: [],
   errorLogin: {},
+  pagination: {
+    page: 0,
+    size: 10,
+    total: 0,
+    totalPages: 0
+  },
   todayOrdersPage: 1,
   todayOrdersPageSize: 10,
   todayOrdersTotal: 0,
@@ -103,7 +108,7 @@ export const mutations = {
   closePopup () {
     state.topPopup = false
   },
-  showPopup (state, type) {
+  showPopup (state) {
     state.modalPopup = true
     setTimeout(function () {
       const el = document.getElementsByClassName('modal-popup')[0]
@@ -129,7 +134,7 @@ export const mutations = {
     state.showModalTable = !state.showModalTable
   },
   changePage (state, newIndex) {
-    state.todayOrdersPage = newIndex
+    state.pagination.page = newIndex
   },
   hasDoneBonusPenalty (state, bool) {
     state.bonusPenaltyFinished = bool
@@ -137,8 +142,8 @@ export const mutations = {
   setCity (state, cityCode) {
     state.city = cityCode
   },
-  setGroup (state, herderId) {
-    state.group = herderId
+  setGroup (state, leaderId) {
+    state.group = leaderId
   },
   setYear (state, year) {
     state.year = year

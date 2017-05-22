@@ -8,24 +8,24 @@
                :docked="false"
                @close="toggle">
       <mu-list>
-        <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'Home'))" title="运营视图" to="/">
+        <mu-list-item v-if="menusArray.Home" title="运营视图" to="/">
           <mu-icon slot="left" value="map"/>
         </mu-list-item>
-        <mu-list-item title="结算报表" toggleNested>
+        <mu-list-item v-if="menusArray.bonusList || menusArray.settleList" title="结算报表" toggleNested>
           <mu-icon slot="left" value="list"/>
-          <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'bonusList'))" slot="nested" title="美车师结算项设置" to="list">
+          <mu-list-item v-if="menusArray.bonusList" slot="nested" title="美车师结算项设置" to="list">
             <mu-icon slot="left" value="edit"/>
           </mu-list-item>
-          <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'settleList'))" slot="nested" title="美车师结算汇总" to="settleList">
+          <mu-list-item v-if="menusArray.settleList" slot="nested" title="美车师结算汇总" to="settleList">
             <mu-icon slot="left" value="assignment"/>
           </mu-list-item>
         </mu-list-item>
-        <mu-list-item title="运营趋势" toggleNested>
+        <mu-list-item v-if="menusArray.overallChart|| menusArray.compareChart" title="运营趋势" toggleNested>
           <mu-icon slot="left" value="list"/>
-          <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'overallChart'))" slot="nested" title="整体趋势" to="overallChart">
+          <mu-list-item v-if="menusArray.overallChart" slot="nested" title="整体趋势" to="overallChart">
             <mu-icon slot="left" value="assessment"/>
           </mu-list-item>
-          <mu-list-item v-if="Boolean(menus.find(m => m.menu === 'compareChart'))" slot="nested" title="对比分析" to="compareChart">
+          <mu-list-item v-if="menusArray.compareChart" slot="nested" title="对比分析" to="compareChart">
             <mu-icon slot="left" value="compare"/>
           </mu-list-item>
         </mu-list-item>
@@ -36,7 +36,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import floatButton from 'muse-components/floatButton'
 import drawer from 'muse-components/drawer'
 import { list, listItem } from 'muse-components/list'
@@ -65,8 +65,8 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'menus'
+    ...mapGetters([
+      'menusArray'
     ])
   }
 }

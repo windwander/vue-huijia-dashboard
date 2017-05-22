@@ -4,10 +4,10 @@
   <div id="amapContainer"></div>
   <Dashboard />
   <InfoWindow :infoData="infoWindowData" />
-  <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="刷新页面" @actionClick="refresh()" @close="hideSnackbar()"/>
-  <mu-popup position="top" :overlay="false" popupClass="popup-top" :open="topPopup">
-    <p @click="closePopup()">{{recieveMsg}}</p>
-  </mu-popup>
+  <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar"/>
+  <div v-if="isLoadingConfig" id="fullScreenLoading">
+    <mu-circular-progress v-if="isLoadingConfig" :size="90" color="red" :strokeWidth="5" />
+  </div>
 </div>
 </template>
 
@@ -18,10 +18,11 @@ import Dashboard from './Dashboard'
 import InfoWindow from './InfoWindow'
 import mainMenu from './units/mainMenu'
 import snackbar from 'muse-components/snackbar'
-import popup from 'muse-components/popup'
+import circularProgress from 'muse-components/circularProgress'
 
 Vue.component(snackbar.name, snackbar)
-Vue.component(popup.name, popup)
+Vue.component(circularProgress.name, circularProgress)
+
 export default {
   name: 'Home',
   components: {
@@ -42,6 +43,7 @@ export default {
       'snackbar',
       'snackbarTimer',
       'snackbarMsg',
+      'isLoadingConfig',
       'recieveMsg',
       'topPopup'
     ])
@@ -138,5 +140,21 @@ div.popup-top {
   padding: 0 2em;
   background-color: #f0f8ff;
   cursor: pointer;
+}
+#fullScreenLoading {
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  color: #eee;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
 }
 </style>

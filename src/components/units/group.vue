@@ -9,7 +9,7 @@
     <div v-if="groups && groups.length" class="group-select">
       <mu-select-field :value="group" @change="handleChangeGroup" class="group-select-field" ref="group">
         <mu-menu-item value="" title="组别"/>
-        <mu-menu-item v-for="item in groups" :key="item.herderId" :value="item.herderId" :title="item.herderName"/>
+        <mu-menu-item v-for="item in groups" :key="item.leaderId" :value="item.leaderId" :title="item.leaderName"/>
       </mu-select-field>
     </div>
   </div>
