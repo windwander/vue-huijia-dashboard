@@ -7,7 +7,7 @@
           {{infoData.name}} <span v-if="infoData.type === 'worker'"> 美车师</span>
           <mu-badge :content="infoData.status" :class="(infoData.status === '未超时' || infoData.status === '空闲') ? 'badge-green' : infoData.status === '已下线' ? 'badge-grey' : ''" secondary/>
         </h3>
-        <div v-if="infoData.type === 'worker'" class="icon-contaner" v-bind:style="{width: infoData.star * 24 + 'px' }">
+        <div v-if="infoData.type === 'worker'" class="icon-container" v-bind:style="{width: infoData.star * 24 + 'px' }">
           <mu-icon value="star"/>
           <mu-icon value="star"/>
           <mu-icon value="star"/>
@@ -15,7 +15,13 @@
           <mu-icon value="star"/>
         </div>
         <mu-badge v-if="infoData.type === 'worker'" :content="String(infoData.star)" primary/>
-        <div v-if="infoData.type === 'order'">订单编号：{{infoData.orderId}}</div>
+        <div v-if="infoData.type === 'worker'" class="worker-rate-box">
+          <div class="progress-box" :title="'月完成单量：' + infoData.totalNum">
+            <div class="progress-rate" :style="{width: infoData.completionRate + '%'}"></div>
+            <div class="rate-span" :style="{width: infoData.completionRate + '%'}">{{infoData.completionRate}}%</div>
+          </div>
+          <div class="target-span" style="float: right;">月目标单量：{{infoData.targetNum}}</div>
+        </div>
       </div>
     </div>
     <mu-list class="info-window-location-info">
@@ -40,6 +46,9 @@
     <div class="info-window-flex">
       <status-box :number="infoData.totalOrders" title="总订单量" direction="row" />
       <status-box :number="infoData.currentOrders" title="已完成" direction="row" />
+      <status-box :number="infoData.toBePayCount" title="待支付" direction="row" />
+      <status-box :number="infoData.cancleCount" title="已取消" direction="row" />
+      <status-box :number="infoData.inServiceCount" title="服务中" direction="row" />
       <status-box :number="infoData.todoOrders" title="待服务" direction="row" clickable="clickable" @click="toggleModalTable()" />
     </div>
     <mu-divider />    
@@ -58,6 +67,7 @@ import icon from 'muse-components/icon'
 import raisedButton from 'muse-components/raisedButton'
 import textField from 'muse-components/textField'
 import badge from 'muse-components/badge'
+import linearProgress from 'muse-components/linearProgress'
 import divider from 'muse-components/divider'
 import {list, listItem} from 'muse-components/list'
 import avatar from './units/avatar'
@@ -68,6 +78,7 @@ Vue.component(icon.name, icon)
 Vue.component(raisedButton.name, raisedButton)
 Vue.component(textField.name, textField)
 Vue.component(badge.name, badge)
+Vue.component(linearProgress.name, linearProgress)
 Vue.component(divider.name, divider)
 Vue.component(list.name, list)
 Vue.component(listItem.name, listItem)
@@ -158,6 +169,7 @@ export default {
 }
 #infoWindowUI .info-window-head-title {
   margin-left: 32px;
+  width: 100%;
 }
 #infoWindowUI .info-window-head-title h3 {
   font-weight: normal;
@@ -176,6 +188,7 @@ export default {
 #infoWindowUI .info-window-flex {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 #infoWindowUI .info-window-flex h4 {
   margin-top: 24px;
@@ -256,6 +269,46 @@ export default {
   background-color: #009944;
 }
 #infoWindowUI .badge-grey .mu-badge {
-  background-color: #999;
+  background-color: #7e848c;
+}
+#infoWindowUI .status-box .status-button {
+  width: 58px;
+  min-width: 58px;
+}
+#infoWindowUI .worker-rate-box {
+  display: flex;
+}
+#infoWindowUI .worker-rate-box .progress-box {
+  position: relative;
+  height: 20px;
+  border-radius: 10px;
+  flex: 1 1 auto;
+  background-color: #bdbdbd;
+}
+#infoWindowUI .worker-rate-box .progress-box .progress-rate {
+  position: absolute;
+  top: 0;
+  height: 20px;
+  border-radius: 10px;
+  background-color: #F05B47;
+}
+#infoWindowUI .worker-rate-box .progress-box .rate-span {
+  position: relative;
+  top: 0;
+  color: #fff;
+  text-align: right;
+  padding: 0 5px;
+}
+#infoWindowUI .worker-rate-box .target-span {
+  padding: 0 5px;
+}
+#infoWindowUI .icon-container {
+  display: inline-block;
+  margin: 5px;
+  vertical-align: middle;
+  color: #ffeb3b;
+  word-spacing: -4px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 </style>

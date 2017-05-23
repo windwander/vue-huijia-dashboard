@@ -193,8 +193,8 @@ export default {
       // 获取视图总情况查询
       z.getOverallCount(z.cityAndGroup)
       // 获取美车师位置和待接单位置
-      z.getWorkers()
-      z.getOrders()
+      z.getWorkers(z.cityAndGroup)
+      z.getOrders(z.cityAndGroup)
     },
     showModal (title, type, status, number) {
       if (number) {

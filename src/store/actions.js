@@ -7,8 +7,8 @@ export const actions = {
   mapPoint ({commit, dispatch, state}, obj) {
     let type = 'worker'
     let div = document.createElement('div')
-    div.className = 'marker-div ' + type + '-' + obj.status
-    div.style.backgroundImage = 'url("static/' + type + '-' + obj.status + '.png")'
+    div.className = 'marker-div ' + type + '-' + obj.status + (obj.breakStatus === 0 ? '-lost' : '')
+    div.style.backgroundImage = 'url("static/' + type + '-' + obj.status + (obj.breakStatus === 0 ? '-lost' : '') + '.png")'
     if (!obj.workerId) { // 订单
       type = 'order'
       let status = 'normal'
@@ -27,7 +27,7 @@ export const actions = {
       map: state.amap,
       position: [obj.lng || obj.longitude || 118.722695, obj.lat || obj.latitude || 32.033995],
       offset: new AMap.Pixel(-24, -24),
-      // title: '美车师：' + obj.account, // 鼠标滑过显示
+      title: (obj.userName || obj.name) + '：' + (obj.phone || obj.userPhone), // 鼠标滑过显示
       content: div  // 自定义点标记覆盖物内容
     })
     point.on('click', function () {
@@ -270,7 +270,7 @@ export const actions = {
           'phone': p.phone,
           'parent': p.parentName + '(' + p.parentPhone + ')',
           'totalNum': p.totalNum,
-          'targetNun': p.targetNun,
+          'targetNum': p.targetNum,
           'completionRate': p.completionRate
         }
         return people
@@ -303,22 +303,44 @@ export const actions = {
     })
   },
   /* 订单查询 */
-  getOrders ({dispatch, state}) {
-    axios.get('/api/v2/fworker/rest/v/Dashboard/orders')
+  getOrders ({commit, dispatch, state}, data) {
+    // 订单状态（待接单：10，待服务：20，服务中：30，待付款：40，已支付：50,60，已取消：90，全部：20,30,40,50,60,90）
+    if (!data.status) { // 默认显示待接单
+      data.status = '10'
+    }
+    axios.get('/api/v2/fworker/rest/v/NewDashboard/orders?cityCode=' + data.cityCode + '&status=' + data.status)
     .then(res => {
       state.orders = res.data
       state.orders.map(o => dispatch('mapPoint', o))
     })
     .catch(error => {
       console.dir(error)
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        state.snackbarMsg = '订单查询：' + (error.response.data && error.response.data.message) || '回应失败'
+        commit('showSnackbar')
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+        state.snackbarMsg = '订单查询：请求失败'
+        commit('showSnackbar')
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message)
+        state.snackbarMsg = '订单查询：' + error.message
+        commit('showSnackbar')
       }
     })
   },
   /* 离线美车师详情查询 */
   getWorkerDetail ({commit, state}, workerId) {
-    axios.get('/api/v2/fworker/rest/v/Dashboard/workerDetial?workerId=' + workerId)
+    axios.get('/api/v2/fworker/rest/v/NewDashboard/workerDetial?workerId=' + workerId)
     .then(res => {
       state.workerDetail = res.data
       commit('openInfoWindow', state.workerDetail)
@@ -331,16 +353,34 @@ export const actions = {
     })
   },
   /* 美车师查询 */
-  getWorkers ({dispatch, state}) {
-    axios.get('/api/v2/fworker/rest/v/Dashboard/workers')
+  getWorkers ({commit, dispatch, state}, data) {
+    axios.get('/api/v2/fworker/rest/v/NewDashboard/workers?cityCode=' + data.cityCode + '&leaderId=' + data.leaderId)
     .then(res => {
       state.workers = res.data
       state.workers.map(w => dispatch('mapPoint', w))
     })
     .catch(error => {
       console.dir(error)
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        state.snackbarMsg = '美车师查询：' + (error.response.data && error.response.data.message) || '回应失败'
+        commit('showSnackbar')
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+        state.snackbarMsg = '美车师查询：请求失败'
+        commit('showSnackbar')
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message)
+        state.snackbarMsg = '美车师查询：' + error.message
+        commit('showSnackbar')
       }
     })
   },

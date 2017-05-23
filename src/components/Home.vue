@@ -128,14 +128,6 @@ export default {
 .hide {
   display: none;
 }
-.icon-contaner {
-  display: inline-block;
-  vertical-align: middle;
-  color: #ffeb3b;
-  word-spacing: -4px;
-  white-space: nowrap;
-  overflow: hidden;
-}
 div.popup-top {
   padding: 0 2em;
   background-color: #f0f8ff;
