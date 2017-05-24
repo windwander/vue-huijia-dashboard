@@ -474,7 +474,7 @@ export const actions = {
           'workerName': w.workerName,
           'phone': w.phone,
           'startDate': w.startDate,
-          'quitDate': w.quitDate,
+          'quitDate': w.quitDate === null ? '在职' : w.quitDate,
           'position': w.position,
           'workDays': w.workDays,
           'pearlWards': w.pearlWards,

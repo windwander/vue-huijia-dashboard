@@ -18,7 +18,7 @@
               <mu-menu-item key="6" value="6" title="正式销售经理" />
             </mu-select-field>
             <mu-date-picker v-else-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && key === 'startDate'" :value="value" :name="key"/>
-            <mu-date-picker v-else-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && key === 'quitDate'" :value="value" :name="key"/>
+            <mu-date-picker v-else-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && key === 'quitDate'" :value="value === '在职' ? '' : value" :name="key"/>
             <mu-text-field v-else-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && index > 2" class="text-field" :value="value" :name="key"/>
             <div v-else-if="key === 'position'" :name="key" class="td-text">{{['实习美车师', '正式美车师', '实习业务组长', '正式业务组长', '实习销售经理', '正式销售经理'][value-1]}}</div>
             <div v-else :name="key" class="td-text">{{value}}</div>
@@ -130,7 +130,12 @@ export default {
           } else if (td.$children[0].$refs.textField) {
             newObj['position'] = el.value
           } else if (td.$children[0].$children[0]) {
-            newObj['startDate'] = el.value
+            if (index === 4) {
+              newObj['startDate'] = el.value
+            }
+            if (index === 5) {
+              newObj['quitDate'] = el.value
+            }
           }
         } else if (index === 0) {
           newObj['workerId'] = td.$el.innerText
@@ -142,7 +147,7 @@ export default {
         }
       })
       saveData = Object.assign({}, originData, newObj)
-      console.log(saveData)
+      // console.log(saveData)
       z.preSaveWorkerMonth(saveData)
     },
     getDetail: function (workerId, workerName) {
