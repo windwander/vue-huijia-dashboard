@@ -44,30 +44,29 @@
     <div v-if="infoData.type === 'worker'">
     <mu-divider />
     <div class="info-window-flex">
-      <status-box :number="infoData.totalOrders" title="总订单量" direction="row" />
-      <status-box :number="infoData.currentOrders" title="已完成" direction="row" />
-      <status-box :number="infoData.toBePayCount" title="待支付" direction="row" />
-      <status-box :number="infoData.cancleCount" title="已取消" direction="row" />
-      <status-box :number="infoData.inServiceCount" title="服务中" direction="row" />
-      <status-box :number="infoData.todoOrders" title="待服务" direction="row" clickable="clickable" @click="toggleModalTable()" />
+      <status-box :number="infoData.totalOrders" title="总订单" direction="row" clickable="clickable" @click="toggleModal('20,30,40,50,60,90', infoData.totalOrders)" :selected="(showModalTable && (orderStatusCode === '20,30,40,50,60,90')) ? 'selected' : ''" />
+      <status-box :number="infoData.currentOrders" title="已完成" direction="row" clickable="clickable" @click="toggleModal('50,60', infoData.currentOrders)" :selected="(showModalTable && (orderStatusCode === '50,60')) ? 'selected' : ''" />
+      <status-box :number="infoData.toBePayCount" title="待支付" direction="row" clickable="clickable" @click="toggleModal('40', infoData.toBePayCount)" :selected="(showModalTable && (orderStatusCode === '40')) ? 'selected' : ''" />
+      <status-box :number="infoData.cancleCount" title="已取消" direction="row" clickable="clickable" @click="toggleModal('90', infoData.cancleCount)" :selected="(showModalTable && (orderStatusCode === '90')) ? 'selected' : ''" />
+      <status-box :number="infoData.inServiceCount" title="服务中" direction="row" clickable="clickable" @click="toggleModal('30', infoData.inServiceCount)" :selected="(showModalTable && (orderStatusCode === '30')) ? 'selected' : ''" />
+      <status-box :number="infoData.todoOrders" title="待服务" direction="row" clickable="clickable" @click="toggleModal('20', infoData.todoOrders)" :selected="(showModalTable && (orderStatusCode === '20')) ? 'selected' : ''" />
     </div>
     <mu-divider />    
     <mu-text-field label="输入派单单号" labelFloat fullWidth class="send-order-input" v-model="orderId" />
     <mu-raised-button label="派单" class="send-order-btn" @click="pushOrder()" secondary/>
     <transition name="order-table-slide">
-      <ModalTable v-if="showModalTable" class="order-table" height="406px"/>
+      <ModalTable v-if="showModalTable" class="order-table" height="434px" :change="getList" />
     </transition>
     </div>
   </div>
 </template>
 <script>
 import Vue from 'vue'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import icon from 'muse-components/icon'
 import raisedButton from 'muse-components/raisedButton'
 import textField from 'muse-components/textField'
 import badge from 'muse-components/badge'
-import linearProgress from 'muse-components/linearProgress'
 import divider from 'muse-components/divider'
 import {list, listItem} from 'muse-components/list'
 import avatar from './units/avatar'
@@ -78,7 +77,6 @@ Vue.component(icon.name, icon)
 Vue.component(raisedButton.name, raisedButton)
 Vue.component(textField.name, textField)
 Vue.component(badge.name, badge)
-Vue.component(linearProgress.name, linearProgress)
 Vue.component(divider.name, divider)
 Vue.component(list.name, list)
 Vue.component(listItem.name, listItem)
@@ -111,16 +109,25 @@ export default {
   },
   data () {
     return {
-      orderId: ''
+      orderId: '',
+      orderStatusCode: '',
+      modalParams: {}
     }
   },
   computed: {
     ...mapState([
       'showModalTable',
-      'workerDetail'
+      'workerDetail',
+      'pagination'
+    ]),
+    ...mapGetters([
+      'cityAndGroup'
     ])
   },
   methods: {
+    ...mapMutations([
+      'toggleModalTable'
+    ]),
     ...mapActions([
       'getOrderList',
       'sendOrder'
@@ -133,14 +140,25 @@ export default {
       }
       z.sendOrder(data)
     },
-    toggleModalTable () {
-      const z = this
-      if (z.infoData.todoOrders > 0) {
-        z.getOrderList({
-          orderStatus: '20',
-          workerId: z.workerDetail.workerId
-        })
+    toggleModal (status, number) {
+      if (number) {
+        const z = this
+        z.toggleModalTable()
+        if (z.orderStatusCode !== status) {
+          z.orderStatusCode = status
+          z.pagination.page = 0
+          z.modalParams = {
+            status: status,
+            workerId: z.infoData.workerId
+          }
+          z.getList()
+        }
       }
+    },
+    getList () {
+      const z = this
+      z.modalParams = Object.assign({}, z.modalParams, z.cityAndGroup, z.pagination)
+      z.getOrderList(z.modalParams)
     }
   }
 }
@@ -223,7 +241,7 @@ export default {
 #infoWindowUI .order-table:after {
   content: '';
   position: absolute;
-  top: 228px;
+  top: 280px;
   left: -32px;
   border: 16px solid transparent;
   border-right-color: #fff;
@@ -283,7 +301,8 @@ export default {
   height: 20px;
   border-radius: 10px;
   flex: 1 1 auto;
-  background-color: #bdbdbd;
+  background-color: #bbbfc4;
+  overflow: hidden;
 }
 #infoWindowUI .worker-rate-box .progress-box .progress-rate {
   position: absolute;
@@ -310,5 +329,8 @@ export default {
   word-spacing: -4px;
   white-space: nowrap;
   overflow: hidden;
+}
+#infoWindowUI .status-box.selected .status-button {
+  background-color: #fffde7 !important;
 }
 </style>

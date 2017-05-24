@@ -212,7 +212,7 @@ function openInfoWindow (obj) {
     targetNum: obj.targetNum || 0,
     totalNum: obj.totalNum || 0,
     orderCount: obj.orderCount || 0,
-    completionRate: obj.completionRate || 0,
+    completionRate: (obj.completionRate * 100) || 0,
     time: formatTimeString(obj.appointTime) || obj.appointTime || obj.timeRequire || '',
     orderId: obj.orderId || '',
     license: obj.carInfo || '',

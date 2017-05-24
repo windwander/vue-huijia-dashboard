@@ -32,7 +32,6 @@ export default {
   },
   data () {
     return {
-      // wsUri: 'wss://echo.websocket.org',
       center: [118.722695, 32.033995],
       zoom: 12
     }
@@ -55,10 +54,6 @@ export default {
       center: z.center,
       zoom: z.zoom
     })
-    // // 设置初始标记点
-    // z.$store.commit('doGeneratePoints')
-    // // 初始化websocket
-    // z.$store.dispatch('initWebsocket', z.wsUri)
   },
   methods: {
     ...mapMutations([

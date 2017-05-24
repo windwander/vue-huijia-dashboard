@@ -159,6 +159,9 @@ export default {
         setTimeout(function () {
           z.update()
         }, 100)
+        setTimeout(function () {
+          z.resetView()
+        }, 3000)
         clearInterval(initUpdate)
       }
     }, 100)
@@ -194,7 +197,8 @@ export default {
       z.getOverallCount(z.cityAndGroup)
       // 获取美车师位置和待接单位置
       z.getWorkers(z.cityAndGroup)
-      z.getOrders(z.cityAndGroup)
+      // 获取待接单订单
+      z.getOrders(Object.assign({status: '10'}, z.cityAndGroup))
     },
     showModal (title, type, status, number) {
       if (number) {
@@ -202,17 +206,16 @@ export default {
         z.modalTitle = title
         z.modalType = type
         z.pagination.page = 0
-        z.modalParams = Object.assign({
+        z.modalParams = {
           status: status
-        }, z.cityAndGroup, z.pagination)
+        }
         z.getList()
       }
     },
     getList () {
       const z = this
-      z.modalParams = Object.assign(z.modalParams, z.cityAndGroup, z.pagination)
+      z.modalParams = Object.assign({}, z.modalParams, z.cityAndGroup, z.pagination)
       if (z.modalType === 'order') {
-        console.log('order')
         z.getOrderList(z.modalParams)
       } else if (z.modalType === 'people') {
         z.getWorkerList(z.modalParams)

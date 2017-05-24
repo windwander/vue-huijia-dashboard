@@ -165,6 +165,9 @@ export const actions = {
     } else {
       queryString += '&sort=APPOINT_TIME,desc'
     }
+    if (data.workerId) {
+      queryString += '&workerId=' + data.workerId
+    }
     axios.get('/api/v2/fworker/rest/v/NewDashboard/' + queryString)
     .then(res => {
       state.pagination.page = res.data.number
@@ -221,7 +224,23 @@ export const actions = {
         }
         return order
       })
-      commit('showPopup')
+      if (data.workerId) {
+        // commit('toggleModalTable')
+        state.showModalTable = true
+        if (state.showModalTable) {
+          setTimeout(function () {
+            const offset = window.innerWidth - document.getElementsByClassName('order-table')[0].getBoundingClientRect().right
+            if (offset < 0) {
+              commit('panBy', {
+                x: offset - 20,
+                y: 0
+              })
+            }
+          })
+        }
+      } else {
+        commit('showPopup')
+      }
     })
     .catch(error => {
       console.dir(error)
@@ -271,7 +290,7 @@ export const actions = {
           'parent': p.parentName + '(' + p.parentPhone + ')',
           'totalNum': p.totalNum,
           'targetNum': p.targetNum,
-          'completionRate': p.completionRate
+          'completionRate': p.completionRate * 100 + '%'
         }
         return people
       })
@@ -305,9 +324,6 @@ export const actions = {
   /* 订单查询 */
   getOrders ({commit, dispatch, state}, data) {
     // 订单状态（待接单：10，待服务：20，服务中：30，待付款：40，已支付：50,60，已取消：90，全部：20,30,40,50,60,90）
-    if (!data.status) { // 默认显示待接单
-      data.status = '10'
-    }
     axios.get('/api/v2/fworker/rest/v/NewDashboard/orders?cityCode=' + data.cityCode + '&status=' + data.status)
     .then(res => {
       state.orders = res.data
@@ -338,7 +354,7 @@ export const actions = {
       }
     })
   },
-  /* 离线美车师详情查询 */
+  /* 美车师详情查询 */
   getWorkerDetail ({commit, state}, workerId) {
     axios.get('/api/v2/fworker/rest/v/NewDashboard/workerDetial?workerId=' + workerId)
     .then(res => {
@@ -347,8 +363,26 @@ export const actions = {
     })
     .catch(error => {
       console.dir(error)
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data)
+        state.snackbarMsg = '美车师详情查询：' + (error.response.data && error.response.data.message) || '回应失败'
+        commit('showSnackbar')
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request)
+        state.snackbarMsg = '美车师详情查询：请求失败'
+        commit('showSnackbar')
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message)
+        state.snackbarMsg = '美车师详情查询：' + error.message
+        commit('showSnackbar')
       }
     })
   },
@@ -432,7 +466,7 @@ export const actions = {
     axios.post('/api/v2/fworker/rest/a/getPreSaveWorkerMonthList?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
     .then(res => {
       state.preSaveWorkerMonthList = res.data
-      state.workerTableHead = ['#', '姓名', '美车师账号', '上岗时间', '职务', '本月工作天数', '伯乐奖', '培训补贴天数', '延迟履约', '投诉追责', '费用骗取', '培训费用', '延迟接单', '服务不规范', '转单延迟1', '转单延迟2', '操作']
+      state.workerTableHead = ['#', '姓名', '美车师账号', '上岗时间', '离职时间', '职务', '本月工作天数', '伯乐奖', '培训补贴天数', '延迟履约', '投诉追责', '费用骗取', '培训费用', '延迟接单', '服务不规范', '转单延迟1', '转单延迟2', '操作']
       state.workerTableData = res.data.map((w, index) => {
         const worker = {
           'workerId': w.workerId,
@@ -440,6 +474,7 @@ export const actions = {
           'workerName': w.workerName,
           'phone': w.phone,
           'startDate': w.startDate,
+          'quitDate': w.quitDate,
           'position': w.position,
           'workDays': w.workDays,
           'pearlWards': w.pearlWards,
