@@ -77,27 +77,7 @@ export const actions = {
       state.isLoadingConfig = false
     })
     .catch(error => {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data)
-        state.snackbarMsg = '配置权限查询：' + (error.response.data && error.response.data.message) || '回应失败'
-        commit('showSnackbar')
-        console.log(error.response.status)
-        console.log(error.response.headers)
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request)
-        state.snackbarMsg = '配置权限查询：请求失败'
-        commit('showSnackbar')
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message)
-        state.snackbarMsg = '配置权限查询：' + error.message
-        commit('showSnackbar')
-      }
+      oneError(commit, state, error, '配置权限查询')
       state.isLoadingConfig = false
     })
   },
@@ -108,22 +88,8 @@ export const actions = {
       state.menus = res.data
     })
     .catch(error => {
+      oneError(commit, state, error, '菜单权限查询')
       router.push('login')
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data)
-        console.log(error.response.status)
-        console.log(error.response.headers)
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request)
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message)
-      }
     })
   },
   /* GET /v/NewDashboard/count 视图总情况查询 */
@@ -133,27 +99,7 @@ export const actions = {
       state.overallCount = res.data
     })
     .catch(error => {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data)
-        state.snackbarMsg = '视图总情况查询：' + (error.response.data && error.response.data.message) || '回应失败'
-        commit('showSnackbar')
-        console.log(error.response.status)
-        console.log(error.response.headers)
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request)
-        state.snackbarMsg = '视图总情况查询：请求失败'
-        commit('showSnackbar')
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message)
-        state.snackbarMsg = '视图总情况查询：' + error.message
-        commit('showSnackbar')
-      }
+      oneError(commit, state, error, '视图总情况查询')
     })
   },
   /* GET /v/NewDashboard/orderList 当日所有类型和美车师当日待服务订单列表查询查询 */
@@ -243,28 +189,7 @@ export const actions = {
       }
     })
     .catch(error => {
-      console.dir(error)
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data)
-        state.snackbarMsg = '订单列表查询：' + (error.response.data && error.response.data.message) || '回应失败'
-        commit('showSnackbar')
-        console.log(error.response.status)
-        console.log(error.response.headers)
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request)
-        state.snackbarMsg = '订单列表查询：请求失败'
-        commit('showSnackbar')
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message)
-        state.snackbarMsg = '订单列表查询：' + error.message
-        commit('showSnackbar')
-      }
+      oneError(commit, state, error, '订单列表查询')
     })
   },
   /* GET /v/NewDashboard/workerList 美车师列表查询 */
@@ -297,28 +222,7 @@ export const actions = {
       commit('showPopup')
     })
     .catch(error => {
-      console.dir(error)
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data)
-        state.snackbarMsg = '美车师列表查询：' + (error.response.data && error.response.data.message) || '回应失败'
-        commit('showSnackbar')
-        console.log(error.response.status)
-        console.log(error.response.headers)
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request)
-        state.snackbarMsg = '美车师列表查询：请求失败'
-        commit('showSnackbar')
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message)
-        state.snackbarMsg = '美车师列表查询：' + error.message
-        commit('showSnackbar')
-      }
+      oneError(commit, state, error, '美车师列表查询')
     })
   },
   /* 订单查询 */
@@ -330,28 +234,7 @@ export const actions = {
       state.orders.map(o => dispatch('mapPoint', o))
     })
     .catch(error => {
-      console.dir(error)
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data)
-        state.snackbarMsg = '订单查询：' + (error.response.data && error.response.data.message) || '回应失败'
-        commit('showSnackbar')
-        console.log(error.response.status)
-        console.log(error.response.headers)
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request)
-        state.snackbarMsg = '订单查询：请求失败'
-        commit('showSnackbar')
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message)
-        state.snackbarMsg = '订单查询：' + error.message
-        commit('showSnackbar')
-      }
+      oneError(commit, state, error, '订单查询')
     })
   },
   /* 美车师详情查询 */
@@ -362,28 +245,7 @@ export const actions = {
       commit('openInfoWindow', state.workerDetail)
     })
     .catch(error => {
-      console.dir(error)
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data)
-        state.snackbarMsg = '美车师详情查询：' + (error.response.data && error.response.data.message) || '回应失败'
-        commit('showSnackbar')
-        console.log(error.response.status)
-        console.log(error.response.headers)
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request)
-        state.snackbarMsg = '美车师详情查询：请求失败'
-        commit('showSnackbar')
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message)
-        state.snackbarMsg = '美车师详情查询：' + error.message
-        commit('showSnackbar')
-      }
+      oneError(commit, state, error, '美车师详情查询')
     })
   },
   /* 美车师查询 */
@@ -394,28 +256,7 @@ export const actions = {
       state.workers.map(w => dispatch('mapPoint', w))
     })
     .catch(error => {
-      console.dir(error)
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data)
-        state.snackbarMsg = '美车师查询：' + (error.response.data && error.response.data.message) || '回应失败'
-        commit('showSnackbar')
-        console.log(error.response.status)
-        console.log(error.response.headers)
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request)
-        state.snackbarMsg = '美车师查询：请求失败'
-        commit('showSnackbar')
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message)
-        state.snackbarMsg = '美车师查询：' + error.message
-        commit('showSnackbar')
-      }
+      oneError(commit, state, error, '美车师查询')
     })
   },
   /* 搜索栏查询 */
@@ -436,15 +277,10 @@ export const actions = {
       }
     })
     .catch(error => {
-      console.dir(error)
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '搜索')
     })
   },
-  /* PUT /v/Dashboard/send
-    派单
-  */
+  /* PUT /v/Dashboard/send 派单 */
   sendOrder ({commit, state}, data) {
     axios.put('/api/v2/fworker/rest/v/Dashboard/send?orderId=' + data.orderId + '&workerId=' + data.workerId)
     .then(res => {
@@ -453,12 +289,7 @@ export const actions = {
       // router.push('/')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '派单失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '派单')
     })
   },
   /* POST 获取美车师结算设置列表 */
@@ -493,10 +324,7 @@ export const actions = {
       // router.push('/')
     })
     .catch(error => {
-      console.dir(error)
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '获取美车师结算设置列表')
     })
   },
   /* POST /a/preSaveWorkerMonth 美车师奖惩结算预保存 */
@@ -511,12 +339,7 @@ export const actions = {
       commit('showSnackbar')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '保存失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '美车师奖惩结算保存')
     })
   },
   /* POST /a/doAddBonusPenalty 美车师结算入库 */
@@ -527,12 +350,7 @@ export const actions = {
       commit('showSnackbar')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = (error.response.data && error.response.data.message) || '结算入库失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '美车师结算入库')
     })
   },
   /* GET /a/exportWorkMonth 导出奖惩月结算预存信息 */
@@ -563,12 +381,7 @@ export const actions = {
       commit('showSnackbar')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '导出失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '导出奖惩月结算信息')
     })
   },
   /* POST /a/hasDoneBonusPenalty 是否已完成当月奖惩结算 */
@@ -578,12 +391,7 @@ export const actions = {
       commit('hasDoneBonusPenalty', res.data)
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = (error.response.data && error.response.data.message) || '获取当月奖惩结算完成状态失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '查询当月奖惩结算完成状态')
     })
   },
   /* GET /a/getWorkerBonusPenaltyByMonth 获取美车师当月奖惩 */
@@ -611,12 +419,7 @@ export const actions = {
       commit('showPopup', 'people')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = (error.response.data && error.response.data.message) || '获取美车师当月奖惩失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '获取美车师当月奖惩')
     })
   },
   /* GET /a/exportBonusPenalty 导出指定美车师奖惩月结算信息 */
@@ -647,25 +450,7 @@ export const actions = {
       commit('showSnackbar')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '导出失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
-    })
-  },
-  /* GET /a/cities 城市列表查询 */
-  getCities ({commit, state}, data) {
-    axios.get('/api/v2/fuser/rest/a/cities')
-    .then(res => {
-      state.cities = res.data
-    })
-    .catch(error => {
-      console.dir(error)
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '导出该美车师奖惩月结算信息')
     })
   },
   /* GET /rest/a/getSettlementStatistic 查询结算汇总信息接口 */
@@ -697,10 +482,7 @@ export const actions = {
       })
     })
     .catch(error => {
-      console.dir(error)
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '查询结算汇总信息')
     })
   },
   /* GET /rest/a/downSettlementStatistic 导出结算汇总信息接口 */
@@ -731,12 +513,7 @@ export const actions = {
       commit('showSnackbar')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '导出失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '导出结算汇总信息')
     })
   },
   /* GET /rest/a/getSettlementByWorker 查询美车师结算接口 */
@@ -771,12 +548,7 @@ export const actions = {
       commit('showPopup', 'people')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '查看失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '查询美车师结算')
     })
   },
   /* GET /rest/a/downSettlementByWorker 导出美车师结算接口 */
@@ -807,12 +579,7 @@ export const actions = {
       commit('showSnackbar')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '导出失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '导出美车师结算')
     })
   },
   /* GET /rest/a/solveSettleProblem 美车师结算问题修复接口 */
@@ -825,12 +592,7 @@ export const actions = {
       commit('showSnackbar')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '执行修复失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '美车师结算问题修复')
     })
   },
   /* GET /a/getGeneralOrderStatistics 查询概要运营数据 */
@@ -840,12 +602,7 @@ export const actions = {
       state.generalOrderStatistics = res.data
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '查询概要运营数据失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '查询概要运营数据')
     })
   },
   /* GET /a/getOperationTrendDate 查询运营统计数据 */
@@ -855,12 +612,7 @@ export const actions = {
       state.operationTrendData = res.data
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '查询运营统计数据失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '查询运营统计数据')
     })
   },
   /* GET /a/statisticsOperationData 统计运营数据 */
@@ -871,12 +623,7 @@ export const actions = {
       commit('showSnackbar')
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '统计运营数据失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '统计运营数据')
     })
   },
   /* GET /a/getOperationTrendCity 查询运营对比数据 */
@@ -886,12 +633,32 @@ export const actions = {
       state.operationTrendCity = res.data
     })
     .catch(error => {
-      console.dir(error)
-      state.snackbarMsg = '查询运营对比数据失败'
-      commit('showSnackbar')
-      if (error.toString().indexOf('401') > -1) {
-        router.push('login')
-      }
+      oneError(commit, state, error, '查询运营对比数据')
     })
+  }
+}
+// 通用的错误处理
+function oneError (commit, state, error, name) {
+  console.dir(error)
+  if (error.response) {
+    // The request was made and the server responded with a status code
+    // that falls out of the range of 2xx
+    console.log(error.response.data)
+    state.snackbarMsg = name + '失败：' + (error.response.data && error.response.data.message) || '回应失败'
+    commit('showSnackbar')
+    console.log(error.response.status)
+    console.log(error.response.headers)
+  } else if (error.request) {
+    // The request was made but no response was received
+    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    // http.ClientRequest in node.js
+    console.log(error.request)
+    state.snackbarMsg = name + '失败：请求失败'
+    commit('showSnackbar')
+  } else {
+    // Something happened in setting up the request that triggered an Error
+    console.log('Error', error.message)
+    state.snackbarMsg = name + '失败：' + error.message
+    commit('showSnackbar')
   }
 }
