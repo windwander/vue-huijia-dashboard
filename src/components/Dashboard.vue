@@ -158,7 +158,7 @@ export default {
       if (!this.isLoadingConfig) {
         setTimeout(function () {
           z.update()
-        }, 100)
+        }, 300)
         setTimeout(function () {
           z.resetView()
         }, 3000)
@@ -167,7 +167,7 @@ export default {
     }, 100)
     setInterval(function () { // 每隔固定时间更新数据
       // // 移除点标记
-      // z.removeMarkers()
+      z.removeMarkers()
       z.update()
     }, 1000 * 60 * 1)
     // 搜索框，按回车键执行搜索
