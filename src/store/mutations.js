@@ -118,13 +118,13 @@ export const mutations = {
     setTimeout(function () {
       const el = document.getElementsByClassName('modal-popup')[0]
       const marginBottom = (window.height - el.getBoundingClientRect().height) / 2
-      if (marginBottom > 20) {
+      if (marginBottom > 10) {
         el.style.marginBottom = marginBottom + 'px'
       } else {
         const table = el.children[1].children[0].children[0].children[1]
         table.style.overflowY = 'auto'
         table.style.maxHeight = 'calc(80vh - 120px)'
-        el.style.marginBottom = '10vh'
+        el.style.marginBottom = '0'
       }
     }, 100)
   },
