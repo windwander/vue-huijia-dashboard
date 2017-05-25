@@ -6,7 +6,6 @@
         <Group :handleChange="changeSelect" />
       </div>
       <div class="setting-dropdown" slot="right">
-        <!--<label for="monthDropDown">时间范围：</label>-->
         <dateSelect :handleChange="changeSelect" />
       </div>
       <div class="setting-dropdown" slot="right">
@@ -219,6 +218,11 @@ export default {
       let bar = z.$refs.bar
       let lengend = []
       let series = []
+      let yAxis = []
+      let yAxisConfig = {
+        a: false,
+        b: false
+      }
       if (z.targetNum && z.targetNum[0] !== null) {
         lengend.push('目标单量')
         series.push({
@@ -236,6 +240,7 @@ export default {
           // },
           data: z.targetNum
         })
+        yAxisConfig.a = true
       }
       if (z.completionNum && z.completionNum[0] !== null) {
         lengend.push('完成单量')
@@ -254,6 +259,7 @@ export default {
           // },
           data: z.completionNum
         })
+        yAxisConfig.a = true
       }
       if ((z.targetNum && z.targetNum[0] !== null) && (z.achievingRate && z.achievingRate[0] !== null)) {
         lengend.push('目标达成率')
@@ -264,6 +270,7 @@ export default {
           formatter: '{value} %',
           data: z.achievingRate
         })
+        yAxisConfig.b = true
       }
       if (z.linkGrowthRate && z.linkGrowthRate[0] !== null) {
         lengend.push('环比增长率')
@@ -274,25 +281,65 @@ export default {
           formatter: '{value} %',
           data: z.linkGrowthRate
         })
+        yAxisConfig.b = true
       }
-      let newData = {
+      if (yAxisConfig.a === true) {
+        yAxis.push({
+          type: 'value',
+          name: '单量'
+        })
+      }
+      if (yAxisConfig.b === true) {
+        yAxis.push({
+          type: 'value',
+          name: '比率',
+          axisLabel: {
+            formatter: '{value} %'
+          }
+        })
+      }
+      this.chartOption = {
         title: {
+          show: true,
           text: z.categoryData.name + '-运营对比图',
-          subtext: this.fullDate
+          subtext: this.fullDate,
+          top: 'top',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
         },
         legend: {
+          top: '12%',
           data: lengend
         },
+        toolbox: {
+          orient: 'vertical',
+          itemSize: 24,
+          right: 24,
+          top: 12,
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        grid: {
+          top: '24%',
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
         xAxis: [{
+          type: 'category',
+          boundaryGap: true,
           data: z.dimension
-          // name: '时'
-          // nameLocation: 'end',
-          // nameGap: -15,
-          // nameRotate: 0
         }],
+        yAxis: yAxis,
         series: series
       }
-      bar.mergeOptions(newData)
       bar.hideLoading()
     },
     topBtnCalc () {

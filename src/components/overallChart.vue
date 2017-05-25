@@ -6,7 +6,6 @@
         <Group :handleChange="changeSelect" />
       </div>
       <div class="setting-dropdown" slot="right">
-        <!--<label for="monthDropDown">时间范围：</label>-->
         <dateSelect :handleChange="changeSelect" />
       </div>
       <div class="top-btn" slot="right">
@@ -283,24 +282,57 @@ export default {
           data: z.linkGrowthRate
         })
       }
-      let newData = {
+      this.chartOption = {
         title: {
+          show: true,
           text: z.categoryData.name + '-运营趋势图',
-          subtext: this.fullDate
+          subtext: this.fullDate,
+          top: 'top',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
         },
         legend: {
+          top: '12%',
           data: lengend
         },
+        toolbox: {
+          orient: 'vertical',
+          itemSize: 24,
+          right: 24,
+          top: 12,
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        grid: {
+          top: '24%',
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
         xAxis: [{
+          type: 'category',
+          boundaryGap: true,
           data: z.dimension
-          // name: '时'
-          // nameLocation: 'end',
-          // nameGap: -15,
-          // nameRotate: 0
+        }],
+        yAxis: [{
+          type: 'value',
+          name: '单量'
+        }, {
+          type: 'value',
+          name: '比率',
+          axisLabel: {
+            formatter: '{value} %'
+          }
         }],
         series: series
       }
-      bar.mergeOptions(newData)
       bar.hideLoading()
     },
     topBtnCalc () {
