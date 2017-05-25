@@ -102,6 +102,12 @@ export default {
         yAxis: [{
           type: 'value',
           name: '单量'
+        }, {
+          type: 'value',
+          name: '比率',
+          axisLabel: {
+            formatter: '{value} %'
+          }
         }],
         series: []
       }
@@ -247,6 +253,26 @@ export default {
           //   }
           // },
           data: z.completionNum
+        })
+      }
+      if ((z.targetNum && z.targetNum[0] !== null) && (z.achievingRate && z.achievingRate[0] !== null)) {
+        lengend.push('目标达成率')
+        series.push({
+          name: '目标达成率',
+          type: 'line',
+          yAxisIndex: 1,
+          formatter: '{value} %',
+          data: z.achievingRate
+        })
+      }
+      if (z.linkGrowthRate && z.linkGrowthRate[0] !== null) {
+        lengend.push('环比增长率')
+        series.push({
+          name: '环比增长率',
+          type: 'line',
+          yAxisIndex: 1,
+          formatter: '{value} %',
+          data: z.linkGrowthRate
         })
       }
       let newData = {

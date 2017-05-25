@@ -3,8 +3,12 @@
   <div id="headSearchBox">
     <avatar />
     <div class="search-box">
-      <mu-text-field hintText="搜索完整手机号或单号后三位" class="search-input" v-model="searchString" ref="searchField"/>
+      <mu-text-field hintText="搜索姓名、手机号、单号后三位" class="search-input" v-model="searchString" ref="searchField"/>
       <mu-flat-button icon="search" class="search-button" backgroundColor="#F05B47" color="#FFF" @click="search()"/>
+      <mu-menu v-if="searchResultList.length" class="search-result-list" :value="searchResultListSelected">
+        <mu-menu-item v-for="item,index in searchResultList" :title="item.name + '：' + item.phone" leftIcon="person_pin" :value="item.workerId" :key="item.workerId" @click="searchResultListClick(item.workerId)" />
+        <mu-menu-item title="关闭搜索结果框" leftIcon="close" @click="closeSearchResult" />
+      </mu-menu>
     </div>
     <Group :handleChange="update" />
   </div>
@@ -104,7 +108,7 @@ import raisedButton from 'muse-components/raisedButton'
 import textField from 'muse-components/textField'
 import flatButton from 'muse-components/flatButton'
 import selectField from 'muse-components/selectField'
-import {menuItem} from 'muse-components/menu'
+import {menu, menuItem} from 'muse-components/menu'
 import statusBox from './units/statusBox'
 import avatar from './units/avatar'
 import Group from './units/group'
@@ -117,6 +121,7 @@ Vue.component(raisedButton.name, raisedButton)
 Vue.component(textField.name, textField)
 Vue.component(flatButton.name, flatButton)
 Vue.component(selectField.name, selectField)
+Vue.component(menu.name, menu)
 Vue.component(menuItem.name, menuItem)
 export default {
   name: 'dashboard',
@@ -131,7 +136,8 @@ export default {
       searchString: '',
       modalTitle: '',
       modalType: '',
-      modalParams: {}
+      modalParams: {},
+      searchResultListSelected: ''
     }
   },
   computed: {
@@ -146,7 +152,8 @@ export default {
       'pagination',
       'todayOrdersPage',
       'todayOrdersPageSize',
-      'isLoadingConfig'
+      'isLoadingConfig',
+      'searchResultList'
     ]),
     ...mapGetters([
       'cityAndGroup'
@@ -181,13 +188,15 @@ export default {
   methods: {
     ...mapMutations([
       'removeMarkers',
-      'resetView'
+      'resetView',
+      'clearSearchResult'
     ]),
     ...mapActions([
       'getOverallCount',
       'getOrderList',
       'getWorkerList',
       'getWorkers',
+      'getWorkerDetail',
       'getOrders',
       'doSearch'
     ]),
@@ -223,16 +232,26 @@ export default {
     },
     search () {
       const z = this
-      let t = {
+      let t = Object.assign({
         type: 'order',
-        input: z.searchString
-      }
+        input: encodeURIComponent(z.searchString)
+      }, z.cityAndGroup)
       if (/^1\d{10}$/.test(z.searchString)) {
         t.type = 'phone'
+      } else if (/^[\u4e00-\u9fa5]{0,}$/.test(z.searchString)) {
+        t.type = 'name'
       }
       if (t.input !== '') {
         z.doSearch(t)
       }
+    },
+    searchResultListClick (workerId) {
+      this.searchResultListSelected = workerId
+      this.getWorkerDetail(workerId)
+    },
+    closeSearchResult () {
+      this.searchString = ''
+      this.clearSearchResult()
     }
   },
   watch: {
@@ -255,6 +274,7 @@ export default {
   display: flex;
 }
 #headSearchBox .search-box {
+  position: relative;
   box-shadow: 0px 0px 6px 0px #bdbdbd;
   background-color: #fff;
   height: 36px;
@@ -269,6 +289,16 @@ export default {
 #headSearchBox .search-button {
   width: 48px;
   min-width: 48px;
+}
+#headSearchBox .search-result-list {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  box-shadow: 0px 0px 6px 0px #bdbdbd;
+  background-color: #fff;
+}
+#headSearchBox .mu-menu-item-title {
+  margin-left: 42px;
 }
 #headSearchBox .city-select, #headSearchBox .group-select {
   box-shadow: 0px 0px 6px 0px #bdbdbd;

@@ -266,14 +266,23 @@ export const actions = {
       searchString = 'phone=' + data.input
     } else if (data.type === 'order') {
       searchString = 'orderId=' + data.input
+    } else if (data.type === 'name') {
+      searchString = 'name=' + data.input
     }
-    axios.get('/api/v2/fworker/rest/v/Dashboard/search?' + searchString)
+    axios.get('/api/v2/fworker/rest/v/NewDashboard/search?cityCode=' + data.cityCode + '&leaderId=' + data.leaderId + '&' + searchString)
     .then(res => {
       const result = res.data
       if (result.order) {
         commit('openInfoWindow', result.order)
       } else if (result.workerDashboardVO) {
-        dispatch('getWorkerDetail', result.workerDashboardVO.workerId)
+        if (result.workerDashboardVO.length > 1) {
+          state.searchResultList = result.workerDashboardVO
+        } else {
+          dispatch('getWorkerDetail', result.workerDashboardVO[0].workerId)
+        }
+      } else {
+        state.snackbarMsg = '没有搜到相关内容'
+        commit('showSnackbar')
       }
     })
     .catch(error => {
@@ -282,7 +291,7 @@ export const actions = {
   },
   /* PUT /v/Dashboard/send 派单 */
   sendOrder ({commit, state}, data) {
-    axios.put('/api/v2/fworker/rest/v/Dashboard/send?orderId=' + data.orderId + '&workerId=' + data.workerId)
+    axios.put('/api/v2/fworker/rest/v/NewDashboard/send?orderId=' + data.orderId + '&workerId=' + data.workerId)
     .then(res => {
       state.snackbarMsg = '派单成功'
       commit('showSnackbar')

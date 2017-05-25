@@ -42,6 +42,7 @@ export const state = {
     total: 0,
     totalPages: 0
   },
+  searchResultList: [],
   todayOrdersPage: 1,
   todayOrdersPageSize: 10,
   todayOrdersTotal: 0,
@@ -95,6 +96,10 @@ export const mutations = {
   // 更新点标记窗口数据
   updateMessage (state, message) {
     state.infoWindowData.message = message
+  },
+  // 清除视图的搜索结果
+  clearSearchResult () {
+    state.searchResultList = []
   },
   openInfoWindow (state, obj) {
     openInfoWindow(obj)

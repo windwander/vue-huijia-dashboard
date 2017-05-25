@@ -263,7 +263,7 @@ export default {
           data: z.completionNum
         })
       }
-      if (z.achievingRate && z.achievingRate[0] !== null) {
+      if ((z.targetNum && z.targetNum[0] !== null) && (z.achievingRate && z.achievingRate[0] !== null)) {
         lengend.push('目标达成率')
         series.push({
           name: '目标达成率',
