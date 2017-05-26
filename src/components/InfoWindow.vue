@@ -5,7 +5,7 @@
       <div class="info-window-head-title">
         <h3>
           {{infoData.name}} <span v-if="infoData.type === 'worker'"> 美车师</span>
-          <mu-badge :content="infoData.status" :class="(infoData.status === '未超时' || infoData.status === '空闲') ? 'badge-green' : infoData.status === '已下线' ? 'badge-grey' : ''" secondary/>
+          <mu-badge v-if="infoData.status" :content="infoData.status" :class="(infoData.status === '未超时' || infoData.status === '空闲') ? 'badge-green' : infoData.status === '已下线' ? 'badge-grey' : ''" secondary/>
         </h3>
         <div v-if="infoData.type === 'worker'" class="icon-container" v-bind:style="{width: infoData.star * 24 + 'px' }">
           <mu-icon value="star"/>
@@ -15,6 +15,7 @@
           <mu-icon value="star"/>
         </div>
         <mu-badge v-if="infoData.type === 'worker'" :content="String(infoData.star)" primary/>
+        <div v-if="infoData.type === 'order'">订单编号：{{infoData.orderId}}</div>
         <div v-if="infoData.type === 'worker'" class="worker-rate-box">
           <div class="progress-box" :title="'月完成单量：' + infoData.totalNum">
             <div class="progress-rate" :style="{width: infoData.completionRate + '%'}"></div>

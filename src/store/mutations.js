@@ -190,8 +190,6 @@ function removeMarkers () {
 }
 // 打开点标记窗口
 function openInfoWindow (obj) {
-  const status = ['空闲', '服务中', '已下线']
-  const orderStatus = ['未超时', '已超时']
   function formatTimeString (time) {
     time = new Date(time)
     const month = time.getMonth() + 1
@@ -200,11 +198,28 @@ function openInfoWindow (obj) {
     const minutes = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()
     return month + '月' + date + '日 ' + hours + ':' + minutes
   }
+  function formatStatus (obj) {
+    const status = ['空闲', '服务中', '已下线']
+    const orderStatus = ['未超时', '已超时']
+    let str = ''
+    if (!obj.carInfo) {
+      str = status[obj.status] || status[0]
+    } else {
+      if (obj.orderStatus === '10') {
+        if (new Date() < obj.appointTime) {
+          str = orderStatus[0]
+        } else {
+          str = orderStatus[1]
+        }
+      }
+    }
+    return str
+  }
   state.infoWindowData = Object.assign({}, {
     type: !obj.carInfo ? 'worker' : 'order',
     account: obj.phone || obj.userPhone || '',
     name: obj.userName || obj.name || '',
-    status: !obj.carInfo ? (status[obj.status] || status[0]) : (new Date() < obj.appointTime ? orderStatus[0] : orderStatus[1]),
+    status: formatStatus(obj),
     star: obj.score || '0',
     location: [obj.lng || obj.longitude || 118.722695, obj.lat || obj.latitude || 32.033995],
     address: obj.address || obj.location || '',
