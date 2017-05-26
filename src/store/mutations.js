@@ -5,7 +5,8 @@ export const state = {
   geocoder: {},
   workerDetail: {},
   infoWindowData: {},
-  testWebsocket: {},
+  points: [],
+  point: {},
   snackbarMsg: '',
   snackbar: false,
   snackbarTimer: {},
@@ -181,12 +182,12 @@ function mapPoint (obj) {
   point.on('click', function () {
     state.dispatch('getWorkerDetail')
   })
-  // state.points.push(point)
+  state.points.push(point)
 }
 // 移除点标记
 function removeMarkers () {
-  state.amap.clearMap()
-  // state.amap.remove(state.points)
+  // state.amap.clearMap()
+  state.amap.remove(state.points)
 }
 // 打开点标记窗口
 function openInfoWindow (obj) {
@@ -219,6 +220,7 @@ function openInfoWindow (obj) {
     type: !obj.carInfo ? 'worker' : 'order',
     account: obj.phone || obj.userPhone || '',
     name: obj.userName || obj.name || '',
+    avatar: obj.icon ? ('http://image.huijiacn.com/' + obj.icon) : '',
     status: formatStatus(obj),
     star: obj.score || '0',
     location: [obj.lng || obj.longitude || 118.722695, obj.lat || obj.latitude || 32.033995],

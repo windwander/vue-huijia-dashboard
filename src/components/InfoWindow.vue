@@ -1,7 +1,7 @@
 <template>
 <div id="infoWindowUI" style="display:none;">
     <div class="info-window-head">
-      <avatar />
+      <avatar :src="infoData.avatar" />
       <div class="info-window-head-title">
         <h3>
           {{infoData.name}} <span v-if="infoData.type === 'worker'"> 美车师</span>
@@ -255,8 +255,10 @@ export default {
 }*/
 #infoWindowUI .order-table .mu-th,
 #infoWindowUI .order-table .mu-td {
-  padding: 1em;
+  padding: 10px;
   white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 .order-table-slide-enter-active {
   transition: all .3s ease;
