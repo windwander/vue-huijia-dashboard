@@ -37,6 +37,12 @@ export const actions = {
         commit('openInfoWindow', obj)
       }
     })
+    point.on('rightclick', function () {
+      // 右键点击标记点时，将标记点置于下一层，用于多个标记点重叠时
+      const newzIndex = point.getzIndex() - 1
+      console.log(newzIndex)
+      point.setzIndex(newzIndex)
+    })
     state.points.push(point)
   },
   /* 用户登录 */
