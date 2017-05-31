@@ -339,4 +339,8 @@ h1, h2 {
 button.raised-button {
   margin: 10px;
 }
+.order-table>div>div:nth-child(2) {
+  max-height: calc(80vh - 120px);
+  overflow-y: auto;
+}
 </style>

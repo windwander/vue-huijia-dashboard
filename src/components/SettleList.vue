@@ -9,7 +9,6 @@
       <dateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
     </div>
     <div class="top-btn" slot="right">
-      <mu-raised-button label="结算问题修复" icon="build" class="raised-button" @click="topBtnBuild" primary/>
       <mu-raised-button label="导出汇总表" icon="print" class="raised-button" @click="downloadAll" secondary/>
     </div>
   </mu-appbar>
@@ -93,8 +92,7 @@ export default {
       'getSettlementStatistic',
       'downSettlementStatistic',
       'getSettlementByWorker',
-      'downSettlementByWorker',
-      'solveSettleProblem'
+      'downSettlementByWorker'
     ]),
     getData () {
       const postData = {
@@ -105,11 +103,6 @@ export default {
     },
     changeSelect () {
       this.getData()
-    },
-    topBtnBuild () {
-      this.solveSettleProblem({
-        month: this.year + '-' + this.month
-      })
     },
     downloadAll () {
       this.downSettlementStatistic({

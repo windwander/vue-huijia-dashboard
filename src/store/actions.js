@@ -591,19 +591,6 @@ export const actions = {
       oneError(commit, state, error, '导出美车师结算')
     })
   },
-  /* GET /rest/a/solveSettleProblem 美车师结算问题修复接口 */
-  solveSettleProblem ({commit, state}, data) {
-    state.snackbarMsg = '正在执行修复，请稍后……'
-    commit('showSnackbar')
-    axios.get('/api/v2/fworker/rest/a/solveSettleProblem?month=' + data.month)
-    .then(res => {
-      state.snackbarMsg = '执行修复成功'
-      commit('showSnackbar')
-    })
-    .catch(error => {
-      oneError(commit, state, error, '美车师结算问题修复')
-    })
-  },
   /* GET /a/getGeneralOrderStatistics 查询概要运营数据 */
   getGeneralOrderStatistics ({commit, state}, data) {
     axios.get('/api/v2/fworker/rest//a/getGeneralOrderStatistics?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode)
