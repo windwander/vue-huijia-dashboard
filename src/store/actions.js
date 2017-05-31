@@ -37,6 +37,7 @@ export const actions = {
         commit('openInfoWindow', obj)
       }
     })
+    state.points.push(point)
   },
   /* 用户登录 */
   doLogin ({dispatch, commit, state}, user) {

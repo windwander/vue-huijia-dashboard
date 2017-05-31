@@ -81,10 +81,6 @@ export const mutations = {
       })
     })
   },
-  // 显示点标记
-  mapPoint (state, obj) {
-    mapPoint(obj)
-  },
   // 移除点标记
   removeMarkers () {
     removeMarkers()
@@ -161,29 +157,6 @@ export const mutations = {
   setDate (state, date) {
     state.date = date
   }
-}
-// 设置点标记
-function mapPoint (obj) {
-  let type = 'worker'
-  let div = document.createElement('div')
-  if (!obj.workerId) {
-    type = 'order'
-  }
-  div.className = 'marker-div ' + type + '-' + obj.status
-  div.style.backgroundImage = 'url("static/' + type + '-' + obj.status + '.png")'
-  console.log([obj.lng || 118.722695, obj.lat || 32.033995])
-  // div.innerHTML = obj.currentOrders || 0
-  const point = new AMap.Marker({
-    map: state.amap,
-    position: [obj.lng || 118.722695, obj.lat || 32.033995],
-    offset: new AMap.Pixel(-24, -24),
-    // title: '美车师：' + obj.account, // 鼠标滑过显示
-    content: div  // 自定义点标记覆盖物内容
-  })
-  point.on('click', function () {
-    state.dispatch('getWorkerDetail')
-  })
-  state.points.push(point)
 }
 // 移除点标记
 function removeMarkers () {
