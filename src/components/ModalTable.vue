@@ -4,11 +4,15 @@
       <mu-thead slot="header" class="table-header">
         <mu-tr>
           <mu-th v-for="item,index in modalTableHead" :key="'order-table-head' + index" :title="item">{{item}}</mu-th>
+          <mu-th>操作</mu-th>
         </mu-tr>
       </mu-thead>
       <mu-tbody>
         <mu-tr v-for="item,index in modalTableData" :key="item.orderId" :selected="item.selected">
           <mu-td v-for="(value, key) in item" :key="key" :title="value">{{value}}</mu-td>
+          <mu-td class="buttons">
+            <mu-icon-button icon="location_searching" title="在地图上定位" @click="locate(item.orderId || item.phone)" />
+          </mu-td>
         </mu-tr>
       </mu-tbody>
       <mu-tfoot v-if="pagination.totalPages > 1" slot="footer" class="table-footer-pagination">
@@ -20,8 +24,9 @@
 
 <script>
 import Vue from 'vue'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import {table, thead, tbody, tfoot, tr, th, td} from 'muse-components/table'
+import iconButton from 'muse-components/iconButton'
 import pagination from 'muse-components/pagination'
 
 Vue.component(pagination.name, pagination)
@@ -32,6 +37,7 @@ Vue.component(tfoot.name, tfoot)
 Vue.component(tr.name, tr)
 Vue.component(th.name, th)
 Vue.component(td.name, td)
+Vue.component(iconButton.name, iconButton)
 export default {
   name: 'ModalTable',
   components: {
@@ -75,18 +81,26 @@ export default {
       'modalTableHead',
       'modalTableData',
       'pagination'
+    ]),
+    ...mapGetters([
+      'cityAndGroup'
     ])
   },
   methods: {
     pageChange (newIndex) {
       this.$store.commit('changePage', newIndex - 1)
       this.change()
+    },
+    locate (id) {
+      this.$store.dispatch('doSearch', Object.assign({
+        input: encodeURIComponent(id)
+      }, this.cityAndGroup))
     }
   }
 }
 </script>
 
-<style lang="css">
+<style scoped>
 .table-header {
   background-color: #eee;
 }
@@ -97,10 +111,18 @@ export default {
 }
 .order-table .mu-th-wrapper {
   white-space: pre-wrap;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 .order-table .mu-td {
-  padding: 1em;
+  padding: 12px 6px;
   white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.order-table .mu-td.buttons {
+  white-space: initial;
 }
 .table-footer-pagination {
   display: block;

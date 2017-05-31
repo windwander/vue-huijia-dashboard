@@ -253,12 +253,13 @@ export default {
 #infoWindowUI .order-table div div:first-child .mu-table {
   width: 100%;
 }*/
+#infoWindowUI .order-table>div>div:nth-child(2) {
+  max-height: initial;
+  overflow-y: auto;
+}
 #infoWindowUI .order-table .mu-th,
 #infoWindowUI .order-table .mu-td {
   padding: 10px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  word-break: break-all;
 }
 .order-table-slide-enter-active {
   transition: all .3s ease;

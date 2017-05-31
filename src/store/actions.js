@@ -269,12 +269,12 @@ export const actions = {
   /* 搜索栏查询 */
   doSearch ({commit, dispatch, state}, data) {
     let searchString = ''
-    if (data.type === 'phone') {
+    if (/^1\d{10}$/.test(data.input)) {
       searchString = 'phone=' + data.input
-    } else if (data.type === 'order') {
+    } else if (/^[\u4e00-\u9fa5]{0,}$/.test(data.input)) {
+      searchString = 'name=' + encodeURIComponent(data.input)
+    } else {
       searchString = 'orderId=' + data.input
-    } else if (data.type === 'name') {
-      searchString = 'name=' + data.input
     }
     axios.get('/api/v2/fworker/rest/v/NewDashboard/search?cityCode=' + data.cityCode + '&leaderId=' + data.leaderId + '&' + searchString)
     .then(res => {

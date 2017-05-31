@@ -233,14 +233,8 @@ export default {
     search () {
       const z = this
       let t = Object.assign({
-        type: 'order',
-        input: encodeURIComponent(z.searchString)
+        input: z.searchString
       }, z.cityAndGroup)
-      if (/^1\d{10}$/.test(z.searchString)) {
-        t.type = 'phone'
-      } else if (/^[\u4e00-\u9fa5]{0,}$/.test(z.searchString)) {
-        t.type = 'name'
-      }
       if (t.input !== '') {
         z.doSearch(t)
       }
