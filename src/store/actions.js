@@ -620,17 +620,6 @@ export const actions = {
       })
     })
   },
-  /* GET /a/statisticsOperationData 统计运营数据 */
-  statisticsOperationData ({commit, state}) {
-    axios.get('/api/v2/fworker/rest/a/statisticsOperationData')
-    .then(res => {
-      state.snackbarMsg = res.data.resultMessage || '统计运营数据成功'
-      commit('showSnackbar')
-    })
-    .catch(error => {
-      oneError(commit, state, error, '统计运营数据')
-    })
-  },
   /* POST /v/getTrendDataWithCondition 根据维度来查询运营数据作为对比 */
   getTrendDataWithCondition ({commit, state}, data) {
     return new Promise(function (resolve, reject) {

@@ -14,9 +14,6 @@
           <mu-menu-item v-for="item in generalOrderStatistics" :key="item.categoryCode" :value="item.categoryCode" :title="item.categoryName" />
         </mu-dropDown-menu>
       </div>
-      <div class="top-btn" slot="right">
-        <mu-raised-button label="统计运营数据" icon="trending_up" class="raised-button" @click="topBtnCalc" secondary/>
-      </div>
     </mu-appbar>
     <div id="mainContent">
       <ECharts :options="chartOption" auto-resize ref="bar"/>
@@ -183,8 +180,7 @@ export default {
     ]),
     ...mapActions([
       'getGeneralOrderStatistics',
-      'getTrendDataWithCondition',
-      'statisticsOperationData'
+      'getTrendDataWithCondition'
     ]),
     getData () {
       const z = this
@@ -340,9 +336,6 @@ export default {
         series: series
       }
       bar.hideLoading()
-    },
-    topBtnCalc () {
-      this.statisticsOperationData()
     }
   }
 }

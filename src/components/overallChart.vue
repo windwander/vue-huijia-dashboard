@@ -8,9 +8,6 @@
       <div class="setting-dropdown" slot="right">
         <dateSelect :handleChange="changeSelect" />
       </div>
-      <div class="top-btn" slot="right">
-        <mu-raised-button label="统计运营数据" icon="trending_up" class="raised-button" @click="topBtnCalc" secondary/>
-      </div>
     </mu-appbar>
     <div id="mainContent">
       <div id="orderTypeBox">
@@ -192,8 +189,7 @@ export default {
     ]),
     ...mapActions([
       'getGeneralOrderStatistics',
-      'getOperationTrendDate',
-      'statisticsOperationData'
+      'getOperationTrendDate'
     ]),
     getData () {
       const z = this
@@ -333,9 +329,6 @@ export default {
         series: series
       }
       bar.hideLoading()
-    },
-    topBtnCalc () {
-      this.statisticsOperationData()
     }
   }
 }
