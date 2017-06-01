@@ -115,14 +115,9 @@ export const mutations = {
     setTimeout(function () {
       // 弹窗垂直居中
       const el = document.getElementsByClassName('modal-popup')[0]
-      const marginBottom = (window.height - el.getBoundingClientRect().height) / 2
-      if (marginBottom > 10) {
+      const marginBottom = (window.innerHeight - el.getBoundingClientRect().height) / 2
+      if (marginBottom > 20) {
         el.style.marginBottom = marginBottom + 'px'
-      } else {
-        // const table = el.children[1].children[0].children[0].children[1]
-        // table.style.overflowY = 'auto'
-        // table.style.maxHeight = 'calc(80vh - 120px)'
-        el.style.marginBottom = '0'
       }
     }, 100)
   },
@@ -208,7 +203,7 @@ function openInfoWindow (obj) {
     targetNum: obj.targetNum || 0,
     totalNum: obj.totalNum || 0,
     orderCount: obj.orderCount || 0,
-    completionRate: (obj.completionRate * 100) || 0,
+    completionRate: (obj.completionRate * 100).toFixed(2) || 0,
     time: formatTimeString(obj.appointTime) || obj.appointTime || obj.timeRequire || '',
     orderId: obj.orderId || '',
     license: obj.carInfo || '',

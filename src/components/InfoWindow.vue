@@ -247,12 +247,6 @@ export default {
   border: 16px solid transparent;
   border-right-color: #fff;
 }
-/*#infoWindowUI .order-table .mu-table {
-  width: auto;
-}
-#infoWindowUI .order-table div div:first-child .mu-table {
-  width: 100%;
-}*/
 #infoWindowUI .order-table>div>div:nth-child(2) {
   max-height: initial;
   overflow-y: auto;

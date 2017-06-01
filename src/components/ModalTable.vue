@@ -4,13 +4,13 @@
       <mu-thead slot="header" class="table-header">
         <mu-tr>
           <mu-th v-for="item,index in modalTableHead" :key="'order-table-head' + index" :title="item">{{item}}</mu-th>
-          <mu-th>操作</mu-th>
+          <mu-th v-if="cellButtons">操作</mu-th>
         </mu-tr>
       </mu-thead>
       <mu-tbody>
         <mu-tr v-for="item,index in modalTableData" :key="item.orderId" :selected="item.selected">
           <mu-td v-for="(value, key) in item" :key="key" :title="value">{{value}}</mu-td>
-          <mu-td class="buttons">
+          <mu-td v-if="cellButtons" class="buttons">
             <mu-icon-button icon="location_searching" title="在地图上定位" @click="locate(item.orderId || item.phone)" />
           </mu-td>
         </mu-tr>
@@ -74,6 +74,10 @@ export default {
     },
     change: {
       type: Function
+    },
+    cellButtons: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -105,23 +109,17 @@ export default {
   background-color: #eee;
 }
 .table-header .mu-th {
-  padding: 0 1em;
+  padding: 0 6px;
   color: #333;
   border-bottom: 1px solid #c7c7c7;
 }
-.order-table .mu-th-wrapper {
-  white-space: pre-wrap;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-.order-table .mu-td {
+.mu-td {
   padding: 12px 6px;
   white-space: pre-wrap;
   word-wrap: break-word;
   word-break: break-all;
 }
-.order-table .mu-td.buttons {
+.mu-td.buttons {
   white-space: initial;
 }
 .table-footer-pagination {
@@ -130,5 +128,12 @@ export default {
 }
 .table-footer-pagination .mu-pagination {
   justify-content: center;
+}
+</style>
+<style>
+.order-table .mu-th-wrapper {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 </style>

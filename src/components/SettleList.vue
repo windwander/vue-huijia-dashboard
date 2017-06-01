@@ -197,12 +197,4 @@ html, body {
 .settle-table .worker-td-0 {
   display: none;
 }
-.modal-popup {
-  width: 1200px;
-  max-width: 1200px;
-}
-.modal-popup {
-  width: 1200px;
-  max-width: 1200px;
-}
 </style>

@@ -95,7 +95,7 @@
       @click="showModal('当前空闲', 'people', '4', overallCount.freeWorkerCount)"
     />
   </div>
-  <Modal :title="modalTitle" :changePage="getList" />
+  <Modal :title="modalTitle" :changePage="getList" :cellButtons="true" />
 </div>
 </template>
 

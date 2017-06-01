@@ -5,7 +5,7 @@
       <mu-icon-button slot="right" icon="close" @click="close()"/>
     </mu-appbar>
     <mu-content-block class="modal-table-box">
-      <ModalTable height="auto" :change="changePage" />
+      <ModalTable height="auto" :change="changePage" :cellButtons="cellButtons" />
     </mu-content-block>
   </mu-popup>
 </template>
@@ -47,6 +47,10 @@ export default {
     },
     changePage: {
       type: Function
+    },
+    cellButtons: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -63,8 +67,9 @@ export default {
 </script>
 <style>
 .modal-popup {
-  max-width: 1000px;
-  max-height: 800px;
+  width: 80vw;
+  max-width: 80vw;
+  margin-bottom: 20px;
 }
 .modal-popup .modal-popup-title {
   color: #474a4f;
