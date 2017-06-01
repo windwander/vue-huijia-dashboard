@@ -52,7 +52,7 @@ export const state = {
   settlementStatistic: [],
   generalOrderStatistics: [],
   operationTrendData: [],
-  operationTrendCity: []
+  trendDataWithCondition: []
 }
 
 export const mutations = {

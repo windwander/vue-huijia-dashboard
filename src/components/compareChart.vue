@@ -119,43 +119,43 @@ export default {
       'snackbar',
       'snackbarMsg',
       'generalOrderStatistics',
-      'operationTrendCity'
+      'trendDataWithCondition'
     ]),
     ...mapGetters([
       'fullDate'
     ]),
     targetNum: function () {
       let arr
-      if (this.operationTrendCity) {
-        arr = this.operationTrendCity.map(d => d.targetNum)
+      if (this.trendDataWithCondition) {
+        arr = this.trendDataWithCondition.map(d => d.targetNum)
       }
       return arr
     },
     completionNum: function () {
       let arr
-      if (this.operationTrendCity) {
-        arr = this.operationTrendCity.map(d => d.completionNum)
+      if (this.trendDataWithCondition) {
+        arr = this.trendDataWithCondition.map(d => d.completionNum)
       }
       return arr
     },
     achievingRate: function () {
       let arr
-      if (this.operationTrendCity) {
-        arr = this.operationTrendCity.map(d => d.achievingRate)
+      if (this.trendDataWithCondition) {
+        arr = this.trendDataWithCondition.map(d => d.achievingRate)
       }
       return arr
     },
     linkGrowthRate: function () {
       let arr
-      if (this.operationTrendCity) {
-        arr = this.operationTrendCity.map(d => d.linkGrowthRate)
+      if (this.trendDataWithCondition) {
+        arr = this.trendDataWithCondition.map(d => d.linkGrowthRate)
       }
       return arr
     },
     dimension: function () {
       let arr
-      if (this.operationTrendCity) {
-        arr = this.operationTrendCity.map(d => d.cityName)
+      if (this.trendDataWithCondition) {
+        arr = this.trendDataWithCondition.map(d => d.dimension)
       }
       return arr
     }
@@ -169,12 +169,12 @@ export default {
       maskColor: 'rgba(255, 255, 255, 0.8)',
       zlevel: 0
     })
-    const dataA = {
+    const data = {
       cityCode: this.city,
       date: this.fullDate,
       parentId: this.group
     }
-    this.getGeneralOrderStatistics(dataA)
+    this.getGeneralOrderStatistics(data)
     this.getData()
   },
   methods: {
@@ -183,7 +183,7 @@ export default {
     ]),
     ...mapActions([
       'getGeneralOrderStatistics',
-      'getOperationTrendCity',
+      'getTrendDataWithCondition',
       'statisticsOperationData'
     ]),
     getData () {
@@ -194,10 +194,9 @@ export default {
         parentId: this.group,
         categoryCode: this.categoryData.code
       }
-      this.getOperationTrendCity(data)
-      setTimeout(function () {
+      this.getTrendDataWithCondition(data).then(function () {
         z.updateBar()
-      }, 100)
+      })
     },
     handleChangeService (v) {
       let name = '全部服务'

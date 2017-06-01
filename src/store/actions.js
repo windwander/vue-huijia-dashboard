@@ -600,7 +600,7 @@ export const actions = {
   },
   /* GET /a/getGeneralOrderStatistics 查询概要运营数据 */
   getGeneralOrderStatistics ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest//a/getGeneralOrderStatistics?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode)
+    axios.get('/api/v2/fworker/rest/a/getGeneralOrderStatistics?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode)
     .then(res => {
       state.generalOrderStatistics = res.data
     })
@@ -610,7 +610,7 @@ export const actions = {
   },
   /* GET /a/getOperationTrendDate 查询运营统计数据 */
   getOperationTrendDate ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest//a/getOperationTrendDate?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
+    axios.get('/api/v2/fworker/rest/a/getOperationTrendDate?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
     .then(res => {
       state.operationTrendData = res.data
     })
@@ -620,7 +620,7 @@ export const actions = {
   },
   /* GET /a/statisticsOperationData 统计运营数据 */
   statisticsOperationData ({commit, state}) {
-    axios.get('/api/v2/fworker/rest//a/statisticsOperationData')
+    axios.get('/api/v2/fworker/rest/a/statisticsOperationData')
     .then(res => {
       state.snackbarMsg = res.data.resultMessage || '统计运营数据成功'
       commit('showSnackbar')
@@ -629,14 +629,22 @@ export const actions = {
       oneError(commit, state, error, '统计运营数据')
     })
   },
-  /* GET /a/getOperationTrendCity 查询运营对比数据 */
-  getOperationTrendCity ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest//a/getOperationTrendCity?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
-    .then(res => {
-      state.operationTrendCity = res.data
-    })
-    .catch(error => {
-      oneError(commit, state, error, '查询运营对比数据')
+  /* POST /v/getTrendDataWithCondition 根据维度来查询运营数据作为对比 */
+  getTrendDataWithCondition ({commit, state}, data) {
+    return new Promise(function (resolve, reject) {
+      axios.post('/api/v2/fworker/rest/v/getTrendDataWithCondition', {
+        cityCode: data.cityCode,
+        categoryCode: data.categoryCode,
+        dimension: data.cityCode ? 'Group' : 'City',
+        date: data.date
+      })
+      .then(res => {
+        state.trendDataWithCondition = res.data
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '查询运营对比数据')
+      })
     })
   }
 }
