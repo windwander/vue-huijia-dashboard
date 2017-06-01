@@ -163,9 +163,7 @@ export default {
     const z = this
     const initUpdate = setInterval(function () {
       if (!this.isLoadingConfig) {
-        setTimeout(function () {
-          z.update()
-        }, 300)
+        z.update()
         setTimeout(function () {
           z.resetView()
         }, 3000)
@@ -173,8 +171,9 @@ export default {
       }
     }, 100)
     setInterval(function () { // 每隔固定时间更新数据
-      // // 移除点标记
+      // 移除点标记
       z.removeMarkers()
+      // 更新点标记
       z.update()
     }, 1000 * 60 * 1)
     // 搜索框，按回车键执行搜索

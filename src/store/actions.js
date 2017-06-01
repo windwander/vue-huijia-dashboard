@@ -189,7 +189,7 @@ export const actions = {
                 y: 0
               })
             }
-          })
+          }, 100)
         }
       } else {
         commit('showPopup')
@@ -610,12 +610,15 @@ export const actions = {
   },
   /* GET /a/getOperationTrendDate 查询运营统计数据 */
   getOperationTrendDate ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest/a/getOperationTrendDate?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
-    .then(res => {
-      state.operationTrendData = res.data
-    })
-    .catch(error => {
-      oneError(commit, state, error, '查询运营统计数据')
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fworker/rest/a/getOperationTrendDate?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
+      .then(res => {
+        state.operationTrendData = res.data
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '查询运营统计数据')
+      })
     })
   },
   /* GET /a/statisticsOperationData 统计运营数据 */

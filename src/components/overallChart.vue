@@ -206,10 +206,9 @@ export default {
         categoryCode: this.categoryData.code
       })
       this.getGeneralOrderStatistics(dataA)
-      this.getOperationTrendDate(dataB)
-      setTimeout(function () {
+      this.getOperationTrendDate(dataB).then(function () {
         z.updateBar()
-      }, 500)
+      })
     },
     changeSelect () {
       this.getData()
