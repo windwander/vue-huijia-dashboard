@@ -14,7 +14,7 @@ export const state = {
   showModalTable: false,
   menus: [],
   cities: [],
-  city: '320100',
+  city: '',
   year: new Date().getFullYear().toString(),
   month: (function () {
     let dateMonth = new Date().getMonth() + 1
