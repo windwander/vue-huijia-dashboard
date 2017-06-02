@@ -171,9 +171,6 @@ export default {
       }
     }, 100)
     setInterval(function () { // 每隔固定时间更新数据
-      // 移除点标记
-      z.removeMarkers()
-      // 更新点标记
       z.update()
     }, 1000 * 60 * 1)
     // 搜索框，按回车键执行搜索
@@ -201,6 +198,8 @@ export default {
     ]),
     update () {
       const z = this
+      // 移除点标记
+      z.removeMarkers()
       // 获取视图总情况查询
       z.getOverallCount(z.cityAndGroup)
       // 获取美车师位置和待接单位置
