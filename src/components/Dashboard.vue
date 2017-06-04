@@ -1,7 +1,7 @@
 <template>
 <div>
   <div id="headSearchBox">
-    <avatar />
+    <!--<avatar />-->
     <div class="search-box">
       <mu-text-field hintText="搜索姓名、手机号、单号后三位" class="search-input" v-model="searchString" ref="searchField"/>
       <mu-flat-button icon="search" class="search-button" backgroundColor="#F05B47" color="#FFF" @click="search()"/>
@@ -10,16 +10,17 @@
         <mu-menu-item title="关闭搜索结果框" leftIcon="close" @click="closeSearchResult" />
       </mu-menu>
     </div>
-    <Group :handleChange="update" />
+    <Group :handleChange="update" :changeCity="changeCity" class="select-box" />
   </div>
   <div id="orderStatusBox">
-    <status-box icon="assignment" title="订单状况" arrowPosition="right" />
+    <status-box icon="assignment" title="订单状况" arrowPosition="right" @click="toggleOrderBox" />
     <status-box
       :number="overallCount.orderCount"
       title="当日订单"
       direction="row"
       clickable="clickable"
       @click="showModal('当日订单', 'order', '20,30,40,50,60,90', overallCount.orderCount)"
+      v-if="showOrderBox"
     />
     <status-box
       :number="overallCount.toBeAcceptCount"
@@ -27,6 +28,7 @@
       direction="row"
       clickable="clickable"
       @click="showModal('待接单订单', 'order', '10', overallCount.toBeAcceptCount)"
+      v-if="showOrderBox"
     />
     <status-box
       :number="overallCount.toBeServiceCount"
@@ -34,6 +36,7 @@
       direction="row"
       clickable="clickable"
       @click="showModal('待服务订单', 'order', '20', overallCount.toBeServiceCount)"
+      v-if="showOrderBox"
     />
     <status-box
       :number="overallCount.inServiceCount"
@@ -41,6 +44,7 @@
       direction="row"
       clickable="clickable"
       @click="showModal('服务中订单', 'order', '30', overallCount.inServiceCount)"
+      v-if="showOrderBox"
     />
     <status-box
       :number="overallCount.toPayCount"
@@ -48,6 +52,7 @@
       direction="row"
       clickable="clickable"
       @click="showModal('待支付订单', 'order', '40', overallCount.toPayCount)"
+      v-if="showOrderBox"
     />
     <status-box
       :number="overallCount.payCount"
@@ -55,6 +60,7 @@
       direction="row"
       clickable="clickable"
       @click="showModal('已支付订单', 'order', '50,60', overallCount.payCount)"
+      v-if="showOrderBox"
     />
     <status-box
       :number="overallCount.cancelCount"
@@ -62,16 +68,18 @@
       direction="row"
       clickable="clickable"
       @click="showModal('已取消订单', 'order', '90', overallCount.cancelCount)"
+      v-if="showOrderBox"
     />
   </div>
   <div id="serviceStatusBox">
-    <status-box icon="people" title="美车师" arrowPosition="bottom" />
+    <status-box icon="people" title="美车师" arrowPosition="bottom" @click="toggleWorkerBox" />
     <status-box
       :number="overallCount.inWorkerCount"
       title="在线人数"
       direction="column"
       clickable="clickable"
       @click="showModal('当前在线', 'people', '1', overallCount.inWorkerCount)"
+      v-if="showWorkerBox"
     />
     <status-box
       :number="overallCount.outWorkerCount"
@@ -79,6 +87,7 @@
       direction="column"
       clickable="clickable"
       @click="showModal('当前离线', 'people', '2', overallCount.outWorkerCount)"
+      v-if="showWorkerBox"
     />
     <status-box
       :number="overallCount.busyWorkerCount"
@@ -86,6 +95,7 @@
       direction="column"
       clickable="clickable"
       @click="showModal('当前忙碌', 'people', '3', overallCount.busyWorkerCount)"
+      v-if="showWorkerBox"
     />
     <status-box
       :number="overallCount.freeWorkerCount"
@@ -93,6 +103,7 @@
       direction="column"
       clickable="clickable"
       @click="showModal('当前空闲', 'people', '4', overallCount.freeWorkerCount)"
+      v-if="showWorkerBox"
     />
   </div>
   <Modal :title="modalTitle" :changePage="getList" :cellButtons="true" />
@@ -137,7 +148,9 @@ export default {
       modalTitle: '',
       modalType: '',
       modalParams: {},
-      searchResultListSelected: ''
+      searchResultListSelected: '',
+      showOrderBox: true,
+      showWorkerBox: true
     }
   },
   computed: {
@@ -153,7 +166,8 @@ export default {
       'todayOrdersPage',
       'todayOrdersPageSize',
       'isLoadingConfig',
-      'searchResultList'
+      'searchResultList',
+      'city'
     ]),
     ...mapGetters([
       'cityAndGroup'
@@ -164,15 +178,16 @@ export default {
     const initUpdate = setInterval(function () {
       if (!this.isLoadingConfig) {
         z.update()
-        setTimeout(function () {
-          z.resetView()
-        }, 3000)
+        // 取消视图自适应
+        // setTimeout(function () {
+        //   z.resetView()
+        // }, 3000)
         clearInterval(initUpdate)
       }
     }, 100)
     setInterval(function () { // 每隔固定时间更新数据
       z.update()
-    }, 1000 * 60 * 1)
+    }, 1000 * 60 * 5)
     // 搜索框，按回车键执行搜索
     const input = z.$refs.searchField.$el.querySelector('input')
     input.addEventListener('keyup', function (event) {
@@ -185,7 +200,8 @@ export default {
     ...mapMutations([
       'removeMarkers',
       'resetView',
-      'clearSearchResult'
+      'clearSearchResult',
+      'centerMap'
     ]),
     ...mapActions([
       'getOverallCount',
@@ -206,6 +222,10 @@ export default {
       z.getWorkers(z.cityAndGroup)
       // 获取待接单订单
       z.getOrders(Object.assign({status: '10'}, z.cityAndGroup))
+    },
+    changeCity () {
+      // 地图按城市居中
+      this.centerMap(this.city)
     },
     showModal (title, type, status, number) {
       if (number) {
@@ -244,6 +264,12 @@ export default {
     closeSearchResult () {
       this.searchString = ''
       this.clearSearchResult()
+    },
+    toggleOrderBox () {
+      this.showOrderBox = !this.showOrderBox
+    },
+    toggleWorkerBox () {
+      this.showWorkerBox = !this.showWorkerBox
     }
   },
   watch: {
@@ -271,7 +297,6 @@ export default {
   background-color: #fff;
   height: 36px;
   margin-top: 6px;
-  margin-left: 20px;
 }
 #headSearchBox .search-input {
   top: -5px;
@@ -334,5 +359,26 @@ button.raised-button {
 .order-table>div>div:nth-child(2) {
   max-height: calc(80vh - 120px);
   overflow-y: auto;
+}
+@media screen and (max-width:1366px) {
+  #headSearchBox {
+    flex-wrap: wrap-reverse;
+    max-width: 320px;
+  }
+  #headSearchBox .city-select, #headSearchBox .group-select {
+    margin-left: 0;
+    margin-top: -6px;
+  }
+  #headSearchBox .city-select-field, #headSearchBox .group-select-field {
+    width: 132px;
+  }
+}
+@media screen and (max-width:1130px) {
+  #headSearchBox .select-box {
+    max-width: 160px;
+  }
+  #headSearchBox .city-select, #headSearchBox .group-select {
+    margin-top: 0;
+  }
 }
 </style>

@@ -81,6 +81,14 @@ export const mutations = {
       })
     })
   },
+  // 按城市居中地图
+  centerMap (state, city) {
+    if (city) {
+      state.amap.setCity(city)
+    } else {
+      state.amap.setCity('100000')
+    }
+  },
   // 移除点标记
   removeMarkers () {
     removeMarkers()

@@ -72,7 +72,7 @@ export default {
 }
 .status-box .status-button {
   height: 88px;
-  width: 100px;
+  width: 88px;
 }
 .status-box .status-arrow {
   content: '';
@@ -81,21 +81,21 @@ export default {
 }
 .status-box.right .status-arrow {
   top: 34px;
-  right: -20px;
+  right: -19px;
   border-left-color: #F05B47;
 }
 .status-box.left .status-arrow {
   top: 34px;
-  left: -20px;
+  left: -19px;
   border-right-color: #F05B47;
 }
 .status-box.top .status-arrow {
-  top: -20px;
+  top: -19px;
   left: 40px;
   border-bottom-color: #F05B47;
 }
 .status-box.bottom .status-arrow {
-  bottom: -20px;
+  bottom: -19px;
   left: 40px;
   border-top-color: #F05B47;
 }

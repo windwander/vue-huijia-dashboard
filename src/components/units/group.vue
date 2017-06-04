@@ -28,6 +28,10 @@ export default {
     handleChange: {
       type: Function,
       default: () => {}
+    },
+    changeCity: {
+      type: Function,
+      default: () => {}
     }
   },
   created () {
@@ -57,6 +61,7 @@ export default {
     ]),
     handleChangeCity (v) {
       this.setCity(v)
+      this.changeCity()
       this.handleChange()
     },
     handleChangeGroup (v) {

@@ -96,6 +96,7 @@ export default {
       this.change()
     },
     locate (id) {
+      this.$store.commit('hidePopup')
       this.$store.dispatch('doSearch', Object.assign({
         input: encodeURIComponent(id)
       }, this.cityAndGroup))
