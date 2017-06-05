@@ -5,7 +5,8 @@ export const state = {
   geocoder: {},
   workerDetail: {},
   infoWindowData: {},
-  points: [],
+  orderPoints: [],
+  workerPoints: [],
   point: {},
   snackbarMsg: '',
   snackbar: false,
@@ -89,14 +90,11 @@ export const mutations = {
       state.amap.setCity('100000')
     }
   },
-  // 移除点标记
-  removeMarkers () {
-    removeMarkers()
-    // this.infoWindow.close()
-  },
   // 自动适应窗口
   resetView () {
-    state.amap.setFitView(state.points)
+    let arr = []
+    arr.concat(state.workerPoints, state.orderPoints)
+    state.amap.setFitView(arr)
   },
   // 更新点标记窗口数据
   updateMessage (state, message) {
@@ -160,11 +158,6 @@ export const mutations = {
   setDate (state, date) {
     state.date = date
   }
-}
-// 移除点标记
-function removeMarkers () {
-  // state.amap.clearMap()
-  state.amap.remove(state.points)
 }
 // 打开点标记窗口
 function openInfoWindow (obj) {

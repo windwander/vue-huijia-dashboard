@@ -178,7 +178,7 @@ export default {
     const initUpdate = setInterval(function () {
       if (!this.isLoadingConfig) {
         z.update()
-        // 取消视图自适应
+        // 视图自适应
         // setTimeout(function () {
         //   z.resetView()
         // }, 3000)
@@ -198,7 +198,6 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'removeMarkers',
       'resetView',
       'clearSearchResult',
       'centerMap'
@@ -214,8 +213,6 @@ export default {
     ]),
     update () {
       const z = this
-      // 移除点标记
-      z.removeMarkers()
       // 获取视图总情况查询
       z.getOverallCount(z.cityAndGroup)
       // 获取美车师位置和待接单位置

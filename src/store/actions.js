@@ -5,30 +5,16 @@ import router from '../router'
 export const actions = {
   /* 设置点标记 */
   mapPoint ({commit, dispatch, state}, obj) {
-    let type = 'worker'
-    let div = document.createElement('div')
-    div.className = 'marker-div ' + type + '-' + obj.status + (obj.breakStatus === 0 ? '-lost' : '')
-    div.style.backgroundImage = 'url("static/' + type + '-' + obj.status + (obj.breakStatus === 0 ? '-lost' : '') + '.png")'
-    if (!obj.workerId) { // 订单
-      type = 'order'
-      let status = 'normal'
-      if (new Date() > obj.appointTime) {
-        status = 'urgent'
-      }
-      div.className = 'marker-div order-' + status
-      div.style.backgroundImage = 'url("static/' + type + '-' + status + '.png")'
-      div.dataset.orderId = obj.orderId
-      div.dataset.orderPhone = obj.userPhone
-    } else { // 美车师
-      div.dataset.workerId = obj.workerId
-      div.dataset.workerPhone = obj.phone
-    }
     const point = new AMap.Marker({
       map: state.amap,
-      position: [obj.lng || obj.longitude || 118.722695, obj.lat || obj.latitude || 32.033995],
+      topWhenMouseOver: true, // 鼠标移上去时置顶
+      position: [(obj.lng || obj.longitude || 118.722695) + Math.random() / 100, (obj.lat || obj.latitude || 32.033995) + Math.random() / 100],
       offset: new AMap.Pixel(-24, -24),
-      title: (obj.userName || obj.name) + '：' + (obj.phone || obj.userPhone), // 鼠标滑过显示
-      content: div  // 自定义点标记覆盖物内容
+      title: myTitle(obj), // 鼠标滑过显示标题
+      content: myMarker(obj), // 自定义点标记覆盖物内容,
+      extData: {
+        id: obj.orderId || obj.workerId
+      }
     })
     point.on('click', function () {
       if (!obj.carInfo) { // 美车师
@@ -42,7 +28,11 @@ export const actions = {
       const newzIndex = point.getzIndex() - 1
       point.setzIndex(newzIndex)
     })
-    state.points.push(point)
+    if (!obj.carInfo) { // 美车师
+      state.workerPoints.push(point)
+    } else {
+      state.orderPoints.push(point)
+    }
   },
   /* 用户登录 */
   doLogin ({dispatch, commit, state}, user) {
@@ -236,6 +226,8 @@ export const actions = {
     // 订单状态（待接单：10，待服务：20，服务中：30，待付款：40，已支付：50,60，已取消：90，全部：20,30,40,50,60,90）
     axios.get('/api/v2/fworker/rest/v/NewDashboard/orders?cityCode=' + data.cityCode + '&status=' + data.status)
     .then(res => {
+      state.amap.remove(state.orderPoints)
+      state.orderPoints = []
       state.orders = res.data
       state.orders.map(o => dispatch('mapPoint', o))
     })
@@ -259,7 +251,19 @@ export const actions = {
     axios.get('/api/v2/fworker/rest/v/NewDashboard/workers?cityCode=' + data.cityCode + '&leaderId=' + data.leaderId)
     .then(res => {
       state.workers = res.data
-      state.workers.map(w => dispatch('mapPoint', w))
+      const currentPoints = state.workerPoints.map(p => p.getExtData().id)
+      state.workers.map(d => {
+        const pos = currentPoints.indexOf(d.workerId)
+        if (pos > -1) { // 已标记在地图上，则更新它
+          const newPos = [d.lng || 118.722695, d.lat || 32.033995]
+          const point = state.workerPoints[pos]
+          point.moveTo(newPos, 5000)
+          point.setContent(myMarker(d))
+          point.setTitle(myTitle(d))
+        } else {
+          dispatch('mapPoint', d)
+        }
+      })
     })
     .catch(error => {
       oneError(commit, state, error, '美车师查询')
@@ -638,6 +642,42 @@ export const actions = {
       })
     })
   }
+}
+// 点标记自定义标题
+function myTitle (obj) {
+  const name = obj.userName || obj.name
+  const phone = obj.phone || obj.userPhone
+  let str = ''
+  if (name) {
+    str += name
+    str += '：'
+  }
+  if (phone) {
+    str += phone
+  }
+  return str
+}
+// 点标记的自定义div
+function myMarker (obj) {
+  let type = 'worker'
+  let div = document.createElement('div')
+  div.className = 'marker-div ' + type + '-' + obj.status + (obj.breakStatus === 0 ? '-lost' : '')
+  div.style.backgroundImage = 'url("static/' + type + '-' + obj.status + (obj.breakStatus === 0 ? '-lost' : '') + '.png")'
+  if (!obj.workerId) { // 订单
+    type = 'order'
+    let status = 'normal'
+    if (new Date() > obj.appointTime) {
+      status = 'urgent'
+    }
+    div.className = 'marker-div order-' + status
+    div.style.backgroundImage = 'url("static/' + type + '-' + status + '.png")'
+    div.dataset.orderId = obj.orderId
+    div.dataset.orderPhone = obj.userPhone
+  } else { // 美车师
+    div.dataset.workerId = obj.workerId
+    div.dataset.workerPhone = obj.phone
+  }
+  return div
 }
 // 通用的错误处理
 function oneError (commit, state, error, name) {
