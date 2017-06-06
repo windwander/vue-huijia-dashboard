@@ -82,7 +82,6 @@ export default {
 .marker-div {
   width: 48px;
   height: 48px;
-  margin-top: -24px;
   line-height: 48px;
   color: #fff;
   text-align: center;
