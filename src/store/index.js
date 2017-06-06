@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import {getters} from './getters'
 import {actions} from './actions'
 import {state, mutations} from './mutations'
-import Amap from './modules/Amap'
 // 引入 axios
 import axios from 'axios'
 
@@ -15,7 +14,6 @@ const store = new Vuex.Store({
   actions,
   mutations,
   modules: {
-    amap: Amap,
     axios: axios
   }
 })
@@ -25,8 +23,7 @@ if (module.hot) {
   module.hot.accept([
     './getters',
     './actions',
-    './mutations',
-    './modules/Amap'
+    './mutations'
   ], () => {
     // 获取更新后的模块
     // 因为 babel 6 的模块编译格式问题，这里需要加上 .default
