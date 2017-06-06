@@ -8,7 +8,7 @@ export const actions = {
     const point = new AMap.Marker({
       map: state.amap,
       topWhenMouseOver: true, // 鼠标移上去时置顶
-      position: [(obj.lng || obj.longitude || 118.722695) + Math.random() / 100, (obj.lat || obj.latitude || 32.033995) + Math.random() / 100],
+      position: [obj.lng || obj.longitude || 118.722695, obj.lat || obj.latitude || 32.033995],
       offset: new AMap.Pixel(-24, -24),
       title: myTitle(obj), // 鼠标滑过显示标题
       content: myMarker(obj), // 自定义点标记覆盖物内容,
