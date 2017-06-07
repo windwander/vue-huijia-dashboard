@@ -6,6 +6,8 @@ import List from '@/components/List'
 import SettleList from '@/components/SettleList'
 import overallChart from '@/components/overallChart'
 import compareChart from '@/components/compareChart'
+import workerVerify from '@/components/workerVerify'
+import workerManage from '@/components/workerManage'
 
 Vue.use(Router)
 
@@ -35,6 +37,14 @@ export default new Router({
       path: '/compareChart',
       name: 'compareChart',
       component: compareChart
+    }, {
+      path: '/workerVerify',
+      name: 'workerVerify',
+      component: workerVerify
+    }, {
+      path: '/workerManage',
+      name: 'workerManage',
+      component: workerManage
     }
   ]
 })

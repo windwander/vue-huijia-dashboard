@@ -641,6 +641,110 @@ export const actions = {
         oneError(commit, state, error, '查询运营对比数据')
       })
     })
+  },
+  /* POST /v/workerAdmin/getWorkersByStatus 查询美车师管理列表接口 */
+  getWorkersByStatus ({commit, state}, data) {
+    return new Promise(function (resolve, reject) {
+      axios.post('/api/v2/fworker/rest/v/workerAdmin/getWorkersByStatus', {
+        cityCode: data.cityCode,
+        parentId: data.parentId,
+        status: data.verify ? 0 : 1,
+        phone: data.phone,
+        startDay: data.startDay,
+        endDay: data.endDay
+      })
+      .then(res => {
+        state.workerManageList = res.data.map((w, index) => {
+          const worker = {
+            'workerId': w.workerId,
+            'index': index + 1,
+            'name': w.name,
+            'phone': w.phone,
+            'idCard': w.idCard,
+            'applyTime': new Date(w.applyTime).toLocaleString(),
+            'cityCode': w.cityCode,
+            'workPhone': w.workPhone,
+            'group': w.parentId,
+            'position': w.position
+          }
+          return worker
+        })
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '查询美车师管理列表')
+      })
+    })
+  },
+  /* POST /v/workerAdmin/changeToWorking 审核美车师接口 */
+  changeToWorking ({commit, state}, data) {
+    return new Promise(function (resolve, reject) {
+      axios.post('/api/v2/fworker/rest/v/workerAdmin/changeToWorking', {
+        workerId: data.workerId,
+        parentId: data.parentId,
+        workPhone: data.workPhone,
+        position: data.position
+      })
+      .then(res => {
+        state.snackbarMsg = '美车师审核成功：' + res.data.resultMessage
+        commit('showSnackbar')
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '审核美车师')
+      })
+    })
+  },
+  /* POST /v/workerAdmin/changeWorkerInfo 修改美车师信息接口 */
+  changeWorkerInfo ({commit, state}, data) {
+    return new Promise(function (resolve, reject) {
+      axios.post('/api/v2/fworker/rest/v/workerAdmin/changeWorkerInfo', {
+        workerId: data.workerId,
+        parentId: data.parentId,
+        workPhone: data.workPhone,
+        position: data.position
+      })
+      .then(res => {
+        state.snackbarMsg = '修改美车师信息成功：' + res.data.resultMessage
+        commit('showSnackbar')
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '修改美车师信息')
+      })
+    })
+  },
+  /* POST /v/workerAdmin/workerQuit 注销美车师接口 */
+  workerQuit ({commit, state}, data) {
+    return new Promise(function (resolve, reject) {
+      axios.post('/api/v2/fworker/rest/v/workerAdmin/workerQuit', {
+        workerId: data.workerId,
+        parentId: data.parentId,
+        workPhone: data.workPhone,
+        position: data.position
+      })
+      .then(res => {
+        state.snackbarMsg = '注销美车师成功：' + res.data.resultMessage
+        commit('showSnackbar')
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '注销美车师')
+      })
+    })
+  },
+  /* GET /a/getDictionaryByCode 根据字典码查询字典数据 */
+  getDictionaryByCode ({commit, state}, code) {
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fworker/rest/a/getDictionaryByCode?code=' + code)
+      .then(res => {
+        state.dictionary = res.data
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '查询字典数据')
+      })
+    })
   }
 }
 // 点标记自定义标题

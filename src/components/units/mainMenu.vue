@@ -29,6 +29,15 @@
             <mu-icon slot="left" value="compare"/>
           </mu-list-item>
         </mu-list-item>
+        <mu-list-item title="美车师管理" toggleNested>
+          <mu-icon slot="left" value="list"/>
+          <mu-list-item slot="nested" title="美车师审核" to="workerVerify">
+            <mu-icon slot="left" value="verified_user"/>
+          </mu-list-item>
+          <mu-list-item slot="nested" title="美车师管理" to="workerManage">
+            <mu-icon slot="left" value="supervisor_account"/>
+          </mu-list-item>
+        </mu-list-item>
       </mu-list>
     </mu-drawer>
   </div>

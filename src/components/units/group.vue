@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div v-if="cities && cities.length" class="city-select">
+    <div v-if="showCity && cities && cities.length" class="city-select">
       <mu-select-field :value="city" @change="handleChangeCity" class="city-select-field" ref="city">
         <mu-menu-item value="" title="全部城市"/>
         <mu-menu-item v-for="item in cities" :key="item.cityCode" :value="item.cityCode" :title="item.cityName"/>
       </mu-select-field>
     </div>
-    <div v-if="groups && groups.length" class="group-select">
+    <div v-if="showGroup && groups && groups.length" class="group-select">
       <mu-select-field :value="group" @change="handleChangeGroup" class="group-select-field" ref="group">
         <mu-menu-item value="" title="全部小组"/>
         <mu-menu-item v-for="item in groups" :key="item.leaderId" :value="item.leaderId" :title="item.leaderName"/>
@@ -32,6 +32,14 @@ export default {
     changeCity: {
       type: Function,
       default: () => {}
+    },
+    showCity: {
+      type: Boolean,
+      default: true
+    },
+    showGroup: {
+      type: Boolean,
+      default: true
     }
   },
   created () {

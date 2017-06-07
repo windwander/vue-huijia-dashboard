@@ -53,7 +53,9 @@ export const state = {
   settlementStatistic: [],
   generalOrderStatistics: [],
   operationTrendData: [],
-  trendDataWithCondition: []
+  trendDataWithCondition: [],
+  workerManageList: [],
+  dictionary: []
 }
 
 export const mutations = {
@@ -107,7 +109,10 @@ export const mutations = {
   openInfoWindow (state, obj) {
     openInfoWindow(obj)
   },
-  showSnackbar () {
+  showSnackbar (state, msg) {
+    if (msg) {
+      state.snackbarMsg = msg
+    }
     showSnackbar()
   },
   hideSnackbar () {
