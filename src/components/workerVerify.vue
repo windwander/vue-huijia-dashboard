@@ -7,11 +7,11 @@
     </div>
     <div class="setting-dropdown" slot="right">
       <div class="date-picker-box">
-        <mu-date-picker hintText="开始时间" autoOk v-model="startDate" fullWidth :maxDate="endDate" @input="getData"/>
+        <mu-date-picker hintText="开始时间" v-model="startDate" fullWidth :maxDate="endDate" @input="getData"/>
       </div>
       <span class="date-picker-splitter">至</span>
       <div class="date-picker-box">
-        <mu-date-picker hintText="结束时间" autoOk v-model="endDate" fullWidth :minDate="startDate" @input="getData"/>
+        <mu-date-picker hintText="结束时间" v-model="endDate" fullWidth :minDate="startDate" @input="getData"/>
       </div>
     </div>
     <div class="setting-search" slot="right">
@@ -29,10 +29,12 @@
       <mu-tr v-for="item,index in workerManageList" :key="item.workerId" :data-id="item.workerId" :data-group="item.group" :data-position="item.position" :data-work-phone="item.workPhone">
         <mu-td v-for="(value, key, index) in item" :key="key" :class="'worker-td-'+ index">
           <div v-if="key === 'cityCode'" :name="key" class="td-text">{{cityName(value)}}</div>
+          <div v-else-if="(selectedId !== item.workerId) && (key === 'group')" :name="key" class="td-text">{{groupName(value)}}</div>
           <mu-select-field v-else-if="(selectedId === item.workerId) && (key === 'group')" :value="value" @change="selectRowGroup" class="worker-verify-select" ref="group" fullWidth>
             <mu-menu-item value="" title="请选择组别"/>
             <mu-menu-item v-for="item in groups" :key="item.leaderId" :value="item.leaderId" :title="item.leaderName"/>
           </mu-select-field>
+          <div v-else-if="(selectedId !== item.workerId) && (key === 'position')" :name="key" class="td-text">{{positionName(value)}}</div>
           <mu-select-field v-else-if="(selectedId === item.workerId) && (key === 'position')" :value="value" @change="selectRowPosition" class="worker-verify-select" ref="position" fullWidth>
             <mu-menu-item value="" title="请选择职务"/>
             <mu-menu-item v-for="(value, key) in dictionary.wcwDictionaryDetails" :key="value.codeKey" :value="value.codeKey" :title="value.codeValue" />
@@ -170,6 +172,24 @@ export default {
         }
       })
       return cityName
+    },
+    groupName (parentId) {
+      let groupName = parentId
+      this.groups.map(g => {
+        if (g.leaderId === parentId) {
+          groupName = g.leaderName
+        }
+      })
+      return groupName
+    },
+    positionName (position) {
+      let positionName = position
+      this.dictionary.wcwDictionaryDetails.map(p => {
+        if (p.codeKey === position) {
+          positionName = p.codeValue
+        }
+      })
+      return positionName
     },
     rowClick: function (index, tr) {
       this.row = tr
@@ -314,10 +334,4 @@ html, body {
   margin: 0;
   white-space: normal;
 }
-/*.worker-table .save-btn {
-  display: none;
-}
-.worker-table .show-save-btn .save-btn {
-  display: inline-block;
-}*/
 </style>

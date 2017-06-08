@@ -662,11 +662,14 @@ export const actions = {
             'phone': w.phone,
             'idCard': w.idCard,
             'applyTime': new Date(w.applyTime).toLocaleString(),
-            'cityCode': w.cityCode,
-            'workPhone': w.workPhone,
-            'group': w.parentId,
-            'position': w.position
+            'cityCode': w.cityCode
           }
+          if (!data.verify) {
+            worker.serviceStatus = w.serviceStatus
+          }
+          worker.workPhone = w.workPhone
+          worker.group = w.parentId
+          worker.position = w.position
           return worker
         })
         resolve()
@@ -719,9 +722,7 @@ export const actions = {
     return new Promise(function (resolve, reject) {
       axios.post('/api/v2/fworker/rest/v/workerAdmin/workerQuit', {
         workerId: data.workerId,
-        parentId: data.parentId,
-        workPhone: data.workPhone,
-        position: data.position
+        quitTime: data.quitTime
       })
       .then(res => {
         state.snackbarMsg = '注销美车师成功：' + res.data.resultMessage
