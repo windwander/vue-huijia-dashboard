@@ -10,7 +10,7 @@
         <mu-menu-item title="关闭搜索结果框" leftIcon="close" @click="closeSearchResult" />
       </mu-menu>
     </div>
-    <Group :handleChange="update" :changeCity="changeCity" class="select-box" />
+    <Group :handleChange="changeCityGroup" :changeCity="changeCity" class="select-box" />
   </div>
   <div id="orderStatusBox">
     <status-box icon="assignment" title="订单状况" arrowPosition="right" @click="toggleOrderBox" />
@@ -200,7 +200,8 @@ export default {
     ...mapMutations([
       'resetView',
       'clearSearchResult',
-      'centerMap'
+      'centerMap',
+      'clearWorkerPoints'
     ]),
     ...mapActions([
       'getOverallCount',
@@ -219,6 +220,10 @@ export default {
       z.getWorkers(z.cityAndGroup)
       // 获取待接单订单
       z.getOrders(Object.assign({status: '10'}, z.cityAndGroup))
+    },
+    changeCityGroup () {
+      this.clearWorkerPoints()
+      this.update()
     },
     changeCity () {
       // 地图按城市居中

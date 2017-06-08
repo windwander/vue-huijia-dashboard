@@ -92,6 +92,10 @@ export const mutations = {
       state.amap.setCity('100000')
     }
   },
+  clearWorkerPoints () {
+    state.amap.remove(state.workerPoints)
+    state.workerPoints = []
+  },
   // 自动适应窗口
   resetView () {
     let arr = []
