@@ -337,6 +337,7 @@ html, body {
   padding: 0;
 }
 .row-btn {
+  width: 60px;
   min-width: 60px;
   line-height: 1;
   height: 2em;

@@ -199,6 +199,7 @@ export default {
         this.rowGroup = tr.$el.dataset.group
         this.rowPhone = Number(tr.$el.dataset.workPhone)
         this.rowPosition = tr.$el.dataset.position
+        this.rowErrorPhone = ''
       }
     },
     selectRowGroup (v) {
