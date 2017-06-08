@@ -20,7 +20,7 @@
             <mu-icon slot="left" value="assignment"/>
           </mu-list-item>
         </mu-list-item>
-        <mu-list-item v-if="menusArray.overallChart|| menusArray.compareChart" title="运营趋势" toggleNested>
+        <mu-list-item v-if="menusArray.overallChart || menusArray.compareChart" title="运营趋势" toggleNested>
           <mu-icon slot="left" value="list"/>
           <mu-list-item v-if="menusArray.overallChart" slot="nested" title="整体趋势" to="overallChart">
             <mu-icon slot="left" value="assessment"/>
@@ -29,12 +29,12 @@
             <mu-icon slot="left" value="compare"/>
           </mu-list-item>
         </mu-list-item>
-        <mu-list-item title="美车师管理" toggleNested>
+        <mu-list-item v-if="menusArray.workerVerify || menusArray.workerManage" title="美车师管理" toggleNested>
           <mu-icon slot="left" value="list"/>
-          <mu-list-item slot="nested" title="美车师审核" to="workerVerify">
+          <mu-list-item v-if="menusArray.workerVerify" slot="nested" title="美车师审核" to="workerVerify">
             <mu-icon slot="left" value="verified_user"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="美车师管理" to="workerManage">
+          <mu-list-item v-if="menusArray.workerManage" slot="nested" title="美车师管理" to="workerManage">
             <mu-icon slot="left" value="supervisor_account"/>
           </mu-list-item>
         </mu-list-item>
