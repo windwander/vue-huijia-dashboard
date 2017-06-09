@@ -173,6 +173,8 @@ export default {
   },
   mounted () {
     const z = this
+    // 修复切换页面后，不显示美车师的点标记
+    z.clearWorkerPoints()
     const initUpdate = setInterval(function () {
       if (!this.isLoadingConfig) {
         z.update()

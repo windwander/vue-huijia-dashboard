@@ -90,7 +90,7 @@ export const mutations = {
     }
   },
   clearWorkerPoints () {
-    state.amap.remove(state.workerPoints)
+    state.amap && state.amap.remove && state.amap.remove(state.workerPoints)
     state.workerPoints = []
   },
   // 自动适应窗口
