@@ -45,9 +45,6 @@ export const state = {
     totalPages: 0
   },
   searchResultList: [],
-  todayOrdersPage: 1,
-  todayOrdersPageSize: 10,
-  todayOrdersTotal: 0,
   preSaveWorkerMonthList: {},
   bonusPenaltyFinished: false,
   settlementStatistic: [],
@@ -138,13 +135,18 @@ export const mutations = {
   },
   hidePopup () {
     state.modalPopup = false
-    state.todayOrdersTotal = 0
+    state.pagination.page = 0
+    state.modalTableHead = []
+    state.modalTableData = []
   },
   panBy (state, offset) {
     state.amap.panBy(offset.x, offset.y)
   },
   toggleModalTable () {
     state.showModalTable = !state.showModalTable
+  },
+  hideModalTable () {
+    state.showModalTable = false
   },
   changePage (state, newIndex) {
     state.pagination.page = newIndex

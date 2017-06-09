@@ -163,8 +163,6 @@ export default {
       'workers',
       'orders',
       'pagination',
-      'todayOrdersPage',
-      'todayOrdersPageSize',
       'isLoadingConfig',
       'searchResultList',
       'city'
@@ -201,7 +199,8 @@ export default {
       'resetView',
       'clearSearchResult',
       'centerMap',
-      'clearWorkerPoints'
+      'clearWorkerPoints',
+      'hideModalTable'
     ]),
     ...mapActions([
       'getOverallCount',
@@ -249,6 +248,7 @@ export default {
       } else if (z.modalType === 'people') {
         z.getWorkerList(z.modalParams)
       }
+      z.hideModalTable()
     },
     search () {
       const z = this
@@ -272,11 +272,6 @@ export default {
     },
     toggleWorkerBox () {
       this.showWorkerBox = !this.showWorkerBox
-    }
-  },
-  watch: {
-    todayOrdersPage: function () {
-      this.showModal('当日订单', 'order', 'all')
     }
   }
 }
