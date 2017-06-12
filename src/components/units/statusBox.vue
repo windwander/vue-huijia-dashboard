@@ -91,12 +91,12 @@ export default {
 }
 .status-box.top .status-arrow {
   top: -19px;
-  left: 40px;
+  left: 34px;
   border-bottom-color: #F05B47;
 }
 .status-box.bottom .status-arrow {
   bottom: -19px;
-  left: 40px;
+  left: 34px;
   border-top-color: #F05B47;
 }
 .status-box .status-button-icon {

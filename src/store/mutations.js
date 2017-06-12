@@ -219,7 +219,7 @@ function openInfoWindow (obj) {
     time: formatTimeString(obj.appointTime) || obj.appointTime || obj.timeRequire || '',
     orderId: obj.orderId || '',
     license: obj.carInfo || '',
-    orderType: obj.productName || '',
+    orderType: (obj.productName + ' ×' + obj.count) || '',
     workerId: obj.workerId || ''
   })
   // 设置信息窗口

@@ -151,7 +151,7 @@ export const actions = {
         }
         return str
       }
-      state.modalTableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型', '完成时间', '订单状态', '备注']
+      state.modalTableHead = ['订单编号', '联系方式', '预约服务时间', '预约服务地点', '车牌', '预约服务类型', '数量', '完成时间', '订单状态', '备注']
       state.modalTableData = res.data.content.map(o => {
         const order = {
           'orderId': o.orderId,
@@ -160,6 +160,7 @@ export const actions = {
           'location': o.location,
           'carInfo': o.carInfo,
           'productName': o.productName,
+          'count': o.count,
           'completeTime': o.completeTime,
           'orderStatus': formatOrderStatus(o.orderStatus),
           'remark': o.remark

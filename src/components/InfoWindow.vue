@@ -112,6 +112,7 @@ export default {
     return {
       orderId: '',
       orderStatusCode: '',
+      workerId: '',
       modalParams: {}
     }
   },
@@ -145,8 +146,9 @@ export default {
       if (number) {
         const z = this
         z.toggleModalTable()
-        if (z.orderStatusCode !== status) {
+        if ((z.orderStatusCode !== status) || (z.infoData.workerId !== z.workerId)) {
           z.orderStatusCode = status
+          z.workerId = z.infoData.workerId
           z.pagination.page = 0
           z.modalParams = {
             status: status,

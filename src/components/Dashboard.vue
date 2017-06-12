@@ -314,7 +314,7 @@ export default {
   background-color: #fff;
 }
 #headSearchBox .mu-menu-item-title {
-  margin-left: 42px;
+  margin-left: -20px;
 }
 #headSearchBox .city-select, #headSearchBox .group-select {
   box-shadow: 0px 0px 6px 0px #bdbdbd;
