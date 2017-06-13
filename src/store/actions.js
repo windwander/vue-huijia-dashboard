@@ -28,6 +28,10 @@ export const actions = {
       const newzIndex = point.getzIndex() - 1
       point.setzIndex(newzIndex)
     })
+    point.on('mouseout', function () {
+      // 鼠标移出时，取消置顶
+      point.setTop(false)
+    })
     if (!obj.carInfo) { // 美车师
       state.workerPoints.push(point)
     } else {
