@@ -1,5 +1,5 @@
 <template>
-<div>
+<div :class="{'drawer-opened': openDrawer}">
   <mainMenu />
   <mu-appbar title="美车师结算项设置" class="setting-appbar">
     <div class="setting-dropdown" slot="right">
@@ -55,7 +55,8 @@ export default {
       'month',
       'snackbar',
       'snackbarMsg',
-      'bonusPenaltyFinished'
+      'bonusPenaltyFinished',
+      'openDrawer'
     ])
   },
   mounted () {

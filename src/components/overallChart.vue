@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{'drawer-opened': openDrawer}">
     <mainMenu />
     <mu-appbar title="运营整体趋势" class="setting-appbar">
       <div class="setting-dropdown" slot="right">
@@ -124,7 +124,8 @@ export default {
       'snackbar',
       'snackbarMsg',
       'generalOrderStatistics',
-      'operationTrendData'
+      'operationTrendData',
+      'openDrawer'
     ]),
     ...mapGetters([
       'fullDate'

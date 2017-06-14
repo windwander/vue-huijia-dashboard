@@ -13,9 +13,11 @@ export const state = {
   snackbarTimer: {},
   modalPopup: false,
   showModalTable: false,
+  openDrawer: false,
   menus: [],
   cities: [],
   city: '',
+  cityAndGroup: [],
   year: new Date().getFullYear().toString(),
   month: (function () {
     let dateMonth = new Date().getMonth() + 1
@@ -118,6 +120,9 @@ export const mutations = {
   },
   hideSnackbar () {
     hideSnackbar()
+  },
+  toggleDrawer (state) {
+    state.openDrawer = !state.openDrawer
   },
   closePopup () {
     state.topPopup = false

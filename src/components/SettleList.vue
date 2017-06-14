@@ -1,5 +1,5 @@
 <template>
-<div>
+<div :class="{'drawer-opened': openDrawer}">
   <mainMenu />
   <mu-appbar title="美车师结算汇总信息" class="setting-appbar">
     <div class="setting-dropdown" slot="right">
@@ -76,7 +76,8 @@ export default {
       'snackbar',
       'snackbarMsg',
       'bonusPenaltyFinished',
-      'settlementStatistic'
+      'settlementStatistic',
+      'openDrawer'
     ])
   },
   mounted () {

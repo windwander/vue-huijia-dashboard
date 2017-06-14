@@ -1,5 +1,5 @@
 <template>
-<div class="home-div">
+<div class="home-div" :class="{'drawer-opened': openDrawer}">
   <mainMenu />
   <div id="amapContainer"></div>
   <Dashboard />
@@ -44,7 +44,8 @@ export default {
       'snackbarMsg',
       'isLoadingConfig',
       'recieveMsg',
-      'topPopup'
+      'topPopup',
+      'openDrawer'
     ])
   },
   mounted () {

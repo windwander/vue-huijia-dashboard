@@ -72,8 +72,13 @@ export const actions = {
   getConfig ({commit, state}) {
     axios.get('/api/v2/fworker/rest/v/NewDashboard/config')
     .then(res => {
-      state.cities = res.data.citys
-      state.groups = res.data.leaders
+      state.cities = res.data.map(d => d.city)
+      let groups = []
+      res.data.map(d => {
+        groups = groups.concat(d.leaders)
+      })
+      state.groups = groups
+      state.cityAndGroup = res.data
       state.isLoadingConfig = false
     })
     .catch(error => {

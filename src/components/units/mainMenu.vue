@@ -2,11 +2,17 @@
   <div class="main-menu">
     <mu-float-button class="main-menu-toggle"
                      icon="menu"
-                     @click="toggle"
+                     @click="toggleDrawer"
                      secondary/>
-    <mu-drawer :open="open"
-               :docked="false"
-               @close="toggle">
+    <mu-drawer :open="openDrawer"
+               @close="toggleDrawer">
+      <div class="header">
+        <avatar />
+      </div>
+      <div class="group-box">
+        <MenuGroup class="select-box" />
+      </div>
+      <mu-divider class="divider"/>
       <mu-list>
         <mu-list-item v-if="menusArray.Home" title="运营视图" to="/">
           <mu-icon slot="left" value="map"/>
@@ -45,20 +51,23 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import floatButton from 'muse-components/floatButton'
 import drawer from 'muse-components/drawer'
 import { list, listItem } from 'muse-components/list'
+import divider from 'muse-components/divider'
+import avatar from './avatar'
+import MenuGroup from './menuGroup'
 
 Vue.component(floatButton.name, floatButton)
 Vue.component(drawer.name, drawer)
 Vue.component(list.name, list)
 Vue.component(listItem.name, listItem)
+Vue.component(divider.name, divider)
 export default {
-  data () {
-    return {
-      open: false
-    }
+  components: {
+    avatar,
+    MenuGroup
   },
   created () {
     if (!(this.menus && this.menus.length)) {
@@ -69,11 +78,14 @@ export default {
     ...mapActions([
       'getMenu'
     ]),
-    toggle () {
-      this.open = !this.open
-    }
+    ...mapMutations([
+      'toggleDrawer'
+    ])
   },
   computed: {
+    ...mapState([
+      'openDrawer'
+    ]),
     ...mapGetters([
       'menusArray'
     ])
@@ -88,7 +100,6 @@ html, body {
 .main-menu {
   position: absolute;
 }
-
 .main-menu-toggle {
   position: absolute;
   top: 10px;
@@ -101,5 +112,26 @@ html, body {
   width: 52px;
   height: 52px;
   background-color: #F05B47;
+}
+.drawer-opened {
+  padding-left: 256px;
+  transition: all .45s cubic-bezier(.23,1,.32,1);
+}
+.drawer-opened #headSearchBox {
+  left: 336px;
+  transition: all .45s cubic-bezier(.23,1,.32,1);
+}
+</style>
+<style scoped>
+.header {
+  height: 100px;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+}
+.divider {
+  margin: 30px 0 20px;
 }
 </style>

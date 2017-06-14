@@ -1,5 +1,5 @@
 <template>
-<div>
+<div :class="{'drawer-opened': openDrawer}">
   <mainMenu />
   <mu-appbar title="美车师管理" class="setting-appbar">
     <div class="setting-dropdown" slot="right">
@@ -117,7 +117,8 @@ export default {
       'snackbar',
       'snackbarMsg',
       'workerManageList',
-      'dictionary'
+      'dictionary',
+      'openDrawer'
     ]),
     rowFinished: function () {
       return Boolean(this.rowGroup) && Boolean(this.rowPosition) && Boolean(this.rowPhone) && !this.rowErrorPhone

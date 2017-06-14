@@ -1,7 +1,6 @@
 <template>
-<div>
+<div id="homeMapBox">
   <div id="headSearchBox">
-    <!--<avatar />-->
     <div class="search-box">
       <mu-text-field hintText="搜索姓名、手机号、单号后三位" class="search-input" v-model="searchString" ref="searchField"/>
       <mu-flat-button icon="search" class="search-button" backgroundColor="#F05B47" color="#FFF" @click="search()"/>
@@ -10,7 +9,6 @@
         <mu-menu-item title="关闭搜索结果框" leftIcon="close" @click="closeSearchResult" />
       </mu-menu>
     </div>
-    <Group :handleChange="changeCityGroup" :changeCity="changeCity" class="select-box" />
   </div>
   <div id="orderStatusBox">
     <status-box icon="assignment" title="订单状况" arrowPosition="right" @click="toggleOrderBox" />
@@ -122,7 +120,6 @@ import selectField from 'muse-components/selectField'
 import {menu, menuItem} from 'muse-components/menu'
 import statusBox from './units/statusBox'
 import avatar from './units/avatar'
-import Group from './units/group'
 import Modal from './Modal'
 
 Vue.component(paper.name, paper)
@@ -139,8 +136,7 @@ export default {
   components: {
     'status-box': statusBox,
     'avatar': avatar,
-    Modal,
-    Group
+    Modal
   },
   data () {
     return {
@@ -196,6 +192,15 @@ export default {
       }
     })
   },
+  watch: {
+    city: function () {
+      this.centerMap(this.city)
+    },
+    cityAndGroup: function () {
+      this.clearWorkerPoints()
+      this.update()
+    }
+  },
   methods: {
     ...mapMutations([
       'resetView',
@@ -222,14 +227,14 @@ export default {
       // 获取待接单订单
       z.getOrders(Object.assign({status: '10'}, z.cityAndGroup))
     },
-    changeCityGroup () {
-      this.clearWorkerPoints()
-      this.update()
-    },
-    changeCity () {
-      // 地图按城市居中
-      this.centerMap(this.city)
-    },
+    // changeCityGroup () {
+    //   this.clearWorkerPoints()
+    //   this.update()
+    // },
+    // changeCity () {
+    //   // 地图按城市居中
+    //   this.centerMap(this.city)
+    // },
     showModal (title, type, status, number) {
       if (number) {
         const z = this
