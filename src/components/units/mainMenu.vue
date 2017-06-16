@@ -8,6 +8,9 @@
                @close="toggleDrawer">
       <div class="header">
         <avatar />
+        <mu-icon-menu icon="more_vert" class="header-avatar-menu">
+          <mu-menu-item title="退出登录" leftIcon="exit_to_app" class="header-avatar-menu-item" @click="logout" />
+        </mu-icon-menu>
       </div>
       <div class="group-box">
         <MenuGroup class="select-box" />
@@ -55,7 +58,9 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import floatButton from 'muse-components/floatButton'
 import drawer from 'muse-components/drawer'
 import { list, listItem } from 'muse-components/list'
+import { menuItem } from 'muse-components/menu'
 import divider from 'muse-components/divider'
+import iconMenu from 'muse-components/iconMenu'
 import avatar from './avatar'
 import MenuGroup from './menuGroup'
 
@@ -63,7 +68,9 @@ Vue.component(floatButton.name, floatButton)
 Vue.component(drawer.name, drawer)
 Vue.component(list.name, list)
 Vue.component(listItem.name, listItem)
+Vue.component(menuItem.name, menuItem)
 Vue.component(divider.name, divider)
+Vue.component(iconMenu.name, iconMenu)
 export default {
   components: {
     avatar,
@@ -76,11 +83,15 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getMenu'
+      'getMenu',
+      'doLogout'
     ]),
     ...mapMutations([
       'toggleDrawer'
-    ])
+    ]),
+    logout: function () {
+      this.doLogout()
+    }
   },
   computed: {
     ...mapState([
@@ -120,6 +131,9 @@ html, body {
 .drawer-opened #headSearchBox {
   left: 336px;
   transition: all .45s cubic-bezier(.23,1,.32,1);
+}
+.header-avatar-menu-item .mu-menu-item-title {
+  margin-left: 32px;
 }
 </style>
 <style scoped>
