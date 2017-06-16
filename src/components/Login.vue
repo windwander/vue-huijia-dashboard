@@ -20,12 +20,12 @@
     />
     <mu-paper class="login-box">
       <h1>运营管理平台登录</h1>
-      <mu-text-field label="用户名" labelFloat v-model="phone" fullWidth/>
+      <mu-text-field label="用户名" labelFloat v-model="phone" :errorText="errorPhone" @input="input" fullWidth/>
       <br/>
-      <mu-text-field label="密码" labelFloat type="password" v-model="password" ref="passwordField" fullWidth/>
+      <mu-text-field label="密码" labelFloat type="password" v-model="password" @input="input" :errorText="errorPassword" ref="passwordField" fullWidth/>
       <br/>
       <mu-raised-button label="登录" class="raised-button" @click="login()" secondary fullWidth/>
-      <p v-if="errorLogin">{{errorLogin.message}}</p>
+      <p v-if="otherError && errorLogin">{{errorLogin.message}}</p>
     </mu-paper>
   </div>
 </template>
@@ -46,7 +46,10 @@ export default {
   data () {
     return {
       phone: '',
-      password: ''
+      password: '',
+      errorPhone: '',
+      errorPassword: '',
+      otherError: false
     }
   },
   computed: {
@@ -54,12 +57,40 @@ export default {
       'errorLogin'
     ])
   },
+  watch: {
+    errorLogin: function () {
+      const msg = this.errorLogin.message
+      if (msg.indexOf('用户名') > -1) {
+        this.errorPhone = msg
+      } else if (msg.indexOf('密码') > -1) {
+        this.errorPassword = msg
+      } else {
+        this.errorPhone = ' '
+        this.errorPassword = ' '
+        this.otherError = true
+      }
+    }
+  },
   methods: {
+    input: function () {
+      if (/^1\d{10}$/.test(this.phone)) {
+        this.errorPhone = ''
+      }
+      if (this.password.length) {
+        this.errorPassword = ''
+      }
+    },
     login: function () {
-      this.$store.dispatch('doLogin', {
-        phone: this.phone,
-        password: this.password
-      })
+      if (!/^1\d{10}$/.test(this.phone)) {
+        this.errorPhone = '请输入正确的手机号'
+      } else if (!this.password.length) {
+        this.errorPassword = '请输入密码'
+      } else {
+        this.$store.dispatch('doLogin', {
+          phone: this.phone,
+          password: this.password
+        })
+      }
     }
   },
   mounted () {

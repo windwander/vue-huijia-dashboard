@@ -68,6 +68,20 @@ export const actions = {
       }
     })
   },
+  /* 退出登录 */
+  doLogout ({dispatch, commit, state}, user) {
+    axios.get('/api/v2/portal/logoutRemote?isajax=true')
+    .then(res => {
+      if (res.data.code === '0000') { // 登出成功
+        router.push('/login')
+      } else {
+        oneError(commit, state, res.data, '退出登录')
+      }
+    })
+    .catch(error => {
+      oneError(commit, state, error, '退出登录')
+    })
+  },
   /* GET /v/NewDashboard/config 配置权限查询 */
   getConfig ({commit, state}) {
     axios.get('/api/v2/fworker/rest/v/NewDashboard/config')
