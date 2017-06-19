@@ -63,7 +63,7 @@
 </template>
 <script>
 import Vue from 'vue'
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import icon from 'muse-components/icon'
 import raisedButton from 'muse-components/raisedButton'
 import textField from 'muse-components/textField'
@@ -120,10 +120,9 @@ export default {
     ...mapState([
       'showModalTable',
       'workerDetail',
-      'pagination'
-    ]),
-    ...mapGetters([
-      'cityAndGroup'
+      'pagination',
+      'city',
+      'group'
     ])
   },
   methods: {
@@ -160,7 +159,10 @@ export default {
     },
     getList () {
       const z = this
-      z.modalParams = Object.assign({}, z.modalParams, z.cityAndGroup, z.pagination)
+      z.modalParams = Object.assign({}, z.modalParams, {
+        cityCode: this.city,
+        leaderId: this.group
+      }, z.pagination)
       z.getOrderList(z.modalParams)
     }
   }

@@ -2,21 +2,16 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import Login from '@/components/Login'
-import bonusList from '@/components/List'
-import settleList from '@/components/SettleList'
-import overallChart from '@/components/overallChart'
-import compareChart from '@/components/compareChart'
-import workerVerify from '@/components/workerVerify'
-import workerManage from '@/components/workerManage'
+import store from '../store/index.js'
 
 Vue.use(Router)
 
-// const bonusList = resolve => require(['@/components/List.vue'], resolve)
-// const settleList = resolve => require(['@/components/settleList.vue'], resolve)
-// const overallChart = resolve => require(['@/components/overallChart.vue'], resolve)
-// const compareChart = resolve => require(['@/components/compareChart.vue'], resolve)
-// const workerVerify = resolve => require(['@/components/workerVerify.vue'], resolve)
-// const workerManage = resolve => require(['@/components/workerManage.vue'], resolve)
+const bonusList = () => import('@/components/List.vue')
+const settleList = () => import('@/components/settleList.vue')
+const overallChart = () => import('@/components/overallChart.vue')
+const compareChart = () => import('@/components/compareChart.vue')
+const workerVerify = () => import('@/components/workerVerify.vue')
+const workerManage = () => import('@/components/workerManage.vue')
 
 export default new Router({
   routes: [
@@ -31,27 +26,69 @@ export default new Router({
     }, {
       path: '/list',
       name: 'List',
-      component: bonusList
+      component: bonusList,
+      beforeEnter: (to, from, next) => {
+        if (store.getters.menusArray.bonusList) {
+          next()
+        } else {
+          next(false)
+        }
+      }
     }, {
       path: '/settleList',
       name: 'settleList',
-      component: settleList
+      component: settleList,
+      beforeEnter: (to, from, next) => {
+        if (store.getters.menusArray.settleList) {
+          next()
+        } else {
+          next(false)
+        }
+      }
     }, {
       path: '/overallChart',
       name: 'overallChart',
-      component: overallChart
+      component: overallChart,
+      beforeEnter: (to, from, next) => {
+        if (store.getters.menusArray.overallChart) {
+          next()
+        } else {
+          next(false)
+        }
+      }
     }, {
       path: '/compareChart',
       name: 'compareChart',
-      component: compareChart
+      component: compareChart,
+      beforeEnter: (to, from, next) => {
+        if (store.getters.menusArray.compareChart) {
+          next()
+        } else {
+          next(false)
+        }
+      }
     }, {
       path: '/workerVerify',
       name: 'workerVerify',
-      component: workerVerify
+      component: workerVerify,
+      beforeEnter: (to, from, next) => {
+        if (store.getters.menusArray.workerVerify) {
+          next()
+        } else {
+          next(false)
+        }
+      }
     }, {
       path: '/workerManage',
       name: 'workerManage',
-      component: workerManage
+      component: workerManage,
+      beforeEnter: (to, from, next) => {
+        if (store.getters.menusArray.workerManage) {
+          next()
+        } else {
+          next(false)
+        }
+      }
     }
   ]
 })

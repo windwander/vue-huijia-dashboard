@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-if="showCity && cityAndGroup" class="city-select-1">
+    <div v-if="citiesAndGroups" class="city-select-1">
       <mu-select-field v-model="selected" @change="handleChangeSelect" :icon="selected ? (selected.indexOf('-') > -1 ? 'group' : 'location_city') : 'public'" class="city-select-field-1" ref="city" fullWidth>
         <mu-menu-item value="" title="全平台" leftIcon="public" class="group-select-menu"/>
-        <mu-menu-item v-for="(el, index) in flattenGroup" :key="index" :value="el.value" :title="el.title" :leftIcon="el.level === 1 ? 'location_city' : 'group'" class="group-select-menu" :style="{marginLeft: el.level * 20 + 'px'}"/>
+        <mu-menu-item v-for="(el, index) in flattenGroup" :key="index" :value="el.value" :title="el.title" :leftIcon="el.level === 1 ? 'location_city' : 'group'" class="group-select-menu" :style="{marginLeft: el.level * 15 + 'px'}"/>
       </mu-select-field>
     </div>
   </div>
@@ -22,18 +22,6 @@ export default {
     handleChange: {
       type: Function,
       default: () => {}
-    },
-    changeCity: {
-      type: Function,
-      default: () => {}
-    },
-    showCity: {
-      type: Boolean,
-      default: true
-    },
-    showGroup: {
-      type: Boolean,
-      default: true
     }
   },
   created () {
@@ -43,11 +31,11 @@ export default {
     ...mapState([
       'city',
       'group',
-      'cityAndGroup'
+      'citiesAndGroups'
     ]),
     flattenGroup: function () {
       let arr = []
-      this.cityAndGroup.map(cg => {
+      this.citiesAndGroups.map(cg => {
         arr.push({
           value: cg.city.cityCode,
           title: cg.city.cityName,
@@ -100,7 +88,7 @@ export default {
   left: 10px;
 }
 .group-select-menu .mu-menu-item-title {
-  margin-left: 30px;
+  margin-left: -30px;
 }
 .mu-menu-destop {
   max-height: 420px;

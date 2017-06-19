@@ -24,7 +24,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import {table, thead, tbody, tfoot, tr, th, td} from 'muse-components/table'
 import iconButton from 'muse-components/iconButton'
 import pagination from 'muse-components/pagination'
@@ -84,10 +84,9 @@ export default {
     ...mapState([
       'modalTableHead',
       'modalTableData',
-      'pagination'
-    ]),
-    ...mapGetters([
-      'cityAndGroup'
+      'pagination',
+      'city',
+      'group'
     ])
   },
   methods: {
@@ -97,9 +96,11 @@ export default {
     },
     locate (id) {
       this.$store.commit('hidePopup')
-      this.$store.dispatch('doSearch', Object.assign({
-        input: encodeURIComponent(id)
-      }, this.cityAndGroup))
+      this.$store.dispatch('doSearch', {
+        input: encodeURIComponent(id),
+        cityCode: this.city,
+        leaderId: this.group
+      })
     }
   }
 }

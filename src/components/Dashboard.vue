@@ -110,7 +110,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import paper from 'muse-components/paper'
 import {flexbox, flexboxItem} from 'muse-components/flexbox'
 import raisedButton from 'muse-components/raisedButton'
@@ -161,10 +161,8 @@ export default {
       'pagination',
       'isLoadingConfig',
       'searchResultList',
-      'city'
-    ]),
-    ...mapGetters([
-      'cityAndGroup'
+      'city',
+      'group'
     ])
   },
   mounted () {
@@ -196,7 +194,7 @@ export default {
     city: function () {
       this.centerMap(this.city)
     },
-    cityAndGroup: function () {
+    group: function () {
       this.clearWorkerPoints()
       this.update()
     }
@@ -221,11 +219,21 @@ export default {
     update () {
       const z = this
       // 获取视图总情况查询
-      z.getOverallCount(z.cityAndGroup)
+      z.getOverallCount({
+        cityCode: z.city,
+        leaderId: z.group
+      })
       // 获取美车师位置和待接单位置
-      z.getWorkers(z.cityAndGroup)
+      z.getWorkers({
+        cityCode: z.city,
+        leaderId: z.group
+      })
       // 获取待接单订单
-      z.getOrders(Object.assign({status: '10'}, z.cityAndGroup))
+      z.getOrders({
+        status: '10',
+        cityCode: z.city,
+        leaderId: z.group
+      })
     },
     // changeCityGroup () {
     //   this.clearWorkerPoints()
@@ -249,7 +257,10 @@ export default {
     },
     getList () {
       const z = this
-      z.modalParams = Object.assign({}, z.modalParams, z.cityAndGroup, z.pagination)
+      z.modalParams = Object.assign({}, z.modalParams, {
+        cityCode: z.city,
+        leaderId: z.group
+      }, z.pagination)
       if (z.modalType === 'order') {
         z.getOrderList(z.modalParams)
       } else if (z.modalType === 'people') {
@@ -259,9 +270,11 @@ export default {
     },
     search () {
       const z = this
-      let t = Object.assign({
-        input: z.searchString
-      }, z.cityAndGroup)
+      let t = {
+        input: z.searchString,
+        cityCode: z.city,
+        leaderId: z.group
+      }
       if (t.input !== '') {
         z.doSearch(t)
       }

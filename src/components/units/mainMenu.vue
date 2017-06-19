@@ -1,7 +1,7 @@
 <template>
   <div class="main-menu">
     <mu-float-button class="main-menu-toggle"
-                     icon="menu"
+                     :icon="openDrawer ? 'arrow_back' : 'menu'"
                      @click="toggleDrawer"
                      secondary/>
     <mu-drawer :open="openDrawer"
@@ -20,7 +20,56 @@
         <mu-list-item v-if="menusArray.Home" title="运营视图" to="/">
           <mu-icon slot="left" value="map"/>
         </mu-list-item>
-        <mu-list-item v-if="menusArray.bonusList || menusArray.settleList" title="结算报表" toggleNested>
+        <mu-list-item title="订单" toggleNested>
+          <mu-icon slot="left" value="list"/>
+          <mu-list-item slot="nested" title="订单数据分析" to="overallChart">
+            <mu-icon slot="left" value="assessment"/>
+          </mu-list-item>
+          <mu-list-item slot="nested" title="订单管理" to="/">
+            <mu-icon slot="left" value="assignment"/>
+          </mu-list-item>
+        </mu-list-item>
+        <mu-list-item title="美车师" toggleNested>
+          <mu-icon slot="left" value="list"/>
+          <mu-list-item slot="nested" title="美车师数据分析" to="/">
+            <mu-icon slot="left" value="assessment"/>
+          </mu-list-item>
+          <mu-list-item slot="nested" title="美车师审核" to="workerVerify">
+            <mu-icon slot="left" value="assignment_turned_in"/>
+          </mu-list-item>
+          <mu-list-item slot="nested" title="美车师管理" to="workerManage">
+            <mu-icon slot="left" value="assignment_ind"/>
+          </mu-list-item>
+        </mu-list-item>
+        <mu-list-item title="产品" toggleNested>
+          <mu-icon slot="left" value="list"/>
+          <mu-list-item slot="nested" title="产品数据分析" to="overallChart">
+            <mu-icon slot="left" value="assessment"/>
+          </mu-list-item>
+          <mu-list-item slot="nested" title="产品管理" to="/">
+            <mu-icon slot="left" value="shop_two"/>
+          </mu-list-item>
+          <mu-list-item slot="nested" title="产品优惠券管理" to="/">
+            <mu-icon slot="left" value="card_giftcard"/>
+          </mu-list-item>
+        </mu-list-item>
+        <mu-list-item title="收入" toggleNested>
+          <mu-icon slot="left" value="list"/>
+          <mu-list-item slot="nested" title="收入数据分析" to="/">
+            <mu-icon slot="left" value="assessment"/>
+          </mu-list-item>
+        </mu-list-item>
+        <mu-list-item title="结算" toggleNested>
+          <mu-icon slot="left" value="list"/>
+          <mu-list-item slot="nested" title="美车师结算项设置" to="list">
+            <mu-icon slot="left" value="assignment_returned"/>
+          </mu-list-item>
+          <mu-list-item slot="nested" title="结算汇总" to="settleList">
+            <mu-icon slot="left" value="assignment"/>
+          </mu-list-item>
+        </mu-list-item>
+
+        <!--<mu-list-item v-if="menusArray.bonusList || menusArray.settleList" title="结算报表" toggleNested>
           <mu-icon slot="left" value="list"/>
           <mu-list-item v-if="menusArray.bonusList" slot="nested" title="美车师结算项设置" to="list">
             <mu-icon slot="left" value="edit"/>
@@ -46,7 +95,7 @@
           <mu-list-item v-if="menusArray.workerManage" slot="nested" title="美车师管理" to="workerManage">
             <mu-icon slot="left" value="supervisor_account"/>
           </mu-list-item>
-        </mu-list-item>
+        </mu-list-item>-->
       </mu-list>
     </mu-drawer>
   </div>

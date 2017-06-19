@@ -11,13 +11,13 @@ export const getters = {
     }
     return date
   },
-  cityAndGroup: function () {
-    return {
-      cityCode: state.city,
-      // leaderId: state.group === '' ? state.groups.map(h => h.leaderId).toString() : state.group
-      leaderId: state.group
-    }
-  },
+  // cityAndGroup: function () {
+  //   return {
+  //     cityCode: state.city,
+  //     // leaderId: state.group === '' ? state.groups.map(h => h.leaderId).toString() : state.group
+  //     leaderId: state.group
+  //   }
+  // },
   menusArray: function () {
     let menus = {}
     state.menus.map(function (m) {

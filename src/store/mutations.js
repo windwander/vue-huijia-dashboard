@@ -17,7 +17,7 @@ export const state = {
   menus: [],
   cities: [],
   city: '',
-  cityAndGroup: [],
+  citiesAndGroups: [],
   year: new Date().getFullYear().toString(),
   month: (function () {
     let dateMonth = new Date().getMonth() + 1

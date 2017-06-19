@@ -92,7 +92,7 @@ export const actions = {
         groups = groups.concat(d.leaders)
       })
       state.groups = groups
-      state.cityAndGroup = res.data
+      state.citiesAndGroups = res.data
       state.isLoadingConfig = false
     })
     .catch(error => {
