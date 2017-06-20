@@ -110,7 +110,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import paper from 'muse-components/paper'
 import {flexbox, flexboxItem} from 'muse-components/flexbox'
 import raisedButton from 'muse-components/raisedButton'
@@ -163,6 +163,9 @@ export default {
       'searchResultList',
       'city',
       'group'
+    ]),
+    ...mapGetters([
+      'cityAndGroup'
     ])
   },
   mounted () {
@@ -194,7 +197,7 @@ export default {
     city: function () {
       this.centerMap(this.city)
     },
-    group: function () {
+    cityAndGroup: function () {
       this.clearWorkerPoints()
       this.update()
     }

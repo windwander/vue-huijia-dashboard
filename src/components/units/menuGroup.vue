@@ -88,7 +88,7 @@ export default {
   left: 10px;
 }
 .group-select-menu .mu-menu-item-title {
-  margin-left: -30px;
+  margin-left: 24px;
 }
 .mu-menu-destop {
   max-height: 420px;

@@ -184,6 +184,9 @@ html, body {
 .header-avatar-menu-item .mu-menu-item-title {
   margin-left: 32px;
 }
+.mu-menu-item.have-left-icon {
+  padding-left: 16px;
+}
 </style>
 <style scoped>
 .header {
