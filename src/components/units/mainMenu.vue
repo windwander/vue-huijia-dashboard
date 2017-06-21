@@ -22,49 +22,49 @@
         </mu-list-item>
         <mu-list-item title="订单" toggleNested>
           <mu-icon slot="left" value="list"/>
-          <mu-list-item slot="nested" title="订单数据分析" to="overallChart">
+          <mu-list-item slot="nested" title="订单数据分析" to="/order/chart">
             <mu-icon slot="left" value="assessment"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="订单管理" to="/">
+          <mu-list-item slot="nested" title="订单管理" to="/order/list">
             <mu-icon slot="left" value="assignment"/>
           </mu-list-item>
         </mu-list-item>
         <mu-list-item title="美车师" toggleNested>
           <mu-icon slot="left" value="list"/>
-          <mu-list-item slot="nested" title="美车师数据分析" to="/">
+          <mu-list-item slot="nested" title="美车师数据分析" to="/worker/chart">
             <mu-icon slot="left" value="assessment"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="美车师审核" to="workerVerify">
+          <mu-list-item slot="nested" title="美车师审核" to="/worker/verify">
             <mu-icon slot="left" value="assignment_turned_in"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="美车师管理" to="workerManage">
+          <mu-list-item slot="nested" title="美车师管理" to="/worker/list">
             <mu-icon slot="left" value="assignment_ind"/>
           </mu-list-item>
         </mu-list-item>
         <mu-list-item title="产品" toggleNested>
           <mu-icon slot="left" value="list"/>
-          <mu-list-item slot="nested" title="产品数据分析" to="overallChart">
+          <mu-list-item slot="nested" title="产品数据分析" to="/product/chart">
             <mu-icon slot="left" value="assessment"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="产品管理" to="/">
+          <mu-list-item slot="nested" title="产品管理" to="/product/list">
             <mu-icon slot="left" value="shop_two"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="产品优惠券管理" to="/">
+          <mu-list-item slot="nested" title="产品优惠券管理" to="/product/coupon">
             <mu-icon slot="left" value="card_giftcard"/>
           </mu-list-item>
         </mu-list-item>
         <mu-list-item title="收入" toggleNested>
           <mu-icon slot="left" value="list"/>
-          <mu-list-item slot="nested" title="收入数据分析" to="/">
+          <mu-list-item slot="nested" title="收入数据分析" to="/income/chart">
             <mu-icon slot="left" value="assessment"/>
           </mu-list-item>
         </mu-list-item>
         <mu-list-item title="结算" toggleNested>
           <mu-icon slot="left" value="list"/>
-          <mu-list-item slot="nested" title="美车师结算项设置" to="list">
+          <mu-list-item slot="nested" title="美车师结算项设置" to="/balance/config">
             <mu-icon slot="left" value="assignment_returned"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="结算汇总" to="settleList">
+          <mu-list-item slot="nested" title="结算汇总" to="/balance/list">
             <mu-icon slot="left" value="assignment"/>
           </mu-list-item>
         </mu-list-item>

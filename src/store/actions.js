@@ -625,9 +625,22 @@ export const actions = {
       oneError(commit, state, error, '导出美车师结算')
     })
   },
+  /* GET /v/getOperationTrendFromStartToEnd 查询运营统计数据 */
+  getOperationTrendFromStartToEnd ({commit, state}, data) {
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fworker/rest/v/getOperationTrendFromStartToEnd?start=' + data.startDate + '&end=' + data.endDate + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
+      .then(res => {
+        state.operationTrendData = res.data
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '查询运营统计数据')
+      })
+    })
+  },
   /* GET /a/getGeneralOrderStatistics 查询概要运营数据 */
   getGeneralOrderStatistics ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest/a/getGeneralOrderStatistics?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode)
+    axios.get('/api/v2/fworker/rest/v/getGeneralOrderStatistics?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode)
     .then(res => {
       state.generalOrderStatistics = res.data
     })
@@ -638,7 +651,7 @@ export const actions = {
   /* GET /a/getOperationTrendDate 查询运营统计数据 */
   getOperationTrendDate ({commit, state}, data) {
     return new Promise(function (resolve, reject) {
-      axios.get('/api/v2/fworker/rest/a/getOperationTrendDate?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
+      axios.get('/api/v2/fworker/rest/v/getOperationTrendDate?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
       .then(res => {
         state.operationTrendData = res.data
         resolve()
