@@ -73,7 +73,7 @@ export const actions = {
     axios.get('/api/v2/portal/logoutRemote?isajax=true')
     .then(res => {
       if (res.data.code === '0000') { // 登出成功
-        router.push('/login')
+        router.push({name: 'Login'})
       } else {
         oneError(commit, state, res.data, '退出登录')
       }
@@ -108,7 +108,7 @@ export const actions = {
     })
     .catch(error => {
       oneError(commit, state, error, '菜单权限查询')
-      router.push('login')
+      router.push({name: 'Login'})
     })
   },
   /* GET /v/NewDashboard/count 视图总情况查询 */

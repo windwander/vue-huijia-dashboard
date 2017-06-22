@@ -1,12 +1,12 @@
 <template>
 <div :class="{'drawer-opened': openDrawer}">
-  <mainMenu />
+  <MainMenu />
   <mu-appbar title="美车师结算项设置" class="setting-appbar">
     <div class="setting-dropdown" slot="right">
       <Group :handleChange="changeSelect" />
     </div>
     <div class="setting-dropdown" slot="right">
-      <dateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
+      <DateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
     </div>
     <div class="top-btn" slot="right">
       <mu-raised-button :label="bonusPenaltyFinished ? '当月已结算' : '确认生成结算'" icon="save" class="raised-button" @click="topBtnSave" primary :disabled="bonusPenaltyFinished"/>
@@ -21,10 +21,10 @@
 <script>
 import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import mainMenu from '../units/mainMenu'
+import MainMenu from '../units/mainMenu'
 import WorkerTable from '../WorkerTable'
 import Group from '../units/group'
-import dateSelect from '../units/dateSelect'
+import DateSelect from '../units/dateSelect'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
@@ -35,12 +35,12 @@ Vue.component(snackbar.name, snackbar)
 Vue.component(dropDownMenu.name, dropDownMenu)
 Vue.component(menuItem.name, menuItem)
 export default {
-  name: 'balance-config',
+  name: 'BalanceConfig',
   components: {
-    mainMenu,
+    MainMenu,
     WorkerTable,
     Group,
-    dateSelect
+    DateSelect
   },
   data () {
     return {
@@ -101,7 +101,7 @@ export default {
 </script>
 
 <style>
-html, body {
+/*html, body {
   overflow-x: auto;
   overflow-y: hidden; 
 }
@@ -122,5 +122,5 @@ html, body {
 }
 #yearDropDown {
   margin-right: -34px;
-}
+}*/
 </style>

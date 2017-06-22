@@ -1,15 +1,10 @@
 <template>
 <div :class="{'drawer-opened': openDrawer}">
-  <mainMenu />
-  <mu-appbar title="美车师管理" class="setting-appbar">
-    <div class="setting-dropdown" slot="right">
-      <Group :handleChange="changeSelect" />
-    </div>
-    <div class="setting-search" slot="right">
-      <mu-text-field hintText="输入手机号搜索" class="search-input" v-model="searchString" ref="searchField" />
-      <mu-icon-button icon="search" class="search-btn" color="#FFF" @click="search()"/>
-    </div>
-  </mu-appbar>
+  <MainMenu title="美车师管理" />
+  <div class="toolbox-search">
+    <mu-text-field hintText="输入手机号搜索" class="search-input" v-model="searchString" ref="searchField" />
+    <mu-icon-button icon="search" class="search-btn" color="#FFF" @click="search()"/>
+  </div>
   <mu-table :fixedHeader="true" :showCheckbox="false" class="worker-manage-table" height="calc(100vh - 135px)" @rowClick="rowClick">
     <mu-thead slot="header" class="table-header">
       <mu-tr>
@@ -54,7 +49,7 @@
 <script>
 import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import mainMenu from '../units/mainMenu'
+import MainMenu from '../units/mainMenu'
 import Group from '../units/group'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import selectField from 'muse-components/selectField'
@@ -78,9 +73,9 @@ Vue.component(iconButton.name, iconButton)
 Vue.component(selectField.name, selectField)
 Vue.component(menuItem.name, menuItem)
 export default {
-  name: 'Home',
+  name: 'WorkerList',
   components: {
-    mainMenu,
+    MainMenu,
     Group
   },
   data () {
@@ -252,7 +247,7 @@ export default {
 </script>
 
 <style>
-html, body {
+/*html, body {
   overflow-x: auto;
   overflow-y: hidden; 
 }
@@ -271,9 +266,9 @@ html, body {
 .setting-dropdown .mu-dropDown-menu-text {
   color: #fff;
 }
-.worker-manage-table .table-header {
-  background-color: #eee;
-}
+.setting-appbar .mu-text-field-input {
+  color: #fff;
+}*/
 .worker-manage-table .table-header .mu-th {
   padding: 0;
   color: #333;
@@ -288,17 +283,40 @@ html, body {
 }
 .worker-manage-table .mu-td {
   font-size: 16px;
-  padding: 1em;
+  padding: 10px 5px;
   white-space: pre-wrap;
   text-align: center;
   word-wrap: break-word;
   word-break: break-all;
 }
+</style>
+<style scoped>
+.toolbox-search {
+  position: relative;
+  display: inline-block;
+  line-height: 46px;
+  margin-right: 48px;
+}
+.toolbox-search .search-input {
+  width: 160px;
+  margin-top: -2px;
+}
+.toolbox-search .search-btn {
+  position: absolute;
+  bottom: 16px;
+  right: -8px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+.worker-manage-table .table-header {
+  background-color: #eee;
+}
 .worker-manage-table .worker-td-0 {
   display: none;
 }
 .worker-manage-table .worker-td-1 {
-  width: 62px;
+  width: 60px;
 }
 .worker-manage-table .worker-td-8,
 .worker-manage-table .worker-td-9,
@@ -307,35 +325,6 @@ html, body {
 }
 .worker-manage-table .worker-manage-btns {
   width: 160px;
-}
-.setting-appbar .mu-text-field-input {
-  color: #fff;
-}
-</style>
-<style scoped>
-.date-picker-box {
-  display: inline-block;
-  width: 100px;
-}
-.date-picker-splitter {
-  margin: 0 10px;
-}
-.setting-search {
-  line-height: 46px;
-  margin-right: 48px;
-  position: relative;
-}
-.search-input {
-  width: 160px;
-  margin-top: -2px;
-}
-.search-btn {
-  position: absolute;
-  bottom: 16px;
-  right: -8px;
-  width: 36px;
-  height: 36px;
-  padding: 0;
 }
 .row-btn {
   width: 60px;

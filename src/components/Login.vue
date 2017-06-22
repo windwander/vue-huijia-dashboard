@@ -1,6 +1,6 @@
 <template>
   <div class="login-outer">
-    <vue-particles
+    <VueParticles
       class="login-particles"
       color="#dedede"
       :particleOpacity="0.8"

@@ -57,7 +57,7 @@ import {menuItem} from 'muse-components/menu'
 Vue.component(selectField.name, selectField)
 Vue.component(menuItem.name, menuItem)
 export default {
-  name: 'dateSelect',
+  name: 'DateSelect',
   props: {
     handleChange: {
       type: Function,
@@ -138,7 +138,7 @@ export default {
   top: -1px;
 }*/
 
-#yearDropDown {
+/*#yearDropDown {
   margin-right: -34px;
-}
+}*/
 </style>

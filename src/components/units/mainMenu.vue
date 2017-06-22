@@ -1,13 +1,14 @@
 <template>
-  <div class="main-menu">
+  <div class="main-menu" :class="{'has-appbar': title}">
     <mu-float-button class="main-menu-toggle"
                      :icon="openDrawer ? 'arrow_back' : 'menu'"
                      @click="toggleDrawer"
                      secondary/>
+    <mu-appbar v-if="title" :title="title" class="appbar"></mu-appbar>
     <mu-drawer :open="openDrawer"
                @close="toggleDrawer">
       <div class="header">
-        <avatar />
+        <Avatar />
         <mu-icon-menu icon="more_vert" class="header-avatar-menu">
           <mu-menu-item title="退出登录" leftIcon="exit_to_app" class="header-avatar-menu-item" @click="logout" />
         </mu-icon-menu>
@@ -25,9 +26,9 @@
           <mu-list-item slot="nested" title="订单数据分析" to="/order/chart">
             <mu-icon slot="left" value="assessment"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="订单管理" to="/order/list">
+          <!--<mu-list-item slot="nested" title="订单管理" to="/order/list">
             <mu-icon slot="left" value="assignment"/>
-          </mu-list-item>
+          </mu-list-item>-->
         </mu-list-item>
         <mu-list-item title="美车师" toggleNested>
           <mu-icon slot="left" value="list"/>
@@ -105,15 +106,17 @@
 import Vue from 'vue'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import floatButton from 'muse-components/floatButton'
+import appbar from 'muse-components/appbar'
 import drawer from 'muse-components/drawer'
 import { list, listItem } from 'muse-components/list'
 import { menuItem } from 'muse-components/menu'
 import divider from 'muse-components/divider'
 import iconMenu from 'muse-components/iconMenu'
-import avatar from './avatar'
+import Avatar from './avatar'
 import MenuGroup from './menuGroup'
 
 Vue.component(floatButton.name, floatButton)
+Vue.component(appbar.name, appbar)
 Vue.component(drawer.name, drawer)
 Vue.component(list.name, list)
 Vue.component(listItem.name, listItem)
@@ -121,9 +124,15 @@ Vue.component(menuItem.name, menuItem)
 Vue.component(divider.name, divider)
 Vue.component(iconMenu.name, iconMenu)
 export default {
+  name: 'MainMenu',
   components: {
-    avatar,
+    Avatar,
     MenuGroup
+  },
+  props: {
+    title: {
+      type: String
+    }
   },
   created () {
     if (!(this.menus && this.menus.length)) {
@@ -154,41 +163,16 @@ export default {
 </script>
 
 <style>
-html, body {
-  min-height: auto;
-}
-.main-menu {
-  position: absolute;
-}
-.main-menu-toggle {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 100;
-  background-color: #F05B47;
-}
-.main-menu-toggle.mu-float-button {
-  font-size: 52px;
-  width: 52px;
-  height: 52px;
-  background-color: #F05B47;
-}
 .drawer-opened {
   padding-left: 256px;
   transition: all .45s cubic-bezier(.23,1,.32,1);
 }
-.drawer-opened #headSearchBox {
-  left: 336px;
-  transition: all .45s cubic-bezier(.23,1,.32,1);
-}
-.header-avatar-menu-item .mu-menu-item-title {
-  margin-left: 32px;
-}
-.mu-menu-item.have-left-icon {
-  padding-left: 16px;
-}
 </style>
 <style scoped>
+.appbar.mu-appbar {
+  height: 74px;
+  padding-left: 74px;
+}
 .header {
   height: 100px;
   display: flex;
@@ -199,5 +183,31 @@ html, body {
 }
 .divider {
   margin: 30px 0 20px;
+}
+.main-menu {
+  position: absolute;
+}
+.main-menu.has-appbar {
+  position: static;
+}
+.main-menu-toggle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  background-color: #F05B47;
+}
+.drawer-opened .main-menu-toggle {
+  left: 266px;
+  transition: left .45s cubic-bezier(.23,1,.32,1);
+}
+.main-menu-toggle.mu-float-button {
+  font-size: 52px;
+  width: 52px;
+  height: 52px;
+  background-color: #F05B47;
+}
+.header-avatar-menu-item .mu-menu-item-title {
+  margin-left: 32px;
 }
 </style>

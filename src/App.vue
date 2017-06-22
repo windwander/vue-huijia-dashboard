@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style>
-html, body {
+html, body, #app {
   font-family: "Hiragino Sans GB", "Lucida Grande", "微软雅黑", Helvetica, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -19,6 +19,6 @@ html, body {
   min-width: 1330px;
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 </style>

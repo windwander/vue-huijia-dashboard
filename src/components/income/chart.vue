@@ -1,6 +1,6 @@
 <template>
   <div :class="{'drawer-opened': openDrawer}">
-    <mainMenu />
+    <MainMenu />
     <mu-appbar title="订单数据分析" class="appbar">
     </mu-appbar>
     <mu-tabs :value="activeTab" @change="handleTabChange" class="chart-tabs">
@@ -28,10 +28,7 @@
 import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import moment from 'moment'
-import mainMenu from '../units/mainMenu'
-import Modal from '../Modal'
-import dateSelect from '../units/dateSelect'
-import statusBox from '../units/statusBox'
+import MainMenu from '../units/mainMenu'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import raisedButton from 'muse-components/raisedButton'
 import {menuItem} from 'muse-components/menu'
@@ -53,13 +50,10 @@ Vue.component(tabs.name, tabs)
 Vue.component(tab.name, tab)
 Vue.component(datePicker.name, datePicker)
 export default {
-  name: 'orderChart',
+  name: 'OrderChart',
   components: {
-    mainMenu,
-    statusBox,
-    Modal,
-    ECharts,
-    dateSelect
+    MainMenu,
+    ECharts
   },
   data () {
     return {

@@ -1,37 +1,34 @@
 <template>
   <div :class="{'drawer-opened': openDrawer}">
-    <mainMenu />
-    <mu-appbar title="订单数据分析" class="appbar">
-    </mu-appbar>
+    <MainMenu title="订单数据分析" />
     <mu-tabs :value="activeTab" @change="handleTabChange" class="chart-tabs">
       <mu-tab value="hour" icon="schedule" title="实时统计"/>
       <mu-tab value="day" icon="assessment" title="整体趋势"/>
     </mu-tabs>
     <div id="mainContent">
-      <div class="toolbox" v-if="activeTab === 'hour'">
-        <mu-raised-button icon="date_range" label="增加对比日期" @click="addCompareBtn"/>
-        <mu-date-picker :maxDate="today" mode="landscape" hintText="增加对比" okLabel="确认加入对比" @input="addCompare" class="date-picker-input" ref="selectDateInput"/>
+      <div class="chart-box">
+        <div v-if="activeTab === 'hour'" class="toolbox">
+          <mu-raised-button icon="date_range" label="增加对比日期" @click="addCompareBtn"/>
+          <mu-date-picker :maxDate="today" mode="landscape" hintText="增加对比" okLabel="确认加入对比" @input="addCompare" class="date-picker-input" ref="selectDateInput"/>
+        </div>
+        <div v-if="activeTab === 'day'" class="toolbox">
+          <mu-raised-button label="周" @click="changePeriod('week')" class="toolbox-btn" :class="{'active': periodType === 'week'}" />
+          <mu-raised-button label="月" @click="changePeriod('month')" class="toolbox-btn" :class="{'active': periodType === 'month'}"/>
+          <mu-raised-button label="自定义" @click="triggerSetDate" class="toolbox-btn"  :class="{'active': periodType === 'custom'}"/>
+          <mu-date-picker :maxDate="today" mode="landscape"  hintText="起始日期" @change="setStartDate" okLabel="确认起始日期" class="date-picker-input" ref="startDateInput"/>
+          <mu-date-picker :minDate="startDate" :maxDate="today" mode="landscape" hintText="结束日期" @change="setEndDate" okLabel="确认结束日期" class="date-picker-input" ref="endDateInput"/>
+        </div>
+        <ECharts :options="chartOption" auto-resize ref="chart"/>
       </div>
-      <div v-if="activeTab === 'day'" class="toolbox">
-        <mu-raised-button label="周" @click="changePeriod('week')" class="toolbox-btn" :class="{'active': periodType === 'week'}" />
-        <mu-raised-button label="月" @click="changePeriod('month')" class="toolbox-btn" :class="{'active': periodType === 'month'}"/>
-        <mu-raised-button label="自定义" @click="triggerSetDate" class="toolbox-btn"  :class="{'active': periodType === 'custom'}"/>
-        <mu-date-picker :maxDate="today" mode="landscape"  hintText="起始日期" @change="setStartDate" okLabel="确认起始日期" class="date-picker-input" ref="startDateInput"/>
-        <mu-date-picker :minDate="startDate" :maxDate="today" mode="landscape" hintText="结束日期" @change="setEndDate" okLabel="确认结束日期" class="date-picker-input" ref="endDateInput"/>
-      </div>
-      <ECharts :options="chartOption" auto-resize ref="bar"/>
     </div>
     <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar"/>
   </div>
 </template>
 <script>
 import Vue from 'vue'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import moment from 'moment'
-import mainMenu from '../units/mainMenu'
-import Modal from '../Modal'
-import dateSelect from '../units/dateSelect'
-import statusBox from '../units/statusBox'
+import MainMenu from '../units/mainMenu'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import raisedButton from 'muse-components/raisedButton'
 import {menuItem} from 'muse-components/menu'
@@ -53,13 +50,10 @@ Vue.component(tabs.name, tabs)
 Vue.component(tab.name, tab)
 Vue.component(datePicker.name, datePicker)
 export default {
-  name: 'orderChart',
+  name: 'OrderChart',
   components: {
-    mainMenu,
-    statusBox,
-    Modal,
-    ECharts,
-    dateSelect
+    MainMenu,
+    ECharts
   },
   data () {
     return {
@@ -69,10 +63,22 @@ export default {
       endDate: '',
       periodType: 'week',
       today: moment().format('YYYY-MM-DD'),
-      legend: [],
-      series: [],
-      chartOption: {}
+      chartOption: {},
+      legendHour: [],
+      seriesHour: []
     }
+  },
+  mounted () {
+    let chart = this.$refs.chart
+    chart.showLoading({
+      text: '加载中',
+      color: '#c23531',
+      textColor: '#000',
+      maskColor: 'rgba(255, 255, 255, 0.8)',
+      zlevel: 0
+    })
+    this.initHourChart()
+    this.getData()
   },
   computed: {
     ...mapState([
@@ -83,6 +89,9 @@ export default {
       'generalOrderStatistics',
       'operationTrendData',
       'openDrawer'
+    ]),
+    ...mapGetters([
+      'cityAndGroup'
     ]),
     completionNum: function () {
       let arr
@@ -106,24 +115,30 @@ export default {
       return arr
     }
   },
-  mounted () {
-    let bar = this.$refs.bar
-    bar.showLoading({
-      text: '加载中',
-      color: '#c23531',
-      textColor: '#000',
-      maskColor: 'rgba(255, 255, 255, 0.8)',
-      zlevel: 0
-    })
-    this.initHourBar()
-    this.getData()
+  watch: {
+    cityAndGroup: function () {
+      const z = this
+      if (z.activeTab === 'hour') {
+        z.legendHour = []
+        z.seriesHour = []
+        z.initHourChart()
+        z.getData()
+      } else if (z.activeTab === 'day') {
+        z.getData()
+      }
+    },
+    openDrawer: function () {
+      const z = this
+      setTimeout(function () {
+        z.$refs.chart.resize()
+      }, 500)
+    }
   },
   methods: {
     ...mapMutations([
       'hideSnackbar'
     ]),
     ...mapActions([
-      'getGeneralOrderStatistics',
       'getOperationTrendDate',
       'getOperationTrendFromStartToEnd'
     ]),
@@ -149,11 +164,11 @@ export default {
       }
       if (z.activeTab === 'hour') {
         z.getOperationTrendDate(data).then(function () {
-          z.updateHourBar(data.date)
+          z.updateHourChart(data.date)
         })
       } else if (z.activeTab === 'day') {
         z.getOperationTrendFromStartToEnd(data).then(function () {
-          z.updateDayBar()
+          z.updateDayChart()
         })
       }
     },
@@ -177,12 +192,12 @@ export default {
     handleTabChange (v) {
       let z = this
       z.activeTab = v
-      z.legend = []
-      z.series = []
+      z.legendHour = []
+      z.seriesHour = []
       if (v === 'hour') {
-        z.initHourBar()
+        z.initHourChart()
       } else if (v === 'day') {
-        z.updateDayBar()
+        z.updateDayChart()
         z.formatDate('week')
       }
       z.getData()
@@ -193,7 +208,7 @@ export default {
     addCompare (date) {
       this.getData(date)
     },
-    initHourBar () {
+    initHourChart () {
       this.chartOption = {
         title: {
           show: true,
@@ -209,9 +224,7 @@ export default {
         },
         legend: {
           top: '12%',
-          data: [{
-            name: '今日'
-          }]
+          data: []
         },
         toolbox: {
           orient: 'horizontal',
@@ -232,41 +245,39 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          boundaryGap: true
+          boundaryGap: true,
+          data: []
         }],
         yAxis: [{
           type: 'value',
           name: '单量'
         }],
-        series: [{
-          name: '今日',
-          type: 'line'
-        }]
+        series: []
       }
     },
-    updateHourBar (date) {
+    updateHourChart (date) {
       const z = this
-      let bar = z.$refs.bar
-      z.legend.push({
+      let chart = z.$refs.chart
+      z.legendHour.push({
         name: date === z.today ? '今日' : date
       })
-      z.series.push({
+      z.seriesHour.push({
         name: date === z.today ? '今日' : date,
         type: 'line',
         data: z.completionNum
       })
-      bar.mergeOptions({
+      chart.mergeOptions({
         legend: {
-          data: z.legend
+          data: z.legendHour
         },
         xAxis: [{
           data: z.dimension
         }],
-        series: z.series
+        series: z.seriesHour
       })
-      bar.hideLoading()
+      chart.hideLoading()
     },
-    updateDayBar () {
+    updateDayChart () {
       this.chartOption = {
         title: {
           show: true,
@@ -280,12 +291,10 @@ export default {
             type: 'shadow'
           }
         },
-        legend: {
-          top: '12%',
-          data: [{
-            data: this.legend
-          }]
-        },
+        // legend: {
+        //   top: '12%',
+        //   data: []
+        // },
         toolbox: {
           orient: 'vertical',
           itemSize: 24,
@@ -324,14 +333,14 @@ export default {
 
 <style scoped>
 #mainContent {
-  position: relative;
   height: calc(100vh - 75px);
   overflow: auto;
   padding-top: 10px;
 }
-.appbar.mu-appbar {
-  height: 74px;
-  padding-left: 74px;
+#mainContent .chart-box {
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 .chart-tabs {
   position: absolute;
@@ -349,7 +358,7 @@ export default {
 }
 .toolbox {
   position: absolute;
-  top: 24px;
+  top: 14px;
   left: 80px;
   z-index: 10;
 }

@@ -1,12 +1,12 @@
 <template>
 <div :class="{'drawer-opened': openDrawer}">
-  <mainMenu />
+  <MainMenu />
   <mu-appbar title="美车师结算汇总信息" class="setting-appbar">
     <div class="setting-dropdown" slot="right">
       <Group :handleChange="changeSelect" />
     </div>
     <div class="setting-dropdown" slot="right">
-      <dateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
+      <DateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
     </div>
     <div class="top-btn" slot="right">
       <mu-raised-button label="导出汇总表" icon="print" class="raised-button" @click="downloadAll" secondary/>
@@ -37,10 +37,10 @@
 <script>
 import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import mainMenu from '../units/mainMenu'
-import Modal from '../Modal'
+import MainMenu from '../units/mainMenu'
+import Modal from '../units/Modal'
 import Group from '../units/group'
-import dateSelect from '../units/dateSelect'
+import DateSelect from '../units/dateSelect'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
@@ -51,12 +51,12 @@ Vue.component(snackbar.name, snackbar)
 Vue.component(dropDownMenu.name, dropDownMenu)
 Vue.component(menuItem.name, menuItem)
 export default {
-  name: 'balance-list',
+  name: 'BalanceList',
   components: {
-    mainMenu,
+    MainMenu,
     Modal,
     Group,
-    dateSelect
+    DateSelect
   },
   data () {
     return {
@@ -145,7 +145,7 @@ export default {
 </script>
 
 <style>
-html, body {
+/*html, body {
   overflow-x: auto;
   overflow-y: hidden; 
 }
@@ -197,5 +197,5 @@ html, body {
 }
 .settle-table .worker-td-0 {
   display: none;
-}
+}*/
 </style>

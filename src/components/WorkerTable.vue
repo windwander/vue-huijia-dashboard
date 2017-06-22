@@ -41,7 +41,7 @@ import {table, thead, tbody, tfoot, tr, th, td} from 'muse-components/table'
 import pagination from 'muse-components/pagination'
 import raisedButton from 'muse-components/raisedButton'
 import datePicker from 'muse-components/datePicker'
-import Modal from './Modal'
+import Modal from './units/Modal'
 
 Vue.component(datePicker.name, datePicker)
 Vue.component(raisedButton.name, raisedButton)
@@ -56,7 +56,6 @@ Vue.component(td.name, td)
 export default {
   name: 'workerTable',
   components: {
-    pagination,
     Modal
   },
   props: {

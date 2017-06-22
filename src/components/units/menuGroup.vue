@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-if="citiesAndGroups" class="city-select-1">
-      <mu-select-field v-model="selected" @change="handleChangeSelect" :icon="selected ? (selected.indexOf('-') > -1 ? 'group' : 'location_city') : 'public'" class="city-select-field-1" ref="city" fullWidth>
-        <mu-menu-item value="" title="全平台" leftIcon="public" class="group-select-menu"/>
-        <mu-menu-item v-for="(el, index) in flattenGroup" :key="index" :value="el.value" :title="el.title" :leftIcon="el.level === 1 ? 'location_city' : 'group'" class="group-select-menu" :style="{marginLeft: el.level * 15 + 'px'}"/>
+    <div v-if="citiesAndGroups" class="city-group-select">
+      <mu-select-field v-model="selected" @change="handleChangeSelect" :icon="selected ? (selected.indexOf('-') > -1 ? 'group' : 'location_city') : 'public'" fullWidth>
+        <mu-menu-item value="" title="全平台" leftIcon="public" class="city-group-select-menu"/>
+        <mu-menu-item v-for="(el, index) in flattenGroup" :key="index" :value="el.value" :title="el.title" :leftIcon="el.level === 1 ? 'location_city' : 'group'" class="city-group-select-menu" :style="{marginLeft: el.level * 15 + 'px'}"/>
       </mu-select-field>
     </div>
   </div>
@@ -83,20 +83,14 @@ export default {
   }
 }
 </script>
+
 <style>
-.group-select-menu .mu-menu-item-left-icon {
-  left: 10px;
-}
-.group-select-menu .mu-menu-item-title {
-  margin-left: 24px;
-}
-.mu-menu-destop {
-  max-height: 420px;
+.city-group-select-menu .mu-menu-item.have-left-icon {
+  padding-left: 60px;
 }
 </style>
 <style scoped>
-.city-select-1 {
-  width: 200px;
+.city-group-select {
   margin: 0 10px;
 }
 </style>

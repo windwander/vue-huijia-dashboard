@@ -336,7 +336,7 @@ export default {
 </script>
 
 <style>
-html,
+/*html,
 body {
   overflow-x: auto;
   overflow-y: hidden;
@@ -399,5 +399,5 @@ body {
 }
 #yearDropDown, #monthDropDown {
   margin-right: -34px;
-}
+}*/
 </style>
