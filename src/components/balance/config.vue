@@ -1,19 +1,16 @@
 <template>
 <div :class="{'drawer-opened': openDrawer}">
-  <MainMenu />
-  <mu-appbar title="美车师结算项设置" class="setting-appbar">
-    <div class="setting-dropdown" slot="right">
-      <Group :handleChange="changeSelect" />
-    </div>
-    <div class="setting-dropdown" slot="right">
+  <MainMenu title="美车师结算项设置"/>
+  <div class="toolbox">
+    <div class="month-select-dropdown">
       <DateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
     </div>
-    <div class="top-btn" slot="right">
+    <div class="top-btn">
       <mu-raised-button :label="bonusPenaltyFinished ? '当月已结算' : '确认生成结算'" icon="save" class="raised-button" @click="topBtnSave" primary :disabled="bonusPenaltyFinished"/>
       <mu-raised-button label="导出表格" icon="print" class="raised-button" @click="topBtnPrint" secondary/>
     </div>
-  </mu-appbar>
-  <WorkerTable :height="tableHeight" />
+  </div>
+  <BalanceConfigTable :height="tableHeight" />
   <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar"/>
 </div>
 </template>
@@ -22,8 +19,7 @@
 import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import MainMenu from '../units/mainMenu'
-import WorkerTable from '../WorkerTable'
-import Group from '../units/group'
+import BalanceConfigTable from './balanceConfigTable'
 import DateSelect from '../units/dateSelect'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
@@ -38,13 +34,21 @@ export default {
   name: 'BalanceConfig',
   components: {
     MainMenu,
-    WorkerTable,
-    Group,
+    BalanceConfigTable,
     DateSelect
   },
   data () {
     return {
       tableHeight: ''
+    }
+  },
+  mounted () {
+    this.getData()
+    this.tableHeight = 'calc(100vh - 188px)'
+  },
+  watch: {
+    city: function () {
+      this.getData()
     }
   },
   computed: {
@@ -58,10 +62,6 @@ export default {
       'bonusPenaltyFinished',
       'openDrawer'
     ])
-  },
-  mounted () {
-    this.getData()
-    this.tableHeight = 'calc(100vh - 135px)'
   },
   methods: {
     ...mapMutations([
@@ -100,27 +100,16 @@ export default {
 }
 </script>
 
-<style>
-/*html, body {
-  overflow-x: auto;
-  overflow-y: hidden; 
+<style scoped>
+.toolbox {
+
 }
-.setting-appbar.mu-appbar {
-  height: 74px;
-  padding-left: 100px;
-  background-color: #00bcd4;
+.toolbox .month-select-dropdown {
+  display: inline-block;
 }
-.setting-dropdown {
-  line-height: 46px;
-  margin-right: 48px;
+.toolbox .top-btn {
+  display: inline-block;
+  margin-top: 8px;
+  vertical-align: top;
 }
-.setting-dropdown label {
-  vertical-align: text-bottom;
-}
-.setting-dropdown .mu-dropDown-menu-text {
-  color: #fff;
-}
-#yearDropDown {
-  margin-right: -34px;
-}*/
 </style>

@@ -47,11 +47,11 @@
           <mu-list-item slot="nested" title="产品数据分析" to="/product/chart">
             <mu-icon slot="left" value="assessment"/>
           </mu-list-item>
-          <mu-list-item slot="nested" title="产品管理" to="/product/list">
+          <!--<mu-list-item slot="nested" title="产品管理" to="/product/list">
             <mu-icon slot="left" value="shop_two"/>
           </mu-list-item>
           <mu-list-item slot="nested" title="产品优惠券管理" to="/product/coupon">
-            <mu-icon slot="left" value="card_giftcard"/>
+            <mu-icon slot="left" value="card_giftcard"/>-->
           </mu-list-item>
         </mu-list-item>
         <mu-list-item title="收入" toggleNested>

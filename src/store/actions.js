@@ -640,7 +640,7 @@ export const actions = {
   },
   /* GET /a/getGeneralOrderStatistics 查询概要运营数据 */
   getGeneralOrderStatistics ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest/v/getGeneralOrderStatistics?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode)
+    axios.get('/api/v2/fworker/rest/v/getGeneralOrderStatistics?start=' + data.startDate + '&end=' + data.endDate + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode)
     .then(res => {
       state.generalOrderStatistics = res.data
     })

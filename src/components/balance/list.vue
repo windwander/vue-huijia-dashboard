@@ -1,18 +1,15 @@
 <template>
 <div :class="{'drawer-opened': openDrawer}">
-  <MainMenu />
-  <mu-appbar title="美车师结算汇总信息" class="setting-appbar">
-    <div class="setting-dropdown" slot="right">
-      <Group :handleChange="changeSelect" />
-    </div>
-    <div class="setting-dropdown" slot="right">
+  <MainMenu title="美车师结算汇总信息"/>
+  <div class="toolbox">
+    <div class="month-select-dropdown">
       <DateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
     </div>
-    <div class="top-btn" slot="right">
+    <div class="top-btn">
       <mu-raised-button label="导出汇总表" icon="print" class="raised-button" @click="downloadAll" secondary/>
     </div>
-  </mu-appbar>
-  <mu-table :fixedHeader="true" :showCheckbox="false" class="settle-table" :height="tableHeight">
+  </div>
+  <mu-table :fixedHeader="true" :showCheckbox="false" class="balance-list-table" :height="tableHeight">
     <mu-thead slot="header" class="table-header">
       <mu-tr>
         <mu-th v-for="item,index in tableHead" :key="'worker-table-head' + index" :class="'worker-td-'+ index" :title="item">{{item}}</mu-th>
@@ -67,6 +64,16 @@ export default {
       modalTitle: ''
     }
   },
+  mounted () {
+    this.getData()
+    // this.tableHeight = 'calc(100vh - 135px)'
+    console.table(this.settlementStatistic)
+  },
+  watch: {
+    city: function () {
+      this.getData()
+    }
+  },
   computed: {
     ...mapState([
       'city',
@@ -79,11 +86,6 @@ export default {
       'settlementStatistic',
       'openDrawer'
     ])
-  },
-  mounted () {
-    this.getData()
-    this.tableHeight = 'calc(100vh - 135px)'
-    console.table(this.settlementStatistic)
   },
   methods: {
     ...mapMutations([
@@ -145,41 +147,19 @@ export default {
 </script>
 
 <style>
-/*html, body {
-  overflow-x: auto;
-  overflow-y: hidden; 
-}
-.setting-appbar.mu-appbar {
-  height: 74px;
-  padding-left: 100px;
-  background-color: #00bcd4;
-}
-.setting-dropdown {
-  line-height: 46px;
-  margin-right: 48px;
-}
-.setting-dropdown label {
-  vertical-align: text-bottom;
-}
-.setting-dropdown .mu-dropDown-menu-text {
-  color: #fff;
-}
-#yearDropDown {
-  margin-right: -34px;
-}
-.settle-table .table-header {
+.balance-list-table .table-header {
   background-color: #eee;
 }
-.settle-table .table-header .mu-th {
+.balance-list-table .table-header .mu-th {
   padding: 0;
   color: #333;
   border-bottom: 1px solid #c7c7c7;
   text-align: center;
 }
-.settle-table .mu-th-wrapper {
+.balance-list-table .mu-th-wrapper {
   white-space: pre-wrap;
 }
-.settle-table .mu-td {
+.balance-list-table .mu-td {
   font-size: 16px;
   padding: 1em;
   white-space: pre-wrap;
@@ -187,7 +167,7 @@ export default {
   word-wrap: break-word;
   word-break: break-all;
 }
-.settle-table .detail-btn {
+.balance-list-table .detail-btn {
   min-width: 60px;
   line-height: 2;
   height: 2em;
@@ -195,7 +175,20 @@ export default {
   margin: 0;
   white-space: normal;
 }
-.settle-table .worker-td-0 {
+.balance-list-table .worker-td-0 {
   display: none;
-}*/
+}
+</style>
+<style scoped>
+.toolbox {
+
+}
+.toolbox .month-select-dropdown {
+  display: inline-block;
+}
+.toolbox .top-btn {
+  display: inline-block;
+  margin-top: 8px;
+  vertical-align: top;
+}
 </style>

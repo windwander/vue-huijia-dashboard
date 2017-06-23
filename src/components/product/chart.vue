@@ -73,8 +73,8 @@ export default {
     return {
       selectedWorker: '',
       activeTab: 'hour',
-      startDate: '',
-      endDate: '',
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().format('YYYY-MM-DD'),
       periodType: 'week',
       today: moment().format('YYYY-MM-DD'),
       chartOption: {},
@@ -89,7 +89,8 @@ export default {
   created () {
     const data = {
       cityCode: this.city,
-      date: this.today,
+      startDate: this.startDate,
+      endDate: this.endDate,
       parentId: this.group
     }
     this.getGeneralOrderStatistics(data)
@@ -179,7 +180,7 @@ export default {
         z.endDate = moment().format('YYYY-MM-DD')
       }
     },
-    getData (date) {
+    getData (date, noUpdateStatistics) {
       const z = this
       const data = {
         cityCode: z.city,
@@ -188,6 +189,9 @@ export default {
         endDate: z.endDate,
         parentId: z.group,
         categoryCode: z.categoryData.code
+      }
+      if (!noUpdateStatistics) {
+        z.getGeneralOrderStatistics(data)
       }
       if (z.activeTab === 'hour') {
         z.getOperationTrendDate(data).then(function () {
@@ -248,7 +252,7 @@ export default {
       this.$refs.selectDateInput.openDialog()
     },
     addCompare (date) {
-      this.getData(date)
+      this.getData(date, true)
     },
     initHourChart () {
       this.chartOption = {

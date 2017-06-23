@@ -17,7 +17,6 @@ const workerList = () => import('@/components/worker/list.vue')
 const workerVerify = () => import('@/components/worker/verify.vue')
 /* 收入 */
 const incomeChart = () => import('@/components/income/chart.vue')
-const incomeList = () => import('@/components/income/list.vue')
 /* 结算 */
 const balanceConfig = () => import('@/components/balance/config.vue')
 const balanceList = () => import('@/components/balance/list.vue')
@@ -120,17 +119,6 @@ export default new Router({
       path: '/income/chart',
       name: 'incomeChart',
       component: incomeChart,
-      beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
-          next()
-        } else {
-          next(false)
-        }
-      }
-    }, {
-      path: '/income/list',
-      name: 'incomeList',
-      component: incomeList,
       beforeEnter: (to, from, next) => {
         if (store.getters.menusArray) {
           next()

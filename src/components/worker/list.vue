@@ -247,28 +247,6 @@ export default {
 </script>
 
 <style>
-/*html, body {
-  overflow-x: auto;
-  overflow-y: hidden; 
-}
-.setting-appbar.mu-appbar {
-  height: 74px;
-  padding-left: 100px;
-  background-color: #00bcd4;
-}
-.setting-dropdown {
-  line-height: 46px;
-  margin-right: 48px;
-}
-.setting-dropdown label {
-  vertical-align: text-bottom;
-}
-.setting-dropdown .mu-dropDown-menu-text {
-  color: #fff;
-}
-.setting-appbar .mu-text-field-input {
-  color: #fff;
-}*/
 .worker-manage-table .table-header .mu-th {
   padding: 0;
   color: #333;
@@ -295,7 +273,7 @@ export default {
   position: relative;
   display: inline-block;
   line-height: 46px;
-  margin-right: 48px;
+  margin-left: 48px;
 }
 .toolbox-search .search-input {
   width: 160px;

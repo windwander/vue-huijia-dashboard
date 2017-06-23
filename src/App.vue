@@ -21,4 +21,9 @@ html, body, #app {
   height: 100%;
   overflow: hidden;
 }
+/* MuseUI 修改样式 */
+.mu-popover>.mu-menu {
+  min-width: 80px;
+  width: auto !important;
+}
 </style>

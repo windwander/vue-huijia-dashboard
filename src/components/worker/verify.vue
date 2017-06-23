@@ -40,7 +40,7 @@
           <div v-else :name="key" class="td-text">{{value}}</div>
         </mu-td>
         <mu-td>
-          <mu-raised-button :label="(selectedId === item.workerId) && rowFinished ? '审核通过' : '请完善左侧信息'" class="verify-btn" secondary ref="verifyBtn" :disabled="(selectedId !== item.workerId) || !rowFinished" @click="openDialog" />
+          <mu-raised-button :label="(selectedId === item.workerId) && rowFinished ? '审核通过' : '请完善信息'" class="verify-btn" secondary ref="verifyBtn" :disabled="(selectedId !== item.workerId) || !rowFinished" @click="openDialog" />
         </mu-td>
       </mu-tr>
     </mu-tbody>
@@ -130,6 +130,11 @@ export default {
   mounted () {
     this.getData()
     this.getDictionaryByCode('WORKER_POSITION')
+  },
+  watch: {
+    city: function () {
+      this.getData()
+    }
   },
   methods: {
     ...mapMutations([
