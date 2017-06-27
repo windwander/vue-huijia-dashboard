@@ -2,7 +2,7 @@
 <div class="map-home-div" :class="{'drawer-opened': openDrawer}">
   <MainMenu />
   <div id="amapContainer"></div>
-  <MapDashboard />
+  <MapDashboard :beforeLeave="beforeLeave" />
   <MapInfoWindow :infoData="infoWindowData" />
   <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar"/>
   <div v-if="isLoadingConfig" id="fullScreenLoading">
@@ -33,18 +33,16 @@ export default {
   data () {
     return {
       center: [118.722695, 32.033995],
-      zoom: 12
+      zoom: 12,
+      beforeLeave: false
     }
   },
   computed: {
     ...mapState([
       'infoWindowData',
       'snackbar',
-      'snackbarTimer',
       'snackbarMsg',
       'isLoadingConfig',
-      'recieveMsg',
-      'topPopup',
       'openDrawer'
     ])
   },
@@ -58,15 +56,17 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'hideSnackbar',
-      'closePopup'
+      'hideSnackbar'
     ]),
-    updateMessage (e) {
-      this.$store.commit('updateMessage', e.target.value)
-    },
     refresh () {
       window.location.reload()
     }
+  },
+  beforeRouteLeave: function (to, from, next) {
+    this.beforeLeave = true
+    setTimeout(function () {
+      next()
+    }, 0)
   }
 }
 </script>

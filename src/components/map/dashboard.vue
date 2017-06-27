@@ -136,6 +136,12 @@ export default {
     StatusBox,
     Modal
   },
+  props: {
+    beforeLeave: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       searchString: '',
@@ -144,7 +150,8 @@ export default {
       modalParams: {},
       searchResultListSelected: '',
       showOrderBox: true,
-      showWorkerBox: true
+      showWorkerBox: true,
+      mapUpdateInterval: {}
     }
   },
   computed: {
@@ -180,7 +187,7 @@ export default {
         clearInterval(initUpdate)
       }
     }, 100)
-    setInterval(function () { // 每隔固定时间更新数据
+    z.mapUpdateInterval = setInterval(function () { // 每隔固定时间更新数据
       z.update()
     }, 1000 * 60 * 5)
     // 搜索框，按回车键执行搜索
@@ -198,6 +205,9 @@ export default {
     cityAndGroup: function () {
       this.clearWorkerPoints()
       this.update()
+    },
+    beforeLeave: function () {
+      clearInterval(this.mapUpdateInterval)
     }
   },
   methods: {

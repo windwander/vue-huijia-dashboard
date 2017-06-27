@@ -101,10 +101,6 @@ export const mutations = {
     arr.concat(state.workerPoints, state.orderPoints)
     state.amap.setFitView(arr)
   },
-  // 更新点标记窗口数据
-  updateMessage (state, message) {
-    state.infoWindowData.message = message
-  },
   // 清除视图的搜索结果
   clearSearchResult () {
     state.searchResultList = []
@@ -123,9 +119,6 @@ export const mutations = {
   },
   toggleDrawer (state) {
     state.openDrawer = !state.openDrawer
-  },
-  closePopup () {
-    state.topPopup = false
   },
   showPopup (state) {
     state.modalPopup = true
