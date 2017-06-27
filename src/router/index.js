@@ -21,13 +21,6 @@ const incomeChart = () => import('@/components/income/chart.vue')
 const balanceConfig = () => import('@/components/balance/config.vue')
 const balanceList = () => import('@/components/balance/list.vue')
 
-// const bonusList = () => import('@/components/List.vue')
-// const settleList = () => import('@/components/settleList.vue')
-// const overallChart = () => import('@/components/overallChart.vue')
-// const compareChart = () => import('@/components/compareChart.vue')
-// const workerVerify = () => import('@/components/workerVerify.vue')
-// const workerManage = () => import('@/components/workerManage.vue')
-
 export default new Router({
   routes: [
     {
@@ -43,7 +36,7 @@ export default new Router({
       name: 'orderChart',
       component: orderChart,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
+        if (store.getters.menusArray.orderChart) {
           next()
         } else {
           next(false)
@@ -54,7 +47,7 @@ export default new Router({
       name: 'orderList',
       component: orderList,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
+        if (store.getters.menusArray.orderList) {
           next()
         } else {
           next(false)
@@ -65,7 +58,7 @@ export default new Router({
       name: 'productChart',
       component: productChart,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
+        if (store.getters.menusArray.productChart) {
           next()
         } else {
           next(false)
@@ -76,7 +69,7 @@ export default new Router({
       name: 'productList',
       component: productList,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
+        if (store.getters.menusArray.productList) {
           next()
         } else {
           next(false)
@@ -87,7 +80,7 @@ export default new Router({
       name: 'workerChart',
       component: workerChart,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
+        if (store.getters.menusArray.workerChart) {
           next()
         } else {
           next(false)
@@ -98,7 +91,7 @@ export default new Router({
       name: 'workerList',
       component: workerList,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
+        if (store.getters.menusArray.workerList) {
           next()
         } else {
           next(false)
@@ -109,7 +102,7 @@ export default new Router({
       name: 'workerVerify',
       component: workerVerify,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
+        if (store.getters.menusArray.workerVerify) {
           next()
         } else {
           next(false)
@@ -120,7 +113,7 @@ export default new Router({
       name: 'incomeChart',
       component: incomeChart,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
+        if (store.getters.menusArray.incomeChart) {
           next()
         } else {
           next(false)
@@ -131,7 +124,7 @@ export default new Router({
       name: 'balanceConfig',
       component: balanceConfig,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
+        if (store.getters.menusArray.balanceConfig) {
           next()
         } else {
           next(false)
@@ -142,7 +135,7 @@ export default new Router({
       name: 'balanceList',
       component: balanceList,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray) {
+        if (store.getters.menusArray.balanceList) {
           next()
         } else {
           next(false)

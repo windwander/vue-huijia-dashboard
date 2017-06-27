@@ -43,6 +43,7 @@ export const actions = {
     axios.get('/api/v2/login?username=' + user.phone + '&password=' + user.password)
     .then(res => {
       if (res.data.code === '0000') { // 登录成功
+        commit('errorLogin', {})
         router.push('/')
       } else {
         commit('errorLogin', res.data)
@@ -61,10 +62,15 @@ export const actions = {
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
         console.log(error.request)
+        commit('errorLogin', {
+          message: '请求失败，请检查本地网络'
+        })
       } else {
         // Something happened in setting up the request that triggered an Error
         console.log('Error', error.message)
-        commit('errorLogin', error.message)
+        commit('errorLogin', {
+          message: error.message
+        })
       }
     })
   },
@@ -73,6 +79,11 @@ export const actions = {
     axios.get('/api/v2/portal/logoutRemote?isajax=true')
     .then(res => {
       if (res.data.code === '0000') { // 登出成功
+        (function deleteAllCookies () { // 清除cookies
+          const c = document.cookie.split(';')
+          for (let i in c) document.cookie = /^[^=]+/.exec(c[i])[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        })()
+        state.menus = []
         router.push({name: 'Login'})
       } else {
         oneError(commit, state, res.data, '退出登录')
@@ -108,6 +119,13 @@ export const actions = {
     })
     .catch(error => {
       oneError(commit, state, error, '菜单权限查询')
+      if (error.response.status !== 401) {
+        commit('errorLogin', {
+          message: '服务器响应失败，请稍后再试'
+        })
+      } else {
+        commit('errorLogin', {})
+      }
       router.push({name: 'Login'})
     })
   },

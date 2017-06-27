@@ -26,4 +26,7 @@ html, body, #app {
   min-width: 80px;
   width: auto !important;
 }
+.mu-popover>.mu-menu>.mu-menu-list {
+  max-height: 80vh;
+}
 </style>

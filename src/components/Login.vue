@@ -24,8 +24,8 @@
       <br/>
       <mu-text-field label="密码" labelFloat type="password" v-model="password" @input="input" :errorText="errorPassword" ref="passwordField" fullWidth/>
       <br/>
+      <p v-if="otherError && errorLogin" class="other-error">{{errorLogin.message}}</p>
       <mu-raised-button label="登录" class="raised-button" @click="login()" secondary fullWidth/>
-      <p v-if="otherError && errorLogin">{{errorLogin.message}}</p>
     </mu-paper>
   </div>
 </template>
@@ -101,6 +101,9 @@ export default {
         z.login()
       }
     })
+    if (this.errorLogin.message) {
+      this.otherError = true
+    }
   }
 }
 </script>
@@ -128,14 +131,15 @@ export default {
   background-size: 120px;
   z-index: 10;
 }
-
 .login-box h1 {
   margin-top: 0;
   font-size: 1.8em;
   font-weight: normal;
   text-align: center;
 }
-
+.other-error {
+  color: #f44336;
+}
 .raised-button {
   margin: 10px 0;
 }

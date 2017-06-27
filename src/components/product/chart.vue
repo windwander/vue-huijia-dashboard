@@ -425,6 +425,10 @@ export default {
   height: 74px;
   margin-left: -120px;
   background-color: transparent;
+  transition: all .45s cubic-bezier(.23,1,.32,1);
+}
+.drawer-opened .chart-tabs {
+  margin-left: 8px;
 }
 .echarts {
   width: 100%;
