@@ -1,13 +1,13 @@
 <template>
 <div :class="{'drawer-opened': openDrawer}">
   <MainMenu title="美车师结算项设置"/>
-  <div class="toolbox">
+  <div class="toolbox-balance-config">
     <div class="month-select-dropdown">
       <DateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
     </div>
     <div class="top-btn">
-      <mu-raised-button :label="bonusPenaltyFinished ? '当月已结算' : '确认生成结算'" icon="save" class="raised-button" @click="topBtnSave" primary :disabled="bonusPenaltyFinished"/>
-      <mu-raised-button label="导出表格" icon="print" class="raised-button" @click="topBtnPrint" secondary/>
+      <mu-raised-button :label="bonusPenaltyFinished ? '当月已结算' : '确认生成结算'" icon="save" class="primary-button" @click="topBtnSave" primary :disabled="bonusPenaltyFinished"/>
+      <mu-raised-button label="导出表格" icon="print" class="secondary-button" @click="topBtnPrint" secondary/>
     </div>
   </div>
   <BalanceConfigTable :height="tableHeight" />
@@ -44,7 +44,7 @@ export default {
   },
   mounted () {
     this.getData()
-    this.tableHeight = 'calc(100vh - 188px)'
+    this.tableHeight = 'calc(100vh - 134px)'
   },
   watch: {
     city: function () {
@@ -100,16 +100,27 @@ export default {
 }
 </script>
 
+<style>
+.toolbox-balance-config .mu-dropDown-menu-text {
+  color: #fff;
+}
+</style>
 <style scoped>
-.toolbox {
-
+.toolbox-balance-config {
+  position: absolute;
+  top: 0;
+  right: 50px;
+  color: #fff;
+  height: 74px;
+  line-height: 74px;
 }
-.toolbox .month-select-dropdown {
+.toolbox-balance-config .month-select-dropdown {
   display: inline-block;
 }
-.toolbox .top-btn {
+.toolbox-balance-config .top-btn {
   display: inline-block;
-  margin-top: 8px;
-  vertical-align: top;
+}
+.toolbox-balance-config .top-btn .primary-button {
+  margin-right: 20px;
 }
 </style>

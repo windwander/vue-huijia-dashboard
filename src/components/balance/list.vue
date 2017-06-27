@@ -1,7 +1,7 @@
 <template>
 <div :class="{'drawer-opened': openDrawer}">
   <MainMenu title="美车师结算汇总信息"/>
-  <div class="toolbox">
+  <div class="toolbox-balance-list">
     <div class="month-select-dropdown">
       <DateSelect :showDate="false" :showMonthAll="false" :handleChange="changeSelect" />
     </div>
@@ -66,7 +66,7 @@ export default {
   },
   mounted () {
     this.getData()
-    // this.tableHeight = 'calc(100vh - 135px)'
+    this.tableHeight = 'calc(100vh - 134px)'
     console.table(this.settlementStatistic)
   },
   watch: {
@@ -178,17 +178,23 @@ export default {
 .balance-list-table .worker-td-0 {
   display: none;
 }
+.toolbox-balance-list .mu-dropDown-menu-text {
+  color: #fff;
+}
 </style>
 <style scoped>
-.toolbox {
-
+.toolbox-balance-list {
+  position: absolute;
+  top: 0;
+  right: 50px;
+  color: #fff;
+  height: 74px;
+  line-height: 74px;
 }
-.toolbox .month-select-dropdown {
+.toolbox-balance-list .month-select-dropdown {
   display: inline-block;
 }
-.toolbox .top-btn {
+.toolbox-balance-list .top-btn {
   display: inline-block;
-  margin-top: 8px;
-  vertical-align: top;
 }
 </style>

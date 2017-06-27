@@ -1,7 +1,7 @@
 <template>
 <div :class="{'drawer-opened': openDrawer}">
   <MainMenu title="美车师管理" />
-  <div class="toolbox-search">
+  <div class="toolbox-worker-list">
     <mu-text-field hintText="输入手机号搜索" class="search-input" v-model="searchString" ref="searchField" />
     <mu-icon-button icon="search" class="search-btn" color="#FFF" @click="search()"/>
   </div>
@@ -267,19 +267,24 @@ export default {
   word-wrap: break-word;
   word-break: break-all;
 }
+.toolbox-worker-list .mu-text-field-input {
+    color: #fff;
+}
 </style>
 <style scoped>
-.toolbox-search {
-  position: relative;
-  display: inline-block;
-  line-height: 46px;
-  margin-left: 48px;
+.toolbox-worker-list {
+  position: absolute;
+  top: 0;
+  right: 50px;
+  color: #fff;
+  height: 74px;
+  line-height: 74px;
 }
-.toolbox-search .search-input {
+.toolbox-worker-list .search-input {
   width: 160px;
   margin-top: -2px;
 }
-.toolbox-search .search-btn {
+.toolbox-worker-list .search-btn {
   position: absolute;
   bottom: 16px;
   right: -8px;

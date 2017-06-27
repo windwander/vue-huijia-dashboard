@@ -79,7 +79,7 @@ export const mutations = {
     AMap.service('AMap.Geocoder', function () { // 回调函数
       // 实例化Geocoder
       state.geocoder = new AMap.Geocoder({
-          // city: "010" // 城市，默认：“全国”
+      // city: "010" // 城市，默认：“全国”
       })
     })
   },

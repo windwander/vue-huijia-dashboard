@@ -132,6 +132,8 @@ export default {
 .login-box h1 {
   margin-top: 0;
   font-size: 1.8em;
+  font-weight: normal;
+  text-align: center;
 }
 
 .raised-button {

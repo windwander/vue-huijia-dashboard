@@ -124,8 +124,8 @@ export default {
   }
 }
 </script>
-<style>
-/*.date-select, .group-select {
+<style scoped>
+.date-select, .group-select {
   display: inline-block;
   height: 36px;
   margin-top: 5px;
@@ -136,9 +136,8 @@ export default {
 .date-select-field, .group-select-field {
   width: 84px;
   top: -1px;
-}*/
-
-/*#yearDropDown {
+}
+#yearDropDown {
   margin-right: -34px;
-}*/
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
 <div :class="{'drawer-opened': openDrawer}">
   <MainMenu title="美车师审核"/>
-  <div class="toolbox">
+  <div class="toolbox-worker-verify">
     <div class="toolbox-setting-date">
       <div class="date-picker-box">
         <mu-date-picker hintText="开始时间" mode="landscape" v-model="startDate" fullWidth :maxDate="endDate" @input="getData"/>
@@ -246,25 +246,6 @@ export default {
 </script>
 
 <style>
-/*html, body {
-  overflow-x: auto;
-  overflow-y: hidden; 
-}
-.setting-appbar.mu-appbar {
-  height: 74px;
-  padding-left: 100px;
-  background-color: #00bcd4;
-}
-.setting-dropdown {
-  line-height: 46px;
-  margin-right: 48px;
-}
-.setting-dropdown label {
-  vertical-align: text-bottom;
-}
-.setting-dropdown .mu-dropDown-menu-text {
-  color: #fff;
-}*/
 .worker-verify-table .table-header .mu-th {
   padding: 0;
   color: #333;
@@ -285,14 +266,21 @@ export default {
   word-wrap: break-word;
   word-break: break-all;
 }
+.toolbox-worker-verify .mu-text-field-input {
+    color: #fff;
+}
 </style>
 <style scoped>
-.toolbox {
-  /*background: grey;*/
+.toolbox-worker-verify {
+  position: absolute;
+  top: 0;
+  right: 50px;
+  color: #fff;
+  height: 74px;
+  line-height: 74px;
 }
 .toolbox-setting-date {
   display: inline-block;
-  margin-left: 48px;
 }
 .toolbox-setting-date .date-picker-box {
   display: inline-block;

@@ -16,7 +16,7 @@ html, body, #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 620px;
-  min-width: 1330px;
+  min-width: 1366px;
   width: 100%;
   height: 100%;
   overflow: hidden;
