@@ -123,6 +123,11 @@ export default {
     this.getData()
     this.getDictionaryByCode('WORKER_POSITION')
   },
+  watch: {
+    city: function () {
+      this.getData()
+    }
+  },
   methods: {
     ...mapMutations([
       'showSnackbar',
@@ -150,9 +155,6 @@ export default {
         }
       }
       this.getWorkersByStatus(postData)
-    },
-    changeSelect () {
-      this.getData()
     },
     cityName (cityCode) {
       let cityName = cityCode

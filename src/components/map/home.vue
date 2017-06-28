@@ -43,16 +43,18 @@ export default {
       'snackbar',
       'snackbarMsg',
       'isLoadingConfig',
-      'openDrawer'
+      'openDrawer',
+      'city'
     ])
   },
   mounted () {
     const z = this
     // 初始化地图
     z.$store.commit('initMap', {
-      center: z.center,
+      // center: z.center,
       zoom: z.zoom
     })
+    z.$store.commit('centerMap', z.city)
   },
   methods: {
     ...mapMutations([

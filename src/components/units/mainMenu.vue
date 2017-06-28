@@ -125,6 +125,7 @@ export default {
   },
   computed: {
     ...mapState([
+      'menus',
       'openDrawer'
     ]),
     ...mapGetters([

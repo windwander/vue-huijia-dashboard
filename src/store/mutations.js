@@ -67,8 +67,8 @@ export const mutations = {
     state.amap = new AMap.Map('amapContainer', {
       resizeEnable: true,
       mapStyle: 'normal',
-      zoom: zoom,
-      center: center
+      // center: center,
+      zoom: zoom
     })
     // 地图插件
     AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.OverView'], function () {

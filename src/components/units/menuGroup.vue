@@ -25,7 +25,9 @@ export default {
     }
   },
   created () {
-    this.getConfig()
+    if (!(this.citiesAndGroups && this.citiesAndGroups.length)) {
+      this.getConfig()
+    }
   },
   computed: {
     ...mapState([
@@ -56,6 +58,9 @@ export default {
     return {
       selected: ''
     }
+  },
+  mounted () {
+    this.selected = this.group ? (this.city + '-' + this.group) : this.city
   },
   methods: {
     ...mapActions([

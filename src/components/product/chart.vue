@@ -27,8 +27,8 @@
           <mu-raised-button label="周" @click="changePeriod('week')" class="toolbox-btn" :class="{'active': periodType === 'week'}" />
           <mu-raised-button label="月" @click="changePeriod('month')" class="toolbox-btn" :class="{'active': periodType === 'month'}"/>
           <mu-raised-button label="自定义" @click="triggerSetDate" class="toolbox-btn"  :class="{'active': periodType === 'custom'}"/>
-          <mu-date-picker :maxDate="today" mode="landscape"  hintText="起始日期" @change="setStartDate" okLabel="确认起始日期" class="date-picker-input" ref="startDateInput"/>
-          <mu-date-picker :minDate="startDate" :maxDate="today" mode="landscape" hintText="结束日期" @change="setEndDate" okLabel="确认结束日期" class="date-picker-input" ref="endDateInput"/>
+          <mu-date-picker :maxDate="today" mode="landscape" v-model="startDate" hintText="起始日期" @change="setStartDate" okLabel="确认起始日期" class="date-picker-input" ref="startDateInput"/>
+          <mu-date-picker :minDate="startDate" :maxDate="today" mode="landscape" v-model="endDate" hintText="结束日期" @change="setEndDate" okLabel="确认结束日期" class="date-picker-input" ref="endDateInput"/>
         </div>
         <ECharts :options="chartOption" auto-resize ref="chart"/>
       </div>
@@ -73,13 +73,14 @@ export default {
     return {
       selectedWorker: '',
       activeTab: 'hour',
-      startDate: moment().format('YYYY-MM-DD'),
-      endDate: moment().format('YYYY-MM-DD'),
+      startDate: '',
+      endDate: '',
       periodType: 'week',
       today: moment().format('YYYY-MM-DD'),
       chartOption: {},
       legendHour: [],
       seriesHour: [],
+      compareHourDates: new Set(),
       categoryData: {
         code: '',
         name: '全部服务'
@@ -89,8 +90,8 @@ export default {
   created () {
     const data = {
       cityCode: this.city,
-      startDate: this.startDate,
-      endDate: this.endDate,
+      startDate: this.today,
+      endDate: this.today,
       parentId: this.group
     }
     this.getGeneralOrderStatistics(data)
@@ -105,7 +106,7 @@ export default {
       zlevel: 0
     })
     this.initHourChart()
-    this.getData()
+    this.getData(this.today, true)
   },
   computed: {
     ...mapState([
@@ -146,8 +147,6 @@ export default {
     cityAndGroup: function () {
       const z = this
       if (z.activeTab === 'hour') {
-        z.legendHour = []
-        z.seriesHour = []
         z.initHourChart()
         z.getData()
       } else if (z.activeTab === 'day') {
@@ -185,8 +184,8 @@ export default {
       const data = {
         cityCode: z.city,
         date: date || z.today,
-        startDate: z.startDate,
-        endDate: z.endDate,
+        startDate: z.startDate || z.today,
+        endDate: z.endDate || z.today,
         parentId: z.group,
         categoryCode: z.categoryData.code
       }
@@ -200,6 +199,8 @@ export default {
       } else if (z.activeTab === 'day') {
         z.getOperationTrendFromStartToEnd(data).then(function () {
           z.updateDayChart()
+          z.startDate = ''
+          z.endDate = ''
         })
       }
     },
@@ -210,8 +211,6 @@ export default {
       }
       const z = this
       if (z.activeTab === 'hour') {
-        z.legendHour = []
-        z.seriesHour = []
         z.initHourChart()
         z.getData()
       } else if (z.activeTab === 'day') {
@@ -238,8 +237,6 @@ export default {
     handleTabChange (v) {
       let z = this
       z.activeTab = v
-      z.legendHour = []
-      z.seriesHour = []
       if (v === 'hour') {
         z.initHourChart()
       } else if (v === 'day') {
@@ -252,9 +249,16 @@ export default {
       this.$refs.selectDateInput.openDialog()
     },
     addCompare (date) {
-      this.getData(date, true)
+      if (!this.compareHourDates.has(date)) {
+        this.compareHourDates.add(date)
+        this.getData(date, true)
+      }
     },
     initHourChart () {
+      this.legendHour = []
+      this.seriesHour = []
+      this.compareHourDates.clear()
+      this.compareHourDates.add(this.today)
       this.chartOption = {
         title: {
           show: true,

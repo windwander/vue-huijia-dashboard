@@ -15,8 +15,8 @@
           <mu-raised-button label="周" @click="changePeriod('week')" class="toolbox-btn" :class="{'active': periodType === 'week'}" />
           <mu-raised-button label="月" @click="changePeriod('month')" class="toolbox-btn" :class="{'active': periodType === 'month'}"/>
           <mu-raised-button label="自定义" @click="triggerSetDate" class="toolbox-btn"  :class="{'active': periodType === 'custom'}"/>
-          <mu-date-picker :maxDate="today" mode="landscape"  hintText="起始日期" @change="setStartDate" okLabel="确认起始日期" class="date-picker-input" ref="startDateInput"/>
-          <mu-date-picker :minDate="startDate" :maxDate="today" mode="landscape" hintText="结束日期" @change="setEndDate" okLabel="确认结束日期" class="date-picker-input" ref="endDateInput"/>
+          <mu-date-picker :maxDate="today" mode="landscape" v-model="startDate" hintText="起始日期" @change="setStartDate" okLabel="确认起始日期" class="date-picker-input" ref="startDateInput"/>
+          <mu-date-picker :minDate="startDate" :maxDate="today" mode="landscape" v-model="endDate" hintText="结束日期" @change="setEndDate" okLabel="确认结束日期" class="date-picker-input" ref="endDateInput"/>
         </div>
         <ECharts :options="chartOption" auto-resize ref="chart"/>
       </div>
@@ -65,7 +65,8 @@ export default {
       today: moment().format('YYYY-MM-DD'),
       chartOption: {},
       legendHour: [],
-      seriesHour: []
+      seriesHour: [],
+      compareHourDates: new Set()
     }
   },
   mounted () {
@@ -119,8 +120,6 @@ export default {
     cityAndGroup: function () {
       const z = this
       if (z.activeTab === 'hour') {
-        z.legendHour = []
-        z.seriesHour = []
         z.initHourChart()
         z.getData()
       } else if (z.activeTab === 'day') {
@@ -169,6 +168,8 @@ export default {
       } else if (z.activeTab === 'day') {
         z.getOperationTrendFromStartToEnd(data).then(function () {
           z.updateDayChart()
+          z.startDate = ''
+          z.endDate = ''
         })
       }
     },
@@ -192,8 +193,6 @@ export default {
     handleTabChange (v) {
       let z = this
       z.activeTab = v
-      z.legendHour = []
-      z.seriesHour = []
       if (v === 'hour') {
         z.initHourChart()
       } else if (v === 'day') {
@@ -206,9 +205,16 @@ export default {
       this.$refs.selectDateInput.openDialog()
     },
     addCompare (date) {
-      this.getData(date)
+      if (!this.compareHourDates.has(date)) {
+        this.compareHourDates.add(date)
+        this.getData(date)
+      }
     },
     initHourChart () {
+      this.legendHour = []
+      this.seriesHour = []
+      this.compareHourDates.clear()
+      this.compareHourDates.add(this.today)
       this.chartOption = {
         title: {
           show: true,
