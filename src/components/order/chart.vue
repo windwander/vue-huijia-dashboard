@@ -9,7 +9,7 @@
       <div class="chart-box">
         <div v-if="activeTab === 'hour'" class="toolbox">
           <mu-raised-button icon="date_range" label="增加对比日期" @click="addCompareBtn"/>
-          <mu-date-picker :maxDate="today" mode="landscape" hintText="增加对比" okLabel="确认加入对比" @input="addCompare" class="date-picker-input" ref="selectDateInput"/>
+          <mu-date-picker :maxDate="today" mode="landscape" hintText="增加对比" okLabel="确认加入对比" @change="addCompare" class="date-picker-input" ref="selectDateInput"/>
         </div>
         <div v-if="activeTab === 'day'" class="toolbox">
           <mu-raised-button label="周" @click="changePeriod('week')" class="toolbox-btn" :class="{'active': periodType === 'week'}" />
