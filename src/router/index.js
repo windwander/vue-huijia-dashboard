@@ -21,6 +21,24 @@ const incomeChart = () => import('@/components/income/chart.vue')
 const balanceConfig = () => import('@/components/balance/config.vue')
 const balanceList = () => import('@/components/balance/list.vue')
 
+/* 进入路由前的权限判断 */
+function permissionChecker (next, permissionName) {
+  function resolveRouter () {
+    if (store.getters.menusArray[permissionName]) {
+      next()
+    } else {
+      next(false)
+    }
+  }
+  if (Object.getOwnPropertyNames(store.getters.menusArray).length === 0) {
+    store.dispatch('getMenu').then(function () {
+      resolveRouter()
+    })
+  } else {
+    resolveRouter()
+  }
+}
+
 export default new Router({
   routes: [
     {
@@ -36,110 +54,70 @@ export default new Router({
       name: 'orderChart',
       component: orderChart,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray.orderChart) {
-          next()
-        } else {
-          next(false)
-        }
+        permissionChecker(next, 'orderChart')
       }
     }, {
       path: '/order/list',
       name: 'orderList',
       component: orderList,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray.orderList) {
-          next()
-        } else {
-          next(false)
-        }
+        permissionChecker(next, 'orderList')
       }
     }, {
       path: '/product/chart',
       name: 'productChart',
       component: productChart,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray.productChart) {
-          next()
-        } else {
-          next(false)
-        }
+        permissionChecker(next, 'productChart')
       }
     }, {
       path: '/product/list',
       name: 'productList',
       component: productList,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray.productList) {
-          next()
-        } else {
-          next(false)
-        }
+        permissionChecker(next, 'productList')
       }
     }, {
       path: '/worker/chart',
       name: 'workerChart',
       component: workerChart,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray.workerChart) {
-          next()
-        } else {
-          next(false)
-        }
+        permissionChecker(next, 'workerChart')
       }
     }, {
       path: '/worker/list',
       name: 'workerList',
       component: workerList,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray.workerList) {
-          next()
-        } else {
-          next(false)
-        }
+        permissionChecker(next, 'workerList')
       }
     }, {
       path: '/worker/verify',
       name: 'workerVerify',
       component: workerVerify,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray.workerVerify) {
-          next()
-        } else {
-          next(false)
-        }
+        permissionChecker(next, 'workerVerify')
       }
     }, {
       path: '/income/chart',
       name: 'incomeChart',
       component: incomeChart,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray.incomeChart) {
-          next()
-        } else {
-          next(false)
-        }
+        permissionChecker(next, 'incomeChart')
       }
     }, {
       path: '/balance/config',
       name: 'balanceConfig',
       component: balanceConfig,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray.balanceConfig) {
-          next()
-        } else {
-          next(false)
-        }
+        permissionChecker(next, 'balanceConfig')
       }
     }, {
       path: '/balance/list',
       name: 'balanceList',
       component: balanceList,
       beforeEnter: (to, from, next) => {
-        if (store.getters.menusArray.balanceList) {
-          next()
-        } else {
-          next(false)
-        }
+        permissionChecker(next, 'balanceList')
       }
     }
   ]

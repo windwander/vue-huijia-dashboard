@@ -113,20 +113,23 @@ export const actions = {
   },
   /* GET /v/NewDashboard/menu 菜单权限查询 */
   getMenu ({commit, state}) {
-    axios.get('/api/v2/fworker/rest/v/NewDashboard/menu')
-    .then(res => {
-      state.menus = res.data
-    })
-    .catch(error => {
-      oneError(commit, state, error, '菜单权限查询')
-      if (error.response.status !== 401) {
-        commit('errorLogin', {
-          message: '服务器响应失败，请稍后再试'
-        })
-      } else {
-        commit('errorLogin', {})
-      }
-      router.push({name: 'Login'})
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fworker/rest/v/NewDashboard/menu')
+      .then(res => {
+        state.menus = res.data
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '菜单权限查询')
+        if (error.response.status !== 401) {
+          commit('errorLogin', {
+            message: '服务器响应失败，请稍后再试'
+          })
+        } else {
+          commit('errorLogin', {})
+        }
+        router.push({name: 'Login'})
+      })
     })
   },
   /* GET /v/NewDashboard/count 视图总情况查询 */

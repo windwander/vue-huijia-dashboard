@@ -146,7 +146,6 @@ export default {
         }
       })
       saveData = Object.assign({}, originData, newObj)
-      // console.log(saveData)
       z.preSaveWorkerMonth(saveData)
     },
     getDetail: function (workerId, workerName) {

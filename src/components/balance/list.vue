@@ -67,7 +67,6 @@ export default {
   mounted () {
     this.getData()
     this.tableHeight = 'calc(100vh - 134px)'
-    console.table(this.settlementStatistic)
   },
   watch: {
     city: function () {
