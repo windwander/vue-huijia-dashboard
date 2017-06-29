@@ -10,7 +10,7 @@ import avatar from 'muse-components/avatar'
 
 Vue.component(avatar.name, avatar)
 export default {
-  name: 'avatar',
+  name: 'Avatar',
   props: {
     src: {
       type: String,

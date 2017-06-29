@@ -14,7 +14,6 @@ export const getters = {
   cityAndGroup: function () {
     return {
       cityCode: state.city,
-      // leaderId: state.group === '' ? state.groups.map(h => h.leaderId).toString() : state.group
       leaderId: state.group
     }
   },

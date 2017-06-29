@@ -80,7 +80,7 @@ export default {
 }
 </script>
 <style>
-.city-select, .group-select {
+/*.city-select, .group-select {
   display: inline-block;
   height: 36px;
   margin-top: 5px;
@@ -91,5 +91,5 @@ export default {
 .city-select-field, .group-select-field {
   width: 84px;
   top: -1px;
-}
+}*/
 </style>

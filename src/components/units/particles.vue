@@ -21,7 +21,7 @@
 <script>
   /* modified of [vue-particles](https://github.com/creotip/vue-particles) */
   export default {
-    name: 'vue-particles',
+    name: 'VueParticles',
     props: {
       color: {
         type: String,

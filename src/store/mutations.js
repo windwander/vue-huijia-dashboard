@@ -13,9 +13,11 @@ export const state = {
   snackbarTimer: {},
   modalPopup: false,
   showModalTable: false,
+  openDrawer: false,
   menus: [],
   cities: [],
   city: '',
+  citiesAndGroups: [],
   year: new Date().getFullYear().toString(),
   month: (function () {
     let dateMonth = new Date().getMonth() + 1
@@ -65,8 +67,8 @@ export const mutations = {
     state.amap = new AMap.Map('amapContainer', {
       resizeEnable: true,
       mapStyle: 'normal',
-      zoom: zoom,
-      center: center
+      // center: center,
+      zoom: zoom
     })
     // 地图插件
     AMap.plugin(['AMap.ToolBar', 'AMap.Scale', 'AMap.OverView'], function () {
@@ -77,7 +79,7 @@ export const mutations = {
     AMap.service('AMap.Geocoder', function () { // 回调函数
       // 实例化Geocoder
       state.geocoder = new AMap.Geocoder({
-          // city: "010" // 城市，默认：“全国”
+      // city: "010" // 城市，默认：“全国”
       })
     })
   },
@@ -99,10 +101,6 @@ export const mutations = {
     arr.concat(state.workerPoints, state.orderPoints)
     state.amap.setFitView(arr)
   },
-  // 更新点标记窗口数据
-  updateMessage (state, message) {
-    state.infoWindowData.message = message
-  },
   // 清除视图的搜索结果
   clearSearchResult () {
     state.searchResultList = []
@@ -119,8 +117,8 @@ export const mutations = {
   hideSnackbar () {
     hideSnackbar()
   },
-  closePopup () {
-    state.topPopup = false
+  toggleDrawer (state) {
+    state.openDrawer = !state.openDrawer
   },
   showPopup (state) {
     state.modalPopup = true

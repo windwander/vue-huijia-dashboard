@@ -9,7 +9,7 @@
 </template>
 <script>
 export default {
-  name: 'status-box',
+  name: 'StatusBox',
   props: {
     icon: {
       type: String
@@ -55,6 +55,18 @@ export default {
 }
 </script>
 <style>
+.status-box .status-button-icon {
+  margin: 0;
+  font-size: 36px;
+}
+.status-box .mu-flat-button-wrapper {
+  flex-direction: column;
+}
+.status-box .mu-flat-button-wrapper .mu-flat-button-label {
+  padding: 0;
+}
+</style>
+<style scoped>
 .status-box {
   position: relative;
 }
@@ -99,24 +111,6 @@ export default {
   left: 34px;
   border-top-color: #F05B47;
 }
-.status-box .status-button-icon {
-  font-size: 36px;
-}
-.status-box .mu-flat-button-wrapper {
-  flex-direction: column;
-}
-.status-box .mu-icon {
-  margin: 0;
-}
-.status-box .mu-flat-button-label {
-  padding: 0;
-}
-/*.status-box {
-  width: 100px;
-  height: 88px;
-  text-align: center;
-  background-color: rgba(255, 255, 255, 0.95);
-}*/
 .status-box.row {
   margin-right: 2px;
 }
@@ -132,9 +126,4 @@ export default {
 .status-box.clickable .head-status-number {
   color: #F05B47;
 }
-/*.head-status-title {
-  margin: 0;
-  font-size: 14px;
-  font-weight: normal;
-}*/
 </style>

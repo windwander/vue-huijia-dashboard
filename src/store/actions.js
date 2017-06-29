@@ -43,6 +43,7 @@ export const actions = {
     axios.get('/api/v2/login?username=' + user.phone + '&password=' + user.password)
     .then(res => {
       if (res.data.code === '0000') { // 登录成功
+        commit('errorLogin', {})
         router.push('/')
       } else {
         commit('errorLogin', res.data)
@@ -61,19 +62,48 @@ export const actions = {
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
         console.log(error.request)
+        commit('errorLogin', {
+          message: '请求失败，请检查本地网络'
+        })
       } else {
         // Something happened in setting up the request that triggered an Error
         console.log('Error', error.message)
-        commit('errorLogin', error.message)
+        commit('errorLogin', {
+          message: error.message
+        })
       }
+    })
+  },
+  /* 退出登录 */
+  doLogout ({dispatch, commit, state}, user) {
+    axios.get('/api/v2/portal/logoutRemote?isajax=true')
+    .then(res => {
+      if (res.data.code === '0000') { // 登出成功
+        (function deleteAllCookies () { // 清除cookies
+          const c = document.cookie.split(';')
+          for (let i in c) document.cookie = /^[^=]+/.exec(c[i])[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        })()
+        state.menus = []
+        router.push({name: 'Login'})
+      } else {
+        oneError(commit, state, res.data, '退出登录')
+      }
+    })
+    .catch(error => {
+      oneError(commit, state, error, '退出登录')
     })
   },
   /* GET /v/NewDashboard/config 配置权限查询 */
   getConfig ({commit, state}) {
     axios.get('/api/v2/fworker/rest/v/NewDashboard/config')
     .then(res => {
-      state.cities = res.data.citys
-      state.groups = res.data.leaders
+      state.cities = res.data.map(d => d.city)
+      let groups = []
+      res.data.map(d => {
+        groups = groups.concat(d.leaders)
+      })
+      state.groups = groups
+      state.citiesAndGroups = res.data
       state.isLoadingConfig = false
     })
     .catch(error => {
@@ -83,13 +113,23 @@ export const actions = {
   },
   /* GET /v/NewDashboard/menu 菜单权限查询 */
   getMenu ({commit, state}) {
-    axios.get('/api/v2/fworker/rest/v/NewDashboard/menu')
-    .then(res => {
-      state.menus = res.data
-    })
-    .catch(error => {
-      oneError(commit, state, error, '菜单权限查询')
-      router.push('login')
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fworker/rest/v/NewDashboard/menu')
+      .then(res => {
+        state.menus = res.data
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '菜单权限查询')
+        if (error.response.status !== 401) {
+          commit('errorLogin', {
+            message: '服务器响应失败，请稍后再试'
+          })
+        } else {
+          commit('errorLogin', {})
+        }
+        router.push({name: 'Login'})
+      })
     })
   },
   /* GET /v/NewDashboard/count 视图总情况查询 */
@@ -606,9 +646,22 @@ export const actions = {
       oneError(commit, state, error, '导出美车师结算')
     })
   },
+  /* GET /v/getOperationTrendFromStartToEnd 查询运营统计数据 */
+  getOperationTrendFromStartToEnd ({commit, state}, data) {
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fworker/rest/v/getOperationTrendFromStartToEnd?start=' + data.startDate + '&end=' + data.endDate + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode + '&categoryCode=' + data.categoryCode)
+      .then(res => {
+        state.operationTrendData = res.data
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '查询运营统计数据')
+      })
+    })
+  },
   /* GET /a/getGeneralOrderStatistics 查询概要运营数据 */
   getGeneralOrderStatistics ({commit, state}, data) {
-    axios.get('/api/v2/fworker/rest/v/getGeneralOrderStatistics?date=' + data.date + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode)
+    axios.get('/api/v2/fworker/rest/v/getGeneralOrderStatistics?start=' + data.startDate + '&end=' + data.endDate + '&parentId=' + data.parentId + '&cityCode=' + data.cityCode)
     .then(res => {
       state.generalOrderStatistics = res.data
     })
