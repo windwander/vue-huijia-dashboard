@@ -1,7 +1,7 @@
 <template>
   <div class="balance-config-table">
     <mu-table :fixedHeader="fixedHeader" :fixedFooter="fixedFooter" :height="height" :enableSelectAll="enableSelectAll" :multiSelectable="multiSelectable" :selectable="selectable" :showCheckbox="showCheckbox" @rowClick="rowClick">
-      <mu-thead slot="header" class="table-header">
+      <mu-thead slot="header" class="table-header" ref="tableHeader">
         <mu-tr>
           <mu-th v-for="item,index in workerTableHead" :key="'balance-config-table-head' + index" :class="'balance-config-td-'+ index" :title="item">{{item}}</mu-th>
         </mu-tr>
@@ -23,7 +23,7 @@
             <div v-else-if="key === 'position'" :name="key" class="td-text">{{['实习美车师', '正式美车师', '实习业务组长', '正式业务组长', '实习销售经理', '正式销售经理'][value-1]}}</div>
             <div v-else :name="key" class="td-text">{{value}}</div>
           </mu-td>
-          <mu-td>
+          <mu-td class="balance-config-td-26">
             <mu-raised-button v-if="!bonusPenaltyFinished" label="保存" class="save-btn" secondary ref="saveBtn" @click="saveRow"/>
             <mu-raised-button v-else label="查看" class="detail-btn" secondary ref="detailBtn" @click="getDetail(item.workerId, item.workerName)"/>
           </mu-td>
@@ -175,18 +175,23 @@ export default {
 </script>
 
 <style lang="css">
+.balance-config-table {
+  min-width: 1366px;
+}
 .balance-config-table .table-header {
   background-color: #eee;
 }
 .balance-config-table .table-header .mu-th {
-  padding: 5px;
+  padding: 0 5px;
   box-sizing: content-box;
   color: #333;
   border-bottom: 1px solid #c7c7c7;
   text-align: center;
 }
 .balance-config-table .mu-th-wrapper {
-  white-space: pre-wrap;
+  white-space: pre-line;
+  max-height: 78px;
+  line-height: 14px;
 }
 .balance-config-table .mu-tr {
   height: 60px;
@@ -236,6 +241,9 @@ export default {
 }
 .balance-config-table .balance-config-td-4 {
   width: 9em;
+}
+.balance-config-table .balance-config-td-26 {
+  width: 70px;
 }
 .balance-config-table .show-save-btn .mu-td {
   line-height: .01;

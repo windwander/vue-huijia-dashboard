@@ -10,7 +10,9 @@
       <mu-raised-button label="导出表格" icon="print" class="secondary-button" @click="topBtnPrint" secondary/>
     </div>
   </div>
-  <BalanceConfigTable :height="tableHeight" />
+  <div class="table-container">
+    <BalanceConfigTable :height="tableHeight" />
+  </div>
   <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar"/>
 </div>
 </template>
@@ -44,7 +46,7 @@ export default {
   },
   mounted () {
     this.getData()
-    this.tableHeight = 'calc(100vh - 162px)'
+    this.tableHeight = 'calc(100vh - 152px)'
   },
   watch: {
     city: function () {
@@ -122,5 +124,11 @@ export default {
 }
 .toolbox-balance-config .top-btn .primary-button {
   margin-right: 20px;
+}
+.table-container {
+  width: 100vw;
+  height: calc(100vh - 74px);
+  overflow-x: auto;
+  overflow-y: hidden; 
 }
 </style>

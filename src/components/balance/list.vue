@@ -9,23 +9,25 @@
       <mu-raised-button label="导出汇总表" icon="print" class="raised-button" @click="downloadAll" secondary/>
     </div>
   </div>
-  <mu-table :fixedHeader="true" :showCheckbox="false" class="balance-list-table" :height="tableHeight">
-    <mu-thead slot="header" class="table-header">
-      <mu-tr>
-        <mu-th v-for="item,index in tableHead" :key="'worker-table-head' + index" :class="'worker-td-'+ index" :title="item">{{item}}</mu-th>
-      </mu-tr>
-    </mu-thead>
-    <mu-tbody>
-      <mu-tr v-for="item,index in settlementStatistic" :key="item.workerId" :data-id="item.workerId">
-        <mu-td v-for="(value, key, index) in item" :key="key" :class="'worker-td-'+ index" :title="(index > 0) && tableHead[index] + ': ' + value">
-          <div :name="key" class="td-text">{{value}}</div>
-        </mu-td>
-        <mu-td>
-          <mu-raised-button label="查看" class="detail-btn" secondary ref="detailBtn" @click="getDetail(item.workerId, item.workerName)" v-if="index + 1 < settlementStatistic.length" />
-        </mu-td>
-      </mu-tr>
-    </mu-tbody>
-  </mu-table>
+  <div class="table-container">
+    <mu-table :fixedHeader="true" :showCheckbox="false" class="balance-list-table" :height="tableHeight">
+      <mu-thead slot="header" class="table-header">
+        <mu-tr>
+          <mu-th v-for="item,index in tableHead" :key="'worker-table-head' + index" :class="'worker-td-'+ index" :title="item">{{item}}</mu-th>
+        </mu-tr>
+      </mu-thead>
+      <mu-tbody>
+        <mu-tr v-for="item,index in settlementStatistic" :key="item.workerId" :data-id="item.workerId">
+          <mu-td v-for="(value, key, index) in item" :key="key" :class="'worker-td-'+ index" :title="(index > 0) && tableHead[index] + ': ' + value">
+            <div :name="key" class="td-text">{{value}}</div>
+          </mu-td>
+          <mu-td>
+            <mu-raised-button label="查看" class="detail-btn" secondary ref="detailBtn" @click="getDetail(item.workerId, item.workerName)" v-if="index + 1 < settlementStatistic.length" />
+          </mu-td>
+        </mu-tr>
+      </mu-tbody>
+    </mu-table>
+  </div>
   <Modal :title="modalTitle" :modalTitleBtn="true" modalTitleBtnIcon="print" :modalTitleBtnClick="printWorkerDetail" />
   <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar" />
 </div>
@@ -146,6 +148,9 @@ export default {
 </script>
 
 <style>
+.balance-list-table {
+  min-width: 1200px;
+}
 .balance-list-table .table-header {
   background-color: #eee;
 }
@@ -195,5 +200,11 @@ export default {
 }
 .toolbox-balance-list .top-btn {
   display: inline-block;
+}
+.table-container {
+  width: 100vw;
+  height: calc(100vh - 74px);
+  overflow-x: auto;
+  overflow-y: hidden; 
 }
 </style>
