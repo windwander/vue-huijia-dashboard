@@ -8,7 +8,7 @@
       </mu-thead>
       <mu-tbody class="my-tbody">
         <mu-tr v-for="item,index in workerTableData" :key="item.workerId" :data-id="item.workerId" v-bind:class="(Number(selectedId) === item.workerId) ? 'show-save-btn' : ''">
-          <mu-td v-for="(value, key, index) in item" :key="key" :title="(index > 0) && workerTableHead[--index] + ': ' + value" :class="'balance-config-td-'+ (index - 1)">
+          <mu-td v-for="(value, key, index) in item" :key="key" :title="(index > 0) && workerTableHead[--index]" :class="'balance-config-td-'+ (index - 1)">
             <mu-select-field v-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && key === 'position'" :value="value" :labelFocusClass="['label-foucs']">
               <mu-menu-item key="1" value="1" title="实习美车师" />
               <mu-menu-item key="2" value="2" title="正式美车师" />
@@ -17,7 +17,7 @@
               <mu-menu-item key="5" value="5" title="实习销售经理" />
               <mu-menu-item key="6" value="6" title="正式销售经理" />
             </mu-select-field>
-            <mu-date-picker v-else-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && key === 'startDate'" :value="value" :name="key"/>
+            <mu-date-picker v-else-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && key === 'startDate'" :value="value" :name="key" mode="landscape" />
             <!--<mu-date-picker v-else-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && key === 'quitDate'" :value="value === '在职' ? '' : value" :name="key"/>-->
             <mu-text-field v-else-if="!bonusPenaltyFinished && Number(selectedId) === item.workerId && index > 2 && index !== 4" class="text-field" :value="value" :name="key"/>
             <div v-else-if="key === 'position'" :name="key" class="td-text">{{['实习美车师', '正式美车师', '实习业务组长', '正式业务组长', '实习销售经理', '正式销售经理'][value-1]}}</div>
@@ -179,7 +179,8 @@ export default {
   background-color: #eee;
 }
 .balance-config-table .table-header .mu-th {
-  padding: 0;
+  padding: 5px;
+  box-sizing: content-box;
   color: #333;
   border-bottom: 1px solid #c7c7c7;
   text-align: center;
@@ -191,9 +192,8 @@ export default {
   height: 60px;
 }
 .balance-config-table .mu-td {
-  padding: 1em;
+  padding: 5px;
   white-space: pre-wrap;
-  line-height: .01;
   text-align: center;
 }
 .balance-config-table tbody .mu-td input {
@@ -229,16 +229,30 @@ export default {
   width: 7em;
 }
 .balance-config-table .balance-config-td-2 {
-  width: 10em;
+  width: 9em;
 }
 .balance-config-table .balance-config-td-3 {
-  width: 9em;
+  width: 8em;
 }
 .balance-config-table .balance-config-td-4 {
   width: 9em;
 }
-.balance-config-table .balance-config-td-5 {
-  width: 10em;
+.balance-config-table .show-save-btn .mu-td {
+  line-height: .01;
+}
+.balance-config-table .balance-config-td-7.mu-th::after {
+  content: '奖励及补贴';
+  position: absolute;
+  top: 10px;
+  left: 10em;
+  width: 5em;
+}
+.balance-config-table .balance-config-td-13.mu-th::after {
+  content: '罚款及杂费';
+  position: absolute;
+  top: 10px;
+  left: 25em;
+  width: 5em;
 }
 .balance-config-table .save-btn, .balance-config-table .detail-btn {
   min-width: 60px;

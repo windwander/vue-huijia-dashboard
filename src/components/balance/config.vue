@@ -44,7 +44,7 @@ export default {
   },
   mounted () {
     this.getData()
-    this.tableHeight = 'calc(100vh - 134px)'
+    this.tableHeight = 'calc(100vh - 162px)'
   },
   watch: {
     city: function () {
