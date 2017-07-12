@@ -30,7 +30,8 @@
         </mu-tr>
       </mu-tbody>
     </mu-table>
-    <Modal :title="modalTitle" :modalTitleBtn="true" modalTitleBtnIcon="print" :modalTitleBtnClick="printWorkerDetail"/>
+    <!-- <Modal :title="modalTitle" :modalTitleBtn="true" modalTitleBtnIcon="print" :modalTitleBtnClick="printWorkerDetail"/> -->
+    <Modal :title="modalTitle" />
   </div>
 </template>
 
@@ -191,7 +192,6 @@ export default {
 .balance-config-table .mu-th-wrapper {
   white-space: pre-line;
   max-height: 78px;
-  line-height: 14px;
 }
 .balance-config-table .mu-tr {
   height: 60px;
@@ -251,14 +251,14 @@ export default {
 .balance-config-table .balance-config-td-7.mu-th::after {
   content: '奖励及补贴';
   position: absolute;
-  top: 10px;
+  top: 6px;
   left: 10em;
   width: 5em;
 }
 .balance-config-table .balance-config-td-13.mu-th::after {
   content: '罚款及杂费';
   position: absolute;
-  top: 10px;
+  top: 6px;
   left: 25em;
   width: 5em;
 }

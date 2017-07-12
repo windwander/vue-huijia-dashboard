@@ -7,7 +7,7 @@
     </div>
     <div class="top-btn">
       <mu-raised-button :label="bonusPenaltyFinished ? '当月已结算' : '确认生成结算'" icon="save" class="primary-button" @click="topBtnSave" primary :disabled="bonusPenaltyFinished"/>
-      <mu-raised-button label="导出表格" icon="print" class="secondary-button" @click="topBtnPrint" secondary/>
+      <!-- <mu-raised-button label="导出表格" icon="print" class="secondary-button" @click="topBtnPrint" secondary/> -->
     </div>
   </div>
   <div class="table-container">
@@ -121,9 +121,6 @@ export default {
 }
 .toolbox-balance-config .top-btn {
   display: inline-block;
-}
-.toolbox-balance-config .top-btn .primary-button {
-  margin-right: 20px;
 }
 .table-container {
   width: 100vw;
