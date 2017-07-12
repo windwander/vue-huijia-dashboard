@@ -67,7 +67,7 @@ externals: {
 }
 ```
 
-### 4. 部署路径设置为了二级目录([http://***/map]())
+### 4. 部署路径设置为了二级目录([http://***/map]()) 【已废弃，迁移到[http://oms.huijiacar.com/]()】
 在文件config/index.js中：
 
 
