@@ -199,8 +199,6 @@ export default {
       } else if (z.activeTab === 'day') {
         z.getOperationTrendFromStartToEnd(data).then(function () {
           z.updateDayChart()
-          z.startDate = ''
-          z.endDate = ''
         })
       }
     },
@@ -224,6 +222,8 @@ export default {
     },
     triggerSetDate () {
       this.periodType = 'custom'
+      this.startDate = ''
+      this.endDate = ''
       this.$refs.startDateInput.openDialog()
     },
     setStartDate (v) {
@@ -239,6 +239,9 @@ export default {
       z.activeTab = v
       if (v === 'hour') {
         z.initHourChart()
+        z.periodType = 'week'
+        z.startDate = ''
+        z.endDate = ''
       } else if (v === 'day') {
         z.updateDayChart()
         z.formatDate('week')
