@@ -16,7 +16,113 @@
       <mu-icon-button icon="search" class="search-btn" color="#FFF" @click="search()"/>
     </div>
   </div>
-  <div class="table-container">
+  <el-table
+    :data="workerManageList"
+    border
+    fit
+    highlight-current-row
+    @current-change="handleCurrentChange"
+    :default-sort="{prop: 'date', order: 'descending'}"
+    :height="tableHeight"
+  >
+    <el-table-column
+      type="index"
+      min-width="60">
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="美车师姓名"
+      sortable
+      min-width="130">
+    </el-table-column>
+    <el-table-column
+      prop="phone"
+      label="美车师手机号"
+      sortable
+      min-width="150">
+    </el-table-column>
+    <el-table-column
+      prop="idCard"
+      label="身份证号"
+      sortable
+      min-width="160">
+    </el-table-column>
+    <el-table-column
+      prop="applyTime"
+      label="申请时间"
+      sortable
+      min-width="150">
+    </el-table-column>
+    <el-table-column
+      prop="cityCode"
+      :formatter="cityName"
+      label="城市"
+      sortable
+      min-width="90">
+    </el-table-column>
+    <el-table-column
+      prop="workPhone"
+      label="工作手机号"
+      sortable
+      min-width="150">
+      <template scope="scope">
+        <el-input v-model="rowPhone" placeholder="请输入工作手机号" v-if="selectedId === scope.row.workerId">
+        </el-input>
+        <div v-else>
+          {{ scope.row.workPhone }}
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column
+      prop="group"
+      label="小组"
+      sortable
+      min-width="130">
+      <template scope="scope">
+        <el-select v-model="rowGroup" placeholder="请选择组别" v-if="selectedId === scope.row.workerId">
+          <el-option
+            v-for="item in groups"
+            :key="item.leaderId"
+            :label="item.leaderName"
+            :value="item.leaderId">
+          </el-option>
+        </el-select>
+        <div v-else>
+          {{ groupName(scope.row.group) }}
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column
+      prop="position"
+      label="职务"
+      sortable
+      min-width="130">
+      <template scope="scope">
+        <el-select v-model="rowPosition" placeholder="请选择职务" v-if="selectedId === scope.row.workerId">
+          <el-option
+            v-for="item in dictionary.wcwDictionaryDetails"
+            v-if="item.codeKey>=scope.row.position"
+            :key="item.codeKey"
+            :label="item.codeValue"
+            :value="item.codeKey">
+          </el-option>
+        </el-select>
+        <div v-else>
+          {{ positionName(scope.row.position) }}
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column
+      fixed="right"
+      prop="date"
+      label="操作"
+      min-width="120">
+      <template scope="scope">
+        <el-button @click="openDialog" type="primary" size="small" :disabled="(selectedId !== scope.row.workerId) || !rowFinished">{{(selectedId === scope.row.workerId) && rowFinished ? '审核通过' : '请完善信息'}}</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+   <!-- <div class="table-container">
     <mu-table :fixedHeader="true" :showCheckbox="false" class="worker-verify-table" height="calc(100vh - 135px)" @rowClick="rowClick">
       <mu-thead slot="header" class="table-header">
         <mu-tr>
@@ -46,7 +152,7 @@
         </mu-tr>
       </mu-tbody>
     </mu-table>
-  </div>
+  </div> -->
   <mu-dialog :open="dialog" title="请再次确认" @close="closeDialog">
     审核通过后不可回退，请再次确认审核通过！
     <mu-flat-button slot="actions" @click="closeDialog" primary label="取消"/>
@@ -59,6 +165,7 @@
 <script>
 import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
+import { Button, Select, Option, Table, TableColumn, Input } from 'element-ui'
 import moment from 'moment'
 import MainMenu from '../units/mainMenu'
 import Group from '../units/group'
@@ -73,6 +180,12 @@ import textField from 'muse-components/textField'
 import datePicker from 'muse-components/datePicker'
 import iconButton from 'muse-components/iconButton'
 
+Vue.use(Button)
+Vue.use(Select)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Option)
+Vue.use(Input)
 Vue.component(raisedButton.name, raisedButton)
 Vue.component(flatButton.name, flatButton)
 Vue.component(dialog.name, dialog)
@@ -111,7 +224,8 @@ export default {
       rowPhone: '',
       rowErrorPhone: '',
       dialog: false,
-      positionCodes: []
+      positionCodes: [],
+      tableHeight: 300
     }
   },
   computed: {
@@ -130,6 +244,19 @@ export default {
     }
   },
   mounted () {
+    const z = this
+    function debounce (func, wait) {
+      let timer = null
+      return function () {
+        clearTimeout(timer)
+        timer = setTimeout(func, wait)
+      }
+    }
+    function setTableHeight () {
+      z.tableHeight = window.innerHeight - 74
+    }
+    setTableHeight()
+    window.addEventListener('resize', debounce(setTableHeight, 400))
     this.getData()
     this.getDictionaryByCode('WORKER_POSITION')
   },
@@ -170,7 +297,7 @@ export default {
     changeSelect () {
       this.getData()
     },
-    cityName (cityCode) {
+    cityName (row, column, cityCode) {
       let cityName = cityCode
       this.cities.map(c => {
         if (c.cityCode === cityCode) {
@@ -206,6 +333,15 @@ export default {
         this.rowPhone = Number(tr.$el.dataset.workPhone)
         this.rowPosition = tr.$el.dataset.position
         this.rowErrorPhone = ''
+      }
+    },
+    handleCurrentChange: function (row, oldRow) {
+      const newId = row && row.workerId
+      if (row && newId !== this.selectedId) {
+        this.selectedId = newId
+        this.rowGroup = row.group
+        this.rowPhone = row.workPhone
+        this.rowPosition = row.position
       }
     },
     selectRowGroup (v) {

@@ -126,6 +126,8 @@ export default {
 .map-home-div, #amapContainer {
   width: 100%;
   height: 100%;
+  min-height: 620px;
+  min-width: 1366px;
 }
 #fullScreenLoading {
   z-index: 9999;
