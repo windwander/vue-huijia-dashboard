@@ -112,7 +112,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  min-height: 500px;
+  height: 100vh;
+  overflow: hidden;
   background-image: radial-gradient(rgba(255, 255, 255, 0.5), rgba(71, 74, 79, 0.8));
 }
 .login-particles {
@@ -121,6 +123,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 .login-box {
   min-width: 360px;

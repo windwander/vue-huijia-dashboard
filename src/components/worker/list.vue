@@ -16,10 +16,12 @@
   >
     <el-table-column
       type="index"
+      fixed="left"
       min-width="60">
     </el-table-column>
     <el-table-column
       prop="name"
+      fixed="left"
       label="美车师姓名"
       sortable
       min-width="130">

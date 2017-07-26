@@ -11,10 +11,17 @@ export default {
 </script>
 
 <style>
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+}
 #app {
   font-family: "Hiragino Sans GB", "Lucida Grande", "微软雅黑", Helvetica, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100%;
 }
 /* MuseUI 修改样式 */
 .mu-popover>.mu-menu {

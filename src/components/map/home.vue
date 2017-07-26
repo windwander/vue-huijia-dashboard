@@ -123,11 +123,15 @@ export default {
 }
 </style>
 <style scoped>
-.map-home-div, #amapContainer {
+.map-home-div {
   width: 100%;
   height: 100%;
+}
+#amapContainer {
   min-height: 620px;
   min-width: 1366px;
+  width: 100vw;
+  height: 100vh;
 }
 #fullScreenLoading {
   z-index: 9999;
