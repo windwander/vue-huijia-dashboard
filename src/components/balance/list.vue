@@ -9,25 +9,132 @@
       <mu-raised-button label="导出汇总表" icon="print" class="raised-button" @click="downloadAll" secondary/>
     </div>
   </div>
-  <div class="table-container">
-    <mu-table :fixedHeader="true" :showCheckbox="false" class="balance-list-table" :height="tableHeight">
-      <mu-thead slot="header" class="table-header">
-        <mu-tr>
-          <mu-th v-for="item,index in tableHead" :key="'worker-table-head' + index" :class="'worker-td-'+ index" :title="item">{{item}}</mu-th>
-        </mu-tr>
-      </mu-thead>
-      <mu-tbody>
-        <mu-tr v-for="item,index in settlementStatistic" :key="item.workerId" :data-id="item.workerId">
-          <mu-td v-for="(value, key, index) in item" :key="key" :class="'worker-td-'+ index" :title="(index > 0) && tableHead[index] + ': ' + value">
-            <div :name="key" class="td-text">{{value}}</div>
-          </mu-td>
-          <mu-td>
-            <mu-raised-button label="查看" class="detail-btn" secondary ref="detailBtn" @click="getDetail(item.workerId, item.workerName)" v-if="index + 1 < settlementStatistic.length" />
-          </mu-td>
-        </mu-tr>
-      </mu-tbody>
-    </mu-table>
-  </div>
+  <el-table
+    :data="settlementStatistic"
+    border
+    fit
+    highlight-current-row
+    :height="tableHeight"
+    class="balance-config-table"
+  >
+    <el-table-column
+      type="index"
+      fixed="left"
+      min-width="60">
+    </el-table-column>
+    <el-table-column
+      prop="workerName"
+      fixed="left"
+      label="姓名"
+      sortable
+      min-width="100">
+    </el-table-column>
+    <el-table-column
+      prop="orderFee"
+      label="订单费"
+      sortable
+      min-width="120">
+    </el-table-column>
+    <el-table-column
+      prop="orderNum"
+      label="订单数量"
+      sortable
+      min-width="120">
+    </el-table-column>
+    <el-table-column
+      prop="reward"
+      label="用户打赏"
+      sortable
+      min-width="120">
+    </el-table-column>
+    <el-table-column
+      prop="productFee"
+      label="产品费"
+      sortable
+      min-width="120">
+    </el-table-column>
+    <el-table-column
+      prop="serviceFee"
+      label="服务费用"
+      sortable
+      min-width="120">
+    </el-table-column>
+    <el-table-column label="美车师结算">
+      <el-table-column
+        prop="workerServiceFee"
+        label="服务费提成"
+        sortable
+        min-width="120">
+      </el-table-column>
+      <el-table-column
+        prop="workerBonusPenalty"
+        label="奖惩"
+        sortable
+        min-width="120">
+      </el-table-column>
+      <el-table-column
+        prop="workerTotal"
+        label="合计"
+        sortable
+        min-width="120">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column label="城市结算">
+      <el-table-column
+        prop="cityProductFee"
+        label="产品费"
+        sortable
+        min-width="120">
+      </el-table-column>
+      <el-table-column
+        prop="cityServiceFee"
+        label="服务费提成"
+        sortable
+        min-width="120">
+      </el-table-column>
+      <el-table-column
+        prop="cityBonusPenalty"
+        label="奖惩"
+        sortable
+        min-width="120">
+      </el-table-column>
+      <el-table-column
+        prop="cityPlatformFee"
+        label="平台费"
+        sortable
+        min-width="120">
+      </el-table-column>
+      <el-table-column
+        prop="cityTotal"
+        label="合计"
+        sortable
+        min-width="120">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column label="平台结算">
+      <el-table-column
+        prop="platformFee"
+        label="平台费"
+        sortable
+        min-width="120">
+      </el-table-column>
+      <el-table-column
+        prop="platformTotal"
+        label="合计"
+        sortable
+        min-width="120">
+      </el-table-column>
+    </el-table-column>
+    <el-table-column
+      fixed="right"
+      prop="date"
+      label="操作"
+      min-width="80">
+      <template scope="scope">
+        <el-button v-if="scope.row.workerId" @click="getDetail(scope.row)" type="primary" size="small">查看</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
   <Modal :title="modalTitle" :modalTitleBtn="true" modalTitleBtnIcon="print" :modalTitleBtnClick="printWorkerDetail" />
   <mu-snackbar v-if="snackbar" :message="snackbarMsg" action="关闭" @actionClick="hideSnackbar" @close="hideSnackbar" />
 </div>
@@ -40,11 +147,15 @@ import MainMenu from '../units/mainMenu'
 import Modal from '../units/Modal'
 import Group from '../units/group'
 import DateSelect from '../units/dateSelect'
+import { Button, Table, TableColumn } from 'element-ui'
 import dropDownMenu from 'muse-components/dropDownMenu'
 import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
 import raisedButton from 'muse-components/raisedButton'
 
+Vue.use(Button)
+Vue.use(Table)
+Vue.use(TableColumn)
 Vue.component(raisedButton.name, raisedButton)
 Vue.component(snackbar.name, snackbar)
 Vue.component(dropDownMenu.name, dropDownMenu)
@@ -60,15 +171,31 @@ export default {
   data () {
     return {
       selectedWorker: '',
-      tableHeight: '',
-      tableHead: ['美车师ID', '#', '美车师姓名', '订单费', '订单数量', '用户打赏', '产品费', '服务费用', '美车师结算\n服务费提成', '美车师结算\n奖惩', '美车师结算\n合计', '城市结算\n产品费', '城市结算\n服务费提成', '城市结算\n奖惩', '城市结算\n平台费', '城市结算\n合计', '平台结算\n平台费', '平台结算\n合计', '操作'],
+      tableHeight: 300,
       tableData: [],
       modalTitle: ''
     }
   },
   mounted () {
     this.getData()
-    this.tableHeight = 'calc(100vh - 134px)'
+    // 监听窗口高度改变，调整表格高度
+    const z = this
+    function debounce (func, wait) {
+      let timer = null
+      return function () {
+        clearTimeout(timer)
+        timer = setTimeout(func, wait)
+      }
+    }
+    function setTableHeight () {
+      z.tableHeight = window.innerHeight - 74
+    }
+    setTableHeight()
+    z.funcTableHeight = debounce(setTableHeight, 400)
+    window.addEventListener('resize', this.funcTableHeight)
+  },
+  destroyed () {
+    window.removeEventListener('resize', this.funcTableHeight)
   },
   watch: {
     city: function () {
@@ -83,7 +210,6 @@ export default {
       'workers',
       'snackbar',
       'snackbarMsg',
-      'bonusPenaltyFinished',
       'settlementStatistic',
       'openDrawer'
     ])
@@ -121,11 +247,11 @@ export default {
         workerName: this.workerName
       })
     },
-    getDetail: function (workerId, workerName) {
+    getDetail: function (row) {
       const z = this
-      z.modalTitle = workerName + ' 美车师的结算详情'
-      z.workerName = workerName
-      z.workerId = workerId
+      z.modalTitle = row.workerName + ' 美车师的结算详情'
+      z.workerName = row.workerName
+      z.workerId = row.workerId
       z.workMonth = this.year + '-' + this.month
       const getData = {
         workerId: z.workerId,
@@ -148,40 +274,6 @@ export default {
 </script>
 
 <style>
-.balance-list-table {
-  min-width: 1200px;
-}
-.balance-list-table .table-header {
-  background-color: #eee;
-}
-.balance-list-table .table-header .mu-th {
-  padding: 0;
-  color: #333;
-  border-bottom: 1px solid #c7c7c7;
-  text-align: center;
-}
-.balance-list-table .mu-th-wrapper {
-  white-space: pre-wrap;
-}
-.balance-list-table .mu-td {
-  font-size: 16px;
-  padding: 1em;
-  white-space: pre-wrap;
-  text-align: center;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-.balance-list-table .detail-btn {
-  min-width: 60px;
-  line-height: 2;
-  height: 2em;
-  font-size: 14px;
-  margin: 0;
-  white-space: normal;
-}
-.balance-list-table .worker-td-0 {
-  display: none;
-}
 .toolbox-balance-list .mu-dropDown-menu-text {
   color: #fff;
 }
@@ -200,11 +292,5 @@ export default {
 }
 .toolbox-balance-list .top-btn {
   display: inline-block;
-}
-.table-container {
-  width: 100vw;
-  height: calc(100vh - 74px);
-  overflow-x: auto;
-  overflow-y: hidden; 
 }
 </style>

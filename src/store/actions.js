@@ -361,40 +361,38 @@ export const actions = {
     axios.get('/api/v2/fworker/rest/a/getPreSaveWorkerMonthList?workMonth=' + data.workMonth + '&cityCode=' + data.cityCode)
     .then(res => {
       state.preSaveWorkerMonthList = res.data
-      state.workerTableHead = ['#', '姓名', '美车师账号', '上岗时间', '职务', '本月工作天数', '本月电动车扣费天数', '\n伯乐奖', '\n培训奖励', '\n定点补贴', '\n其他1', '\n其他2', '\n其他3', '\n延迟履约', '\n投诉追责', '\n费用骗取', '\n延迟接单', '\n服务不规范', '\n转单延迟1', '\n转单延迟2', '\n培训费用', '\n话费', '\n保险', '\n其他1', '\n其他2', '\n其他3', '操作']
-      state.workerTableData = res.data.map((w, index) => {
-        const worker = {
-          'workerId': w.workerId,
-          'index': index + 1,
-          'workerName': w.workerName,
-          'phone': w.phone,
-          'startDate': w.startDate,
-          'position': w.position,
-          'realWorkDays': w.realWorkDays,
-          'workDays': w.workDays,
-          'pearlWards': w.pearlWards,
-          'trainAllowance': w.trainAllowance,
-          'fixedAllowance': w.fixedAllowance,
-          'bonusOther1': w.bonusOther1,
-          'bonusOther2': w.bonusOther2,
-          'bonusOther3': w.bonusOther3,
-          'delayAgreement': w.delayAgreement,
-          'complaint': w.complaint,
-          'cheat': w.cheat,
-          'delayTake': w.delayTake,
-          'nonstandard': w.nonstandard,
-          'delayTurnFrom': w.delayTurnFrom,
-          'delayTurnTo': w.delayTurnTo,
-          'train': w.train,
-          'telephoneFare': w.telephoneFare,
-          'insurance': w.insurance,
-          'penaltyOther1': w.penaltyOther1,
-          'penaltyOther2': w.penaltyOther2,
-          'penaltyOther3': w.penaltyOther3
-        }
-        return worker
-      })
-      // router.push('/')
+      state.workerTableData = res.data
+      // .map((w, index) => {
+      //   const worker = {
+      //     'workerId': w.workerId,
+      //     'workerName': w.workerName,
+      //     'phone': w.phone,
+      //     'startDate': w.startDate,
+      //     'position': w.position,
+      //     'realWorkDays': w.realWorkDays,
+      //     'workDays': w.workDays,
+      //     'pearlWards': w.pearlWards,
+      //     'trainAllowance': w.trainAllowance,
+      //     'fixedAllowance': w.fixedAllowance,
+      //     'bonusOther1': w.bonusOther1,
+      //     'bonusOther2': w.bonusOther2,
+      //     'bonusOther3': w.bonusOther3,
+      //     'delayAgreement': w.delayAgreement,
+      //     'complaint': w.complaint,
+      //     'cheat': w.cheat,
+      //     'delayTake': w.delayTake,
+      //     'nonstandard': w.nonstandard,
+      //     'delayTurnFrom': w.delayTurnFrom,
+      //     'delayTurnTo': w.delayTurnTo,
+      //     'train': w.train,
+      //     'telephoneFare': w.telephoneFare,
+      //     'insurance': w.insurance,
+      //     'penaltyOther1': w.penaltyOther1,
+      //     'penaltyOther2': w.penaltyOther2,
+      //     'penaltyOther3': w.penaltyOther3
+      //   }
+      //   return worker
+      // })
     })
     .catch(error => {
       oneError(commit, state, error, '获取美车师结算设置列表')

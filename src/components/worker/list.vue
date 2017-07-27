@@ -22,21 +22,21 @@
     <el-table-column
       prop="name"
       fixed="left"
-      label="美车师姓名"
+      label="姓名"
       sortable
-      min-width="130">
+      min-width="120">
     </el-table-column>
     <el-table-column
       prop="phone"
-      label="美车师手机号"
+      label="手机号"
       sortable
-      min-width="150">
+      min-width="130">
     </el-table-column>
     <el-table-column
       prop="idCard"
       label="身份证号"
       sortable
-      min-width="160">
+      min-width="190">
     </el-table-column>
     <el-table-column
       prop="applyTime"
@@ -118,44 +118,13 @@
       label="操作"
       min-width="140">
       <template scope="scope">
-        <el-button @click="doChangeInfo" type="primary" size="small">保存</el-button>
-        <el-button @click="openDialog" type="danger" size="small">注销</el-button>
+        <el-button v-if="selectedId === scope.row.workerId" @click="doChangeInfo" type="primary" size="small">保存</el-button>
+        <el-button v-if="selectedId === scope.row.workerId" @click="openDialog" type="danger" size="small">注销</el-button>
       </template>
     </el-table-column>
   </el-table>
-  <!-- <mu-table :fixedHeader="true" :showCheckbox="false" class="worker-manage-table" height="calc(100vh - 135px)" @rowClick="rowClick">
-    <mu-thead slot="header" class="table-header">
-      <mu-tr>
-        <mu-th v-for="item,index in tableHead" :key="'worker-table-head' + index" :class="'worker-td-'+ index" :title="item">{{item}}</mu-th>
-      </mu-tr>
-    </mu-thead>
-    <mu-tbody>
-      <mu-tr v-for="item,index in workerManageList" :key="item.workerId" :data-id="item.workerId" :data-group="item.group" :data-position="item.position" :data-work-phone="item.workPhone">
-        <mu-td v-for="(value, key, index) in item" :key="key" :class="'worker-td-'+ index">
-          <div v-if="key === 'cityCode'" :name="key" class="td-text">{{cityName(value)}}</div>
-          <div v-else-if="key === 'serviceStatus'" :name="key" class="td-text">{{serviceStatusName(value)}}</div>
-          <div v-else-if="(selectedId !== item.workerId) && (key === 'group')" :name="key" class="td-text">{{groupName(value)}}</div>
-          <mu-select-field v-else-if="(selectedId === item.workerId) && (key === 'group')" :value="value" @change="selectRowGroup" class="worker-manage-select" ref="group" fullWidth>
-            <mu-menu-item value="" title="请选择组别"/>
-            <mu-menu-item v-for="item in groups" :key="item.leaderId" :value="item.leaderId" :title="item.leaderName"/>
-          </mu-select-field>
-          <div v-else-if="(selectedId !== item.workerId) && (key === 'position')" :name="key" class="td-text">{{positionName(value)}}</div>
-          <mu-select-field v-else-if="(selectedId === item.workerId) && (key === 'position')" :value="value" @change="selectRowPosition" class="worker-manage-select" ref="position" fullWidth>
-            <mu-menu-item value="" title="请选择职务"/>
-            <mu-menu-item v-for="(pos, key) in dictionary.wcwDictionaryDetails" v-if="pos.codeKey >=value" :key="pos.codeKey" :value="pos.codeKey" :title="pos.codeValue" />
-          </mu-select-field>
-          <mu-text-field v-else-if="(selectedId === item.workerId) && (key === 'workPhone')" class="text-field" hintText="请输入手机号" :value="value" @input="inputRowPhone" @blur="checkRowPhone" :errorText="rowErrorPhone" :name="key" fullWidth/>
-          <div v-else :name="key" class="td-text">{{value}}</div>
-        </mu-td>
-        <mu-td class="worker-manage-btns">
-          <mu-raised-button v-if="selectedId === item.workerId" label="保存" class="row-btn" secondary @click="doChangeInfo" />
-          <mu-raised-button v-if="selectedId === item.workerId" label="注销" class="row-btn" primary @click="openDialog" />
-        </mu-td>
-      </mu-tr>
-    </mu-tbody>
-  </mu-table> -->
   <mu-dialog :open="dialog" title="确认注销账号" @close="closeDialog">
-    <mu-date-picker hintText="请选择美车师离职时间" v-model="quitDate" fullWidth :maxDate="quitDateMax" />
+    <mu-date-picker hintText="请选择美车师离职时间" v-model="quitDate" mode="landscape" fullWidth :maxDate="quitDateMax" />
     <span class="dialog-help-text">*仅可选择当月及之前时间</span>
     <mu-flat-button slot="actions" @click="closeDialog" primary label="取消"/>
     <mu-flat-button slot="actions" primary @click="doWorkerQuit" :disabled="!quitDate" label="确定"/>
@@ -170,14 +139,9 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import { Button, Select, Option, Table, TableColumn, Input, Tag } from 'element-ui'
 import MainMenu from '../units/mainMenu'
 import Group from '../units/group'
-// import dropDownMenu from 'muse-components/dropDownMenu'
-// import selectField from 'muse-components/selectField'
-// import {menuItem} from 'muse-components/menu'
 import snackbar from 'muse-components/snackbar'
-// import raisedButton from 'muse-components/raisedButton'
 import flatButton from 'muse-components/flatButton'
 import dialog from 'muse-components/dialog'
-// import textField from 'muse-components/textField'
 import datePicker from 'muse-components/datePicker'
 import iconButton from 'muse-components/iconButton'
 
@@ -188,16 +152,11 @@ Vue.use(TableColumn)
 Vue.use(Option)
 Vue.use(Input)
 Vue.use(Tag)
-// Vue.component(raisedButton.name, raisedButton)
 Vue.component(flatButton.name, flatButton)
 Vue.component(dialog.name, dialog)
-// Vue.component(textField.name, textField)
 Vue.component(datePicker.name, datePicker)
 Vue.component(snackbar.name, snackbar)
-// Vue.component(dropDownMenu.name, dropDownMenu)
 Vue.component(iconButton.name, iconButton)
-// Vue.component(selectField.name, selectField)
-// Vue.component(menuItem.name, menuItem)
 export default {
   name: 'WorkerList',
   components: {
@@ -224,7 +183,6 @@ export default {
       rowGroup: '',
       rowPosition: '',
       rowPhone: '',
-      rowErrorPhone: '',
       dialog: false,
       positionCodes: [],
       tableHeight: 300
@@ -241,12 +199,12 @@ export default {
       'workerManageList',
       'dictionary',
       'openDrawer'
-    ]),
-    rowFinished: function () {
-      return Boolean(this.rowGroup) && Boolean(this.rowPosition) && Boolean(this.rowPhone) && !this.rowErrorPhone
-    }
+    ])
   },
   mounted () {
+    this.getData()
+    this.getDictionaryByCode('WORKER_POSITION')
+    // 监听窗口高度改变，调整表格高度
     const z = this
     function debounce (func, wait) {
       let timer = null
@@ -259,9 +217,11 @@ export default {
       z.tableHeight = window.innerHeight - 74
     }
     setTableHeight()
-    window.addEventListener('resize', debounce(setTableHeight, 400))
-    this.getData()
-    this.getDictionaryByCode('WORKER_POSITION')
+    z.funcTableHeight = debounce(setTableHeight, 400)
+    window.addEventListener('resize', this.funcTableHeight)
+  },
+  destroyed () {
+    window.removeEventListener('resize', this.funcTableHeight)
   },
   watch: {
     city: function () {
@@ -327,16 +287,6 @@ export default {
       })
       return positionName
     },
-    rowClick: function (index, tr) {
-      this.row = tr
-      const newId = Number(tr.$el.dataset.id)
-      if (newId !== this.selectedId) {
-        this.selectedId = newId
-        this.rowGroup = tr.$el.dataset.group
-        this.rowPhone = Number(tr.$el.dataset.workPhone)
-        this.rowPosition = tr.$el.dataset.position
-      }
-    },
     handleCurrentChange: function (row, oldRow) {
       const newId = row && row.workerId
       if (row && newId !== this.selectedId) {
@@ -344,22 +294,6 @@ export default {
         this.rowGroup = row.group
         this.rowPhone = row.workPhone
         this.rowPosition = row.position
-      }
-    },
-    selectRowGroup (v) {
-      this.rowGroup = v
-    },
-    selectRowPosition (v) {
-      this.rowPosition = v
-    },
-    inputRowPhone (v) {
-      this.rowPhone = v
-    },
-    checkRowPhone () {
-      if (!/^1\d{10}$/.test(this.rowPhone)) {
-        this.rowErrorPhone = '请输入正确的手机号'
-      } else {
-        this.rowErrorPhone = ''
       }
     },
     openDialog () {
@@ -398,26 +332,6 @@ export default {
 </script>
 
 <style>
-.worker-manage-table .table-header .mu-th {
-  padding: 0;
-  color: #333;
-  border-bottom: 1px solid #c7c7c7;
-  text-align: center;
-}
-.worker-manage-table .mu-th-wrapper {
-  white-space: pre-wrap;
-}
-.worker-manage-table .mu-tr {
-  height: 60px;
-}
-.worker-manage-table .mu-td {
-  font-size: 16px;
-  padding: 10px 5px;
-  white-space: pre-wrap;
-  text-align: center;
-  word-wrap: break-word;
-  word-break: break-all;
-}
 .toolbox-worker-list .mu-text-field-input {
     color: #fff;
 }
@@ -442,32 +356,6 @@ export default {
   width: 36px;
   height: 36px;
   padding: 0;
-}
-.worker-manage-table .table-header {
-  background-color: #eee;
-}
-.worker-manage-table .worker-td-0 {
-  display: none;
-}
-.worker-manage-table .worker-td-1 {
-  width: 60px;
-}
-.worker-manage-table .worker-td-8,
-.worker-manage-table .worker-td-9,
-.worker-manage-table .worker-td-10 {
-  white-space: normal;
-}
-.worker-manage-table .worker-manage-btns {
-  width: 160px;
-}
-.row-btn {
-  width: 60px;
-  min-width: 60px;
-  line-height: 1;
-  height: 2em;
-  font-size: 14px;
-  margin: 0;
-  white-space: normal;
 }
 .dialog-help-text {
   font-size: 14px;
