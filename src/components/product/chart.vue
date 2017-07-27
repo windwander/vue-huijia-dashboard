@@ -386,11 +386,11 @@ export default {
 
 <style>
 #orderTypeBox .status-box:first-child .status-button {
-  height: 228px;
+  height: 148px;
   width: 120px;
 }
 #orderTypeBox .status-box .status-button {
-  height: 108px;
+  height: 68px;
   width: 120px;
 }
 #orderTypeBox .status-box.selected .status-button {
@@ -411,7 +411,8 @@ export default {
 }
 #orderTypeBox {
   display: flex;
-  height: 240px;
+  height: 160px;
+  min-width: 1008px;
   flex-wrap: wrap;
   flex-direction: column;
   align-items: center;
