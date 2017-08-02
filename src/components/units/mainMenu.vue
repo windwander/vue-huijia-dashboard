@@ -26,9 +26,9 @@
           <mu-list-item slot="nested" v-if="menusArray.orderChart" title="订单数据分析" to="/order/chart">
             <mu-icon slot="left" value="assessment"/>
           </mu-list-item>
-          <!--<mu-list-item slot="nested" v-if="menusArray.orderList" title="订单管理" to="/order/list">
+          <mu-list-item slot="nested" title="订单管理" to="/order/list">
             <mu-icon slot="left" value="assignment"/>
-          </mu-list-item>-->
+          </mu-list-item>
         </mu-list-item>
         <mu-list-item title="美车师" v-if="menusArray.workerChart || menusArray.workerVerify || menusArray.workerList" toggleNested>
           <mu-icon slot="left" value="list"/>
