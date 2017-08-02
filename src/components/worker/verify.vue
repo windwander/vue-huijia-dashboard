@@ -28,7 +28,7 @@
     <el-table-column
       type="index"
       fixed="left"
-      min-width="60">
+      width="62">
     </el-table-column>
     <el-table-column
       prop="name"
