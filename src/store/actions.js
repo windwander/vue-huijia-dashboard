@@ -811,6 +811,47 @@ export const actions = {
         oneError(commit, state, error, '查询字典数据')
       })
     })
+  },
+  /* GET /a/orderManage/queryAllProduct 获取全部服务类型 */
+  getAllProductType ({commit, state}, code) {
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fuser/rest/a/orderManage/queryAllProduct')
+      .then(res => {
+        state.allProductType = res.data
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '获取全部服务类型')
+      })
+    })
+  },
+  /* GET /a/orderManage/queryByCondition 条件联合查询订单 */
+  getOrdersByCondition ({commit, state}, data) {
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fuser/rest/a/orderManage/queryByCondition', {
+        params: data
+      })
+      .then(res => {
+        state.orderList = res.data
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '条件联合查询订单')
+      })
+    })
+  },
+  /* GET /a/orderManage/queryByKeyword 关键字查询订单 */
+  getOrdersByKeyword ({commit, state}, data) {
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fuser/rest/a/orderManage/queryByKeyword')
+      .then(res => {
+        state.orderList = res.data
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '关键字查询订单')
+      })
+    })
   }
 }
 // 点标记自定义标题
