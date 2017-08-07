@@ -833,6 +833,10 @@ export const actions = {
       })
       .then(res => {
         state.orderList = res.data
+        if (res.data.content && res.data.content.length === 0) {
+          state.snackbarMsg = '该查询条件暂时查找不到订单！'
+          commit('showSnackbar')
+        }
         resolve()
       })
       .catch(error => {
@@ -843,13 +847,33 @@ export const actions = {
   /* GET /a/orderManage/queryByKeyword 关键字查询订单 */
   getOrdersByKeyword ({commit, state}, data) {
     return new Promise(function (resolve, reject) {
-      axios.get('/api/v2/fuser/rest/a/orderManage/queryByKeyword')
+      axios.get('/api/v2/fuser/rest/a/orderManage/queryByKeyword', {
+        params: data
+      })
       .then(res => {
         state.orderList = res.data
+        if (res.data.content && res.data.content.length === 0) {
+          state.snackbarMsg = '该查询条件暂时查找不到订单！'
+          commit('showSnackbar')
+        }
         resolve()
       })
       .catch(error => {
         oneError(commit, state, error, '关键字查询订单')
+      })
+    })
+  },
+  /* POST /a/orderManage/cancel 取消订单 */
+  cancelOrder ({commit, state}, data) {
+    return new Promise(function (resolve, reject) {
+      axios.post('/api/v2/fworker/rest/a/orderManage/cancel', data)
+      .then(res => {
+        state.snackbarMsg = '取消订单成功：' + res.data.resultMessage
+        commit('showSnackbar')
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '取消订单')
       })
     })
   }
