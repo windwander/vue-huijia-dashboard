@@ -89,7 +89,7 @@
       </el-table-column>
       <el-table-column fixed="right" prop="date" label="操作" min-width="100">
         <template scope="scope">
-          <el-button v-if="selectedId === scope.row.orderId" @click="openDialog" type="danger" size="small">取消订单</el-button>
+          <el-button v-if="(scope.row.orderStatus < 50) && (selectedId === scope.row.orderId)" @click="openDialog" type="danger" size="small">取消订单</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -222,7 +222,9 @@ export default {
       'getAllProductType',
       'getOrdersByCondition',
       'getOrdersByKeyword',
-      'cancelOrder'
+      'cancelOrder',
+      'exportByCondition',
+      'exportByKeyword'
     ]),
     adjustTableHeight () {
       // 监听窗口高度改变，调整表格高度
@@ -320,10 +322,13 @@ export default {
       this.selectedId = row && row.orderId
     },
     doDeleteOrder () {
-      this.cancelOrder({
+      const z = this
+      z.cancelOrder({
         orderId: this.selectedId
+      }).then(function () {
+        z.getData()
       })
-      this.closeDialog()
+      z.closeDialog()
     },
     handleSearch () {
       this.getData()
@@ -338,7 +343,26 @@ export default {
       this.getData()
     },
     exportData () {
-      console.log(this.orderList.totalElements)
+      if (this.searchString) {
+        let searchData = {
+          keyword: this.searchString.trim(),
+          cityCode: this.city,
+          leaderId: this.group
+        }
+        this.exportByKeyword(searchData)
+      } else {
+        let data = {
+          cityCode: this.city,
+          leaderId: this.group,
+          payCode: this.payCode.toString(),
+          productId: this.productId.toString(),
+          orderStatus: this.orderStatus.toString(),
+          timeType: this.timeType,
+          startTime: moment(this.timeRange[0]).format('YYYY-MM-DD'),
+          endTime: moment(this.timeRange[1]).format('YYYY-MM-DD')
+        }
+        this.exportByCondition(data)
+      }
       console.log('export')
     }
   }

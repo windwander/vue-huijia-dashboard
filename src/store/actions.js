@@ -866,15 +866,79 @@ export const actions = {
   /* POST /a/orderManage/cancel 取消订单 */
   cancelOrder ({commit, state}, data) {
     return new Promise(function (resolve, reject) {
-      axios.post('/api/v2/fworker/rest/a/orderManage/cancel', data)
+      axios.post('/api/v2/fuser/rest/a/orderManage/cancel?orderId=' + data.orderId)
       .then(res => {
-        state.snackbarMsg = '取消订单成功：' + res.data.resultMessage
+        state.snackbarMsg = '取消订单成功！'
         commit('showSnackbar')
         resolve()
       })
       .catch(error => {
         oneError(commit, state, error, '取消订单')
       })
+    })
+  },
+  /* GET /a/orderManage/exportByCondition 条件联合查询导出订单 */
+  exportByCondition ({commit, state}, data) {
+    axios.get('/api/v2/fuser/rest/a/orderManage/exportByCondition', {
+      params: data,
+      responseType: 'blob'
+    })
+    .then(res => {
+      const filename = '订单导出（' + (new Date()).toLocaleString() + '）'
+      const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        // IE workaround for "HTML7007: One or more blob URLs were
+        // revoked by closing the blob for which they were created.
+        // These URLs will no longer resolve as the data backing
+        // the URL has been freed."
+        window.navigator.msSaveBlob(blob, filename)
+      } else {
+        const blobURL = window.URL.createObjectURL(blob)
+        let tempLink = document.createElement('a')
+        tempLink.href = blobURL
+        tempLink.setAttribute('download', filename)
+        tempLink.setAttribute('target', '_blank')
+        document.body.appendChild(tempLink)
+        tempLink.click()
+        document.body.removeChild(tempLink)
+      }
+      state.snackbarMsg = '导出成功'
+      commit('showSnackbar')
+    })
+    .catch(error => {
+      oneError(commit, state, error, '条件联合查询导出订单')
+    })
+  },
+  /* GET /a/orderManage/exportByKeyword 关键字查询导出订单 */
+  exportByKeyword ({commit, state}, data) {
+    axios.get('/api/v2/fuser/rest/a/orderManage/exportByKeyword', {
+      params: data,
+      responseType: 'blob'
+    })
+    .then(res => {
+      const filename = '订单导出（' + (new Date()).toLocaleString() + '）'
+      const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        // IE workaround for "HTML7007: One or more blob URLs were
+        // revoked by closing the blob for which they were created.
+        // These URLs will no longer resolve as the data backing
+        // the URL has been freed."
+        window.navigator.msSaveBlob(blob, filename)
+      } else {
+        const blobURL = window.URL.createObjectURL(blob)
+        let tempLink = document.createElement('a')
+        tempLink.href = blobURL
+        tempLink.setAttribute('download', filename)
+        tempLink.setAttribute('target', '_blank')
+        document.body.appendChild(tempLink)
+        tempLink.click()
+        document.body.removeChild(tempLink)
+      }
+      state.snackbarMsg = '导出成功'
+      commit('showSnackbar')
+    })
+    .catch(error => {
+      oneError(commit, state, error, '关键字查询导出订单')
     })
   }
 }
