@@ -279,11 +279,11 @@ export default {
           cityCode: this.city,
           leaderId: this.group,
           payCode: this.payCode.toString(),
-          productId: this.productId.toString(),
+          productIds: this.productId.toString(),
           orderStatus: this.orderStatus.toString(),
           timeType: this.timeType,
-          startTime: moment(this.timeRange[0]).format('YYYY-MM-DD'),
-          endTime: moment(this.timeRange[1]).format('YYYY-MM-DD'),
+          startTime: moment(this.timeRange[0]).format('YYYY-MM-DD 00:00:00'),
+          endTime: moment(this.timeRange[1]).format('YYYY-MM-DD 23:59:59'),
           page: this.currentPage - 1,
           size: this.pageSize
         }
@@ -357,11 +357,11 @@ export default {
           cityCode: z.city,
           leaderId: z.group,
           payCode: z.payCode.toString(),
-          productId: z.productId.toString(),
+          productIds: z.productId.toString(),
           orderStatus: z.orderStatus.toString(),
           timeType: z.timeType,
-          startTime: moment(z.timeRange[0]).format('YYYY-MM-DD'),
-          endTime: moment(z.timeRange[1]).format('YYYY-MM-DD')
+          startTime: moment(z.timeRange[0]).format('YYYY-MM-DD 00:00:00'),
+          endTime: moment(z.timeRange[1]).format('YYYY-MM-DD 23:59:59')
         }
         z.exportByCondition(data).then(function () {
           z.isExporting = false
