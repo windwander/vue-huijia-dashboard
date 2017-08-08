@@ -192,7 +192,7 @@ export default {
   },
   mounted () {
     this.adjustTableHeight()
-    this.getAllProductType()
+    this.getAllProductType(this.city)
     this.getData()
   },
   destroyed () {
@@ -214,6 +214,10 @@ export default {
     ])
   },
   watch: {
+    city: function () {
+      this.productId = []
+      this.getAllProductType(this.city)
+    },
     cityAndGroup: function () {
       this.getData()
     }

@@ -822,11 +822,19 @@ export const actions = {
     })
   },
   /* GET /a/orderManage/queryAllProduct 获取全部服务类型 */
-  getAllProductType ({commit, state}, code) {
+  getAllProductType ({commit, state}, cityCode) {
     return new Promise(function (resolve, reject) {
-      axios.get('/api/v2/fuser/rest/a/orderManage/queryAllProduct')
+      axios.get('/api/v2/fuser/rest/a/orderManage/queryAllProduct?cityCode=' + cityCode)
       .then(res => {
-        state.allProductType = res.data
+        let types = {}
+        res.data.forEach(function (product) {
+          if (types[product.productName]) {
+            types[product.productName].productId += ',' + product.productId
+          } else {
+            types[product.productName] = product
+          }
+        })
+        state.allProductType = types
         resolve()
       })
       .catch(error => {
