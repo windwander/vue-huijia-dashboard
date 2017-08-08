@@ -61,8 +61,7 @@ export default new Router({
       name: 'orderList',
       component: orderList,
       beforeEnter: (to, from, next) => {
-        // permissionChecker(next, 'orderList')
-        next()
+        permissionChecker(next, 'orderList')
       }
     }, {
       path: '/product/chart',
