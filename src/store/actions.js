@@ -128,6 +128,7 @@ export const actions = {
         } else {
           commit('errorLogin', {})
         }
+        reject(error)
         router.push({name: 'Login'})
       })
     })
@@ -663,6 +664,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '查询运营统计数据')
+        reject(error)
       })
     })
   },
@@ -686,6 +688,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '查询运营统计数据')
+        reject(error)
       })
     })
   },
@@ -704,6 +707,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '查询运营对比数据')
+        reject(error)
       })
     })
   },
@@ -741,6 +745,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '查询美车师管理列表')
+        reject(error)
       })
     })
   },
@@ -760,6 +765,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '审核美车师')
+        reject(error)
       })
     })
   },
@@ -779,6 +785,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '修改美车师信息')
+        reject(error)
       })
     })
   },
@@ -796,6 +803,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '注销美车师')
+        reject(error)
       })
     })
   },
@@ -809,6 +817,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '查询字典数据')
+        reject(error)
       })
     })
   },
@@ -822,6 +831,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '获取全部服务类型')
+        reject(error)
       })
     })
   },
@@ -841,6 +851,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '条件联合查询订单')
+        reject(error)
       })
     })
   },
@@ -860,6 +871,7 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '关键字查询订单')
+        reject(error)
       })
     })
   },
@@ -874,71 +886,80 @@ export const actions = {
       })
       .catch(error => {
         oneError(commit, state, error, '取消订单')
+        reject(error)
       })
     })
   },
   /* GET /a/orderManage/exportByCondition 条件联合查询导出订单 */
   exportByCondition ({commit, state}, data) {
-    axios.get('/api/v2/fuser/rest/a/orderManage/exportByCondition', {
-      params: data,
-      responseType: 'blob'
-    })
-    .then(res => {
-      const filename = '订单导出（' + (new Date()).toLocaleString() + '）'
-      const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
-      if (typeof window.navigator.msSaveBlob !== 'undefined') {
-        // IE workaround for "HTML7007: One or more blob URLs were
-        // revoked by closing the blob for which they were created.
-        // These URLs will no longer resolve as the data backing
-        // the URL has been freed."
-        window.navigator.msSaveBlob(blob, filename)
-      } else {
-        const blobURL = window.URL.createObjectURL(blob)
-        let tempLink = document.createElement('a')
-        tempLink.href = blobURL
-        tempLink.setAttribute('download', filename)
-        tempLink.setAttribute('target', '_blank')
-        document.body.appendChild(tempLink)
-        tempLink.click()
-        document.body.removeChild(tempLink)
-      }
-      state.snackbarMsg = '导出成功'
-      commit('showSnackbar')
-    })
-    .catch(error => {
-      oneError(commit, state, error, '条件联合查询导出订单')
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fuser/rest/a/orderManage/exportByCondition', {
+        params: data,
+        responseType: 'blob'
+      })
+      .then(res => {
+        const filename = '订单导出（' + (new Date()).toLocaleString() + '）'
+        const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+        if (typeof window.navigator.msSaveBlob !== 'undefined') {
+          // IE workaround for "HTML7007: One or more blob URLs were
+          // revoked by closing the blob for which they were created.
+          // These URLs will no longer resolve as the data backing
+          // the URL has been freed."
+          window.navigator.msSaveBlob(blob, filename)
+        } else {
+          const blobURL = window.URL.createObjectURL(blob)
+          let tempLink = document.createElement('a')
+          tempLink.href = blobURL
+          tempLink.setAttribute('download', filename)
+          tempLink.setAttribute('target', '_blank')
+          document.body.appendChild(tempLink)
+          tempLink.click()
+          document.body.removeChild(tempLink)
+        }
+        state.snackbarMsg = '导出成功'
+        commit('showSnackbar')
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '条件联合查询导出订单')
+        reject(error)
+      })
     })
   },
   /* GET /a/orderManage/exportByKeyword 关键字查询导出订单 */
   exportByKeyword ({commit, state}, data) {
-    axios.get('/api/v2/fuser/rest/a/orderManage/exportByKeyword', {
-      params: data,
-      responseType: 'blob'
-    })
-    .then(res => {
-      const filename = '订单导出（' + (new Date()).toLocaleString() + '）'
-      const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
-      if (typeof window.navigator.msSaveBlob !== 'undefined') {
-        // IE workaround for "HTML7007: One or more blob URLs were
-        // revoked by closing the blob for which they were created.
-        // These URLs will no longer resolve as the data backing
-        // the URL has been freed."
-        window.navigator.msSaveBlob(blob, filename)
-      } else {
-        const blobURL = window.URL.createObjectURL(blob)
-        let tempLink = document.createElement('a')
-        tempLink.href = blobURL
-        tempLink.setAttribute('download', filename)
-        tempLink.setAttribute('target', '_blank')
-        document.body.appendChild(tempLink)
-        tempLink.click()
-        document.body.removeChild(tempLink)
-      }
-      state.snackbarMsg = '导出成功'
-      commit('showSnackbar')
-    })
-    .catch(error => {
-      oneError(commit, state, error, '关键字查询导出订单')
+    return new Promise(function (resolve, reject) {
+      axios.get('/api/v2/fuser/rest/a/orderManage/exportByKeyword', {
+        params: data,
+        responseType: 'blob'
+      })
+      .then(res => {
+        const filename = '订单导出（' + (new Date()).toLocaleString() + '）'
+        const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+        if (typeof window.navigator.msSaveBlob !== 'undefined') {
+          // IE workaround for "HTML7007: One or more blob URLs were
+          // revoked by closing the blob for which they were created.
+          // These URLs will no longer resolve as the data backing
+          // the URL has been freed."
+          window.navigator.msSaveBlob(blob, filename)
+        } else {
+          const blobURL = window.URL.createObjectURL(blob)
+          let tempLink = document.createElement('a')
+          tempLink.href = blobURL
+          tempLink.setAttribute('download', filename)
+          tempLink.setAttribute('target', '_blank')
+          document.body.appendChild(tempLink)
+          tempLink.click()
+          document.body.removeChild(tempLink)
+        }
+        state.snackbarMsg = '导出成功'
+        commit('showSnackbar')
+        resolve()
+      })
+      .catch(error => {
+        oneError(commit, state, error, '关键字查询导出订单')
+        reject(error)
+      })
     })
   }
 }

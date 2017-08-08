@@ -7,40 +7,44 @@
         <mu-icon-button icon="search" class="search-btn" color="#FFF" @click="handleSearch()"/>
       </div>
       <div class="top-btn">
-        <mu-raised-button label="导出" icon="print" class="raised-button" @click="exportData" secondary/>
+        <mu-raised-button label="导出" icon="print" class="raised-button" @click="exportData" :disabled="isExporting" secondary/>
       </div>
     </div>
     <div id="filterBox" class="filterbox-order-list">
       <div>
-      <el-select v-model="timeType" @change="filterTimeType" placeholder="时间范围" class="filter-timetype">
-        <el-option label="下单时间" value="1"></el-option>
-        <el-option label="完成时间" value="2"></el-option>
-        <el-option label="支付时间" value="3"></el-option>
-      </el-select>
-      <el-date-picker
-        v-model="timeRange"
-        @change="filterTimeRange"
-        type="daterange"
-        placeholder="选择日期范围"
-        class="filter-timerange">
-      </el-date-picker>
+        <el-select v-model="timeType" @change="filterTimeType" placeholder="时间范围" class="filter-timetype">
+          <el-option label="下单时间" value="1"></el-option>
+          <el-option label="完成时间" value="2"></el-option>
+          <el-option label="支付时间" value="3"></el-option>
+        </el-select>
+        <el-date-picker
+          v-model="timeRange"
+          @change="filterTimeRange"
+          type="daterange"
+          placeholder="选择日期范围"
+          class="filter-timerange">
+        </el-date-picker>
       </div>
-      <el-select v-model="productId" multiple @change="filterProductType" placeholder="服务类型" class="filter-box-div">
-        <el-option
-          v-for="item in allProductType"
-          :key="item.productId"
-          :label="item.productName"
-          :value="item.productId">
-        </el-option>
-      </el-select>
-      <el-select v-model="orderStatus" multiple @change="filterOrderType" placeholder="订单状态" class="filter-box-div">
-        <el-option
-          v-for="item in orderStatusOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
+      <div class="filter-box-div">
+        <el-select v-model="productId" multiple @change="filterProductType" placeholder="服务类型" class="multi-select">
+          <el-option
+            v-for="item in allProductType"
+            :key="item.productId"
+            :label="item.productName"
+            :value="item.productId">
+          </el-option>
+        </el-select>
+      </div>
+      <div class="filter-box-div">
+        <el-select v-model="orderStatus" multiple @change="filterOrderType" placeholder="订单状态" class="multi-select">
+          <el-option
+            v-for="item in orderStatusOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
     </div>
     <el-table :data="orderList.content" border fit highlight-current-row @current-change="handleCurrentChange" :height="tableHeight">
       <el-table-column type="index" fixed="left" width="62">
@@ -51,7 +55,7 @@
       </el-table-column>
       <el-table-column prop="userPhone" label="手机号" min-width="130">
       </el-table-column>
-      <el-table-column prop="cityCode" :formatter="cityName" label="城市" min-width="90">
+      <el-table-column prop="cityName" label="城市" min-width="90">
       </el-table-column>
       <el-table-column prop="location" label="预约服务地点" min-width="150">
       </el-table-column>
@@ -182,7 +186,8 @@ export default {
       ],
       searchString: '',
       pageSize: 20,
-      currentPage: 1
+      currentPage: 1,
+      isExporting: false
     }
   },
   mounted () {
@@ -243,15 +248,6 @@ export default {
       setTableHeight()
       z.funcTableHeight = debounce(setTableHeight, 400)
       window.addEventListener('resize', this.funcTableHeight)
-    },
-    cityName (row, column, cityCode) {
-      let cityName = cityCode
-      this.cities.map(c => {
-        if (c.cityCode === cityCode) {
-          cityName = c.cityName
-        }
-      })
-      return cityName
     },
     moneyFormatter (row, column, money) {
       return (money / 100).toFixed(2)
@@ -343,27 +339,36 @@ export default {
       this.getData()
     },
     exportData () {
-      if (this.searchString) {
+      const z = this
+      z.isExporting = true
+      if (z.searchString) {
         let searchData = {
-          keyword: this.searchString.trim(),
-          cityCode: this.city,
-          leaderId: this.group
+          keyword: z.searchString.trim(),
+          cityCode: z.city,
+          leaderId: z.group
         }
-        this.exportByKeyword(searchData)
+        z.exportByKeyword(searchData).then(function () {
+          z.isExporting = false
+        }, function (reason) {
+          z.isExporting = false
+        })
       } else {
         let data = {
-          cityCode: this.city,
-          leaderId: this.group,
-          payCode: this.payCode.toString(),
-          productId: this.productId.toString(),
-          orderStatus: this.orderStatus.toString(),
-          timeType: this.timeType,
-          startTime: moment(this.timeRange[0]).format('YYYY-MM-DD'),
-          endTime: moment(this.timeRange[1]).format('YYYY-MM-DD')
+          cityCode: z.city,
+          leaderId: z.group,
+          payCode: z.payCode.toString(),
+          productId: z.productId.toString(),
+          orderStatus: z.orderStatus.toString(),
+          timeType: z.timeType,
+          startTime: moment(z.timeRange[0]).format('YYYY-MM-DD'),
+          endTime: moment(z.timeRange[1]).format('YYYY-MM-DD')
         }
-        this.exportByCondition(data)
+        z.exportByCondition(data).then(function () {
+          z.isExporting = false
+        }, function (reason) {
+          z.isExporting = false
+        })
       }
-      console.log('export')
     }
   }
 }
@@ -418,6 +423,9 @@ export default {
 #filterBox .filter-box-div {
   margin: 5px;
   flex: 1;
+}
+#filterBox .filter-box-div .multi-select {
+  width: 100%;
 }
 #filterBox .filter-timetype {
   width: 8em;
