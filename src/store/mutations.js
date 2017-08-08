@@ -54,7 +54,9 @@ export const state = {
   operationTrendData: [],
   trendDataWithCondition: [],
   workerManageList: [],
-  dictionary: []
+  dictionary: [],
+  orderList: [],
+  allProductType: []
 }
 
 export const mutations = {
